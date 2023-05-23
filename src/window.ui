@@ -10,25 +10,101 @@
       <class name="devel" />
     </style>
     <child>
-      <object class="GtkBox">
+      <object class="AdwLeaflet">
         <property name="orientation">vertical</property>
+        <property name="visible-child">world_leaflet</property>
+        <property name="transition-type">under</property>
+        <property name="can-unfold">False</property>
         <child>
-          <object class="GtkHeaderBar" id="header_bar">
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="menu-model">primary_menu</property>
+          <object class="AdwLeaflet" id="world_leaflet">
+            <property name="can-unfold">False</property>
+            <property name="can-navigate-back">true</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <!-- Start AdwHeaderBar -->
+                <child>
+                  <object class="AdwHeaderBar">
+                    <property name="centering-policy">strict</property>
+                    <child type="title">
+                      <object class="AdwViewSwitcherTitle" id="view_switcher_title">
+                        <property name="stack">stack</property>
+                        <property name="title" bind-source="PomodoroWindow" bind-property="title"
+                          bind-flags="sync-create" />
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkMenuButton">
+                        <property name="menu_model">primary_menu</property>
+                        <property name="icon_name">open-menu-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Main menu</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <!-- End AdwHeaderBar -->
+                <!-- Start AdwViewStack -->
+                <child>
+                  <object class="AdwViewStack" id="stack">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <!-- Start timer page-->
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="name">timer</property>
+                        <property name="title" translatable="yes">_Timer</property>
+                        <property name="use-underline">True</property>
+                        <property name="icon-name">camera-timer-symbolic</property>
+                        <property name="child">
+                          <object class="GtkLabel">
+                            <property name="label">Timer page</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <!-- End timer page-->
+                    <!-- Start Statistics page-->
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="name">statistics</property>
+                        <property name="title" translatable="yes">_Statistics</property>
+                        <property name="use-underline">True</property>
+                        <property name="icon-name">profit-symbolic</property>
+                        <property name="child">
+                          <object class="GtkLabel">
+                            <property name="label">Statistics page</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <!-- End Statistics page-->
+                    <!-- Start Historic page-->
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="name">historic</property>
+                        <property name="title" translatable="yes">_Historic</property>
+                        <property name="use-underline">True</property>
+                        <property name="icon-name">history-undo-symbolic</property>
+                        <property name="child">
+                          <object class="GtkLabel">
+                            <property name="label">Historic page</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <!-- End Historic page-->
+                  </object>
+                </child>
+                <!-- End AdwViewStack -->
+                <child>
+                  <object class="AdwViewSwitcherBar">
+                    <property name="stack">stack</property>
+                    <property name="reveal" bind-source="view_switcher_title"
+                      bind-property="title-visible" bind-flags="sync-create" />
+                  </object>
+                </child>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="label">
-            <property name="label">Hello, World!</property>
-            <property name="vexpand">true</property>
-            <style>
-              <class name="title-1" />
-            </style>
           </object>
         </child>
       </object>

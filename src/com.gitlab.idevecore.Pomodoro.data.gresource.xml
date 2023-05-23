@@ -4,4 +4,9 @@
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
   </gresource>
+  <gresource prefix="/com/gitlab/idevecore/Pomodoro/icons/scalable/actions/">
+    <file preprocess="xml-stripblanks" alias="camera-timer-symbolic.svg">icons/camera-timer-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="profit-symbolic.svg">icons/profit-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="history-undo-symbolic.svg">icons/history-undo-symbolic.svg</file>
+  </gresource>
 </gresources>
