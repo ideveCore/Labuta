@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=pomodoro
+Exec=com.gitlab.idevecore.Pomodoro
+Icon=com.gitlab.idevecore.Pomodoro
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true
