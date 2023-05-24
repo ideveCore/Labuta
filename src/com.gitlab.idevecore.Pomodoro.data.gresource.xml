@@ -3,6 +3,10 @@
   <gresource prefix="/com/gitlab/idevecore/Pomodoro">
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">ui/timer.ui</file>
+    <file>style.css</file>
+    <file alias="complete">sounds/complete.ogx</file>
+    <file alias="alarm">sounds/alarm.ogx</file>
   </gresource>
   <gresource prefix="/com/gitlab/idevecore/Pomodoro/icons/scalable/actions/">
     <file preprocess="xml-stripblanks" alias="camera-timer-symbolic.svg">icons/camera-timer-symbolic.svg</file>

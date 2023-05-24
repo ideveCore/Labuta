@@ -1,0 +1,178 @@
+<interface>
+  <requires lib="Gtk" version="4.0" />
+  <requires lib="Adw" version="1.0" />
+  <template class="Timer" parent="AdwBin">
+    <child>
+      <object class="AdwClamp">
+        <property name="valign">center</property>
+        <property name="halign">center</property>
+        <child>
+          <object class="GtkListBox">
+            <property name="activate-on-single-click">False</property>
+            <property name="selection-mode">none</property>
+            <property name="margin-top">20</property>
+            <property name="margin-bottom">20</property>
+            <property name="margin-start">20</property>
+            <property name="margin-end">20</property>
+            <style>
+              <class name="boxed-list" />
+            </style>
+            <child>
+              <object class="GtkListBoxRow">
+                <property name="activatable">False</property>
+                <property name="hexpand">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="hexpand">True</property>
+                    <property name="valign">start</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-top">20</property>
+                    <property name="margin-bottom">20</property>
+                    <property name="margin-start">20</property>
+                    <property name="margin-end">20</property>
+                    <property name="orientation">vertical</property>
+                    <style>
+                      <class name="vertical" />
+                    </style>
+                    <child>
+                      <object class="GtkLabel" id="timer_label">
+                        <property name="label">00:25:00</property>
+                        <property name="hexpand">True</property>
+                        <style>
+                          <class name="accent" />
+                          <class name="fs-1" />
+                        </style>
+                      </object>
+                    </child>
+                    <!-- Start task Entries -->
+                    <child>
+                      <object class="GtkListBox" id="list_box">
+                        <property name="selection-mode">none</property>
+                        <style>
+                          <class name="boxed-list" />
+                        </style>
+                        <child>
+                          <object class="AdwEntryRow" id="title_entry">
+                            <property name="title" translatable="yes">Title</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwEntryRow" id="description_entry">
+                            <property name="title" translatable="yes">Description</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <!-- End task Entries -->
+                    <!-- Start timer controls -->
+                    <child>
+                      <object class="GtkStack" id="stack_timer_controls">
+                        <property name="transition-type">crossfade</property>
+                        <!-- Start stack init timer -->
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">init_timer</property>
+                            <property name="child">
+                              <object class="GtkButton">
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="icon-name">media-playback-start-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Init timer</property>
+                                <signal name="clicked" handler="handler_timer" />
+                                <style>
+                                  <class name="suggested-action" />
+                                  <class name="circular" />
+                                  <class name="large-button" />
+                                </style>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <!-- End stack init timer -->
+                        <!-- Start stack running timer -->
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">running_timer</property>
+                            <property name="child">
+                              <object class="GtkButton">
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="icon-name">media-playback-pause-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Pause timer</property>
+                                <signal name="clicked" handler="handler_timer" />
+                                <style>
+                                  <class name="circular" />
+                                  <class name="large-button" />
+                                </style>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <!-- End stack running timer -->
+                        <!-- Start stack paused timer -->
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">paused_timer</property>
+                            <property name="child">
+                              <object class="GtkGrid">
+                                <property name="halign">center</property>
+                                <property name="column_spacing">18</property>
+                                <property name="column_homogeneous">True</property>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="icon-name">view-refresh-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Reset timer</property>
+                                    <signal name="clicked" handler="reset_timer" />
+                                    <style>
+                                      <class name="circular" />
+                                      <class name="large-button" />
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="icon-name">media-playback-start-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Init timer</property>
+                                    <signal name="clicked" handler="handler_timer" />
+                                    <style>
+                                      <class name="suggested-action" />
+                                      <class name="circular" />
+                                      <class name="large-button" />
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="icon-name">media-playback-stop-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Stop timer</property>
+                                    <signal name="clicked" handler="stop_timer" />
+                                    <style>
+                                      <class name="circular" />
+                                      <class name="large-button" />
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <!-- End stack paused timer -->
+                      </object>
+                    </child>
+                    <!-- End timer controls -->
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

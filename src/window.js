@@ -21,14 +21,16 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
+import { Application } from './stores.js';
 
 export const PomodoroWindow = GObject.registerClass({
-    GTypeName: 'PomodoroWindow',
-    Template: 'resource:///com/gitlab/idevecore/Pomodoro/window.ui',
-    InternalChildren: ['label'],
+  GTypeName: 'PomodoroWindow',
+  Template: 'resource:///com/gitlab/idevecore/Pomodoro/window.ui',
+  InternalChildren: [],
 }, class PomodoroWindow extends Adw.ApplicationWindow {
-    constructor(application) {
-        super({ application });
-    }
+  constructor(application) {
+    super({ application });
+    Application.update(() => (application))
+  }
 });
 
