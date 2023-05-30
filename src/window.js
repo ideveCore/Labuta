@@ -21,16 +21,20 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import { Application } from './stores.js';
+import { Application, navigation } from './stores.js';
 
 export const PomodoroWindow = GObject.registerClass({
   GTypeName: 'PomodoroWindow',
   Template: 'resource:///com/gitlab/idevecore/Pomodoro/window.ui',
-  InternalChildren: [],
+  InternalChildren: ['stack'],
 }, class PomodoroWindow extends Adw.ApplicationWindow {
   constructor(application) {
     super({ application });
     Application.update(() => (application))
+    navigation.$((value) => {
+      if (value === "timer")
+        return this._stack.visible_child_name = "timer"
+    })
   }
 });
 

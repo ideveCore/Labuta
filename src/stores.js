@@ -23,3 +23,4 @@ class Writable {
 export const timer_state = new Writable('stopped');
 export const data = new Writable([]);
 export const Application = new Writable(null);
+export const navigation = new Writable(null);

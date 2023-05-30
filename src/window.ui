@@ -82,9 +82,7 @@
                         <property name="use-underline">True</property>
                         <property name="icon-name">history-undo-symbolic</property>
                         <property name="child">
-                          <object class="GtkLabel">
-                            <property name="label">Historic page</property>
-                          </object>
+                          <object class="Historic"></object>
                         </property>
                       </object>
                     </child>
