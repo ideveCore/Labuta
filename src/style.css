@@ -1,6 +1,13 @@
 .fs-1 {
   font-size: 3em;
 }
+.fs-2 {
+  font-size: 2em;
+}
+
+.fs-3 {
+  font-size: 1.2em;
+}
 
 .large-button {
   padding: 0.5em;

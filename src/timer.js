@@ -57,8 +57,8 @@ export const Timer = GObject.registerClass({
               break_time: 0,
               date: {
                 day: current_date.get_day_of_year(),
-                week: current_date.get_day_of_week(),
-                month: current_date.get_month() + 1,
+                week: current_date.get_week_of_year(),
+                month: current_date.get_month(),
                 display_date: this.get_date(),
               },
               counts: 0,

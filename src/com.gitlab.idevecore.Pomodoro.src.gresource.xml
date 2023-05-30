@@ -4,6 +4,7 @@
     <file>main.js</file>
     <file>window.js</file>
     <file>timer.js</file>
+    <file>statistics.js</file>
     <file>stores.js</file>
     <file>utils.js</file>
   </gresource>

@@ -69,9 +69,7 @@
                         <property name="use-underline">True</property>
                         <property name="icon-name">profit-symbolic</property>
                         <property name="child">
-                          <object class="GtkLabel">
-                            <property name="label">Statistics page</property>
-                          </object>
+                          <object class="Statistics"></object>
                         </property>
                       </object>
                     </child>

@@ -27,6 +27,7 @@ import { Application_data } from './utils.js';
 
 import { PomodoroWindow } from './window.js';
 import './timer.js';
+import './statistics.js';
 
 pkg.initGettext();
 pkg.initFormat();
