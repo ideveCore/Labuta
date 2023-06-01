@@ -1,0 +1,184 @@
+# Brazilian Portuguese translation for Pomodoro.
+# Copyright (C) 2023 Pomodoro's COPYRIGHT HOLDER
+# This file is distributed under the same license as the Pomodoro package.
+# Ideve Core <ideve.core@gmail.com>, 2023.
+#
+
+msgid ""
+msgstr ""
+"Project-Id-Version: Pomodoro master\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/idevecore/pomodoro/-/issues\n"
+"POT-Creation-Date: 2023-05-22 12:53+0000\n"
+"PO-Revision-Date: 2022-05-22 14:09-0300\n"
+"Last-Translator: Ideve Core <ideve.core@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 42.0\n"
+"X-Project-Style: gnome\n"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Geral"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Mostra a ajuda"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Sair"
+
+#: src/window.ui:37
+msgid "Main menu"
+msgstr "Menu principal"
+
+#: src/window.ui:52
+msgid "_Timer"
+msgstr "_Temporizador"
+
+#: src/window.ui:65
+msgid "_Statistics"
+msgstr "_Estatísticas"
+
+#: src/window.ui:78
+msgid "_Historic"
+msgstr "_Histórico"
+
+#: src/window.ui:107
+msgid "_Preferences"
+msgstr "_Preferências"
+
+#: src/window.ui:111
+msgid "_Keyboard Shortcuts"
+msgstr "Atalhos de teclado"
+
+#: src/window.ui:115
+msgid "_About Pomodoro"
+msgstr "_Sobre o Pomodoro"
+
+#: src/window.ui:56
+msgid "Title"
+msgstr "Título"
+
+#: src/window.ui:56 src/historic_row.js:48 src/timer.js:90 src/timer.js:92 src/timer.js:114
+msgid "Description"
+msgstr "Descrição"
+
+#: src/timer.ui:80 src/timer.ui:139
+msgid "Init timer"
+msgstr "Iniciar temporizador"
+
+#: src/timer.ui:101
+msgid "Paused timer"
+msgstr "Pausar temporizador"
+
+#: src/timer.ui:126
+msgid "Reset timer"
+msgstr "Reiniciar temporizador"
+
+#: src/timer.ui:153
+msgid "Stop timer"
+msgstr "Parar temporizador"
+
+#: src/timer.js:29
+msgid "invalid"
+msgstr "inválido"
+
+#: src/timer.js:89
+msgid "Pomodoro started"
+msgstr "Pomodoro começou"
+
+#: src/timer.js:89 src/timer.js:91 src/timer.js:113
+msgid "Created date"
+msgstr "Data de criação"
+
+#: src/timer.js:91
+msgid "Pomodoro break time"
+msgstr "pomodoro interrupção"
+
+#: src/timer.js:113
+msgid "Pomodoro finished"
+msgstr "pomodoro terminou"
+
+#: src/timer.js:163
+msgid "of"
+msgstr "de"
+
+#: src/statistics.js:42 src/statistics.js:100 src/statistics.js:145
+msgid "Today"
+msgstr "Hoje"
+
+#: src/statistics.js:42 src/statistics.js:116 src/statistics.js:161 src/historic_row.ui:16
+msgid "Work time"
+msgstr "Tempo de trabalho"
+
+#: src/statistics.js:60 src/statistics.js:70 src/statistics.js:79
+msgid "more"
+msgstr "a mais que"
+
+#: src/statistics.js:62 src/statistics.js:72 src/statistics.js:81
+msgid "less"
+msgstr "a menos que"
+
+#: src/statistics.js:63
+msgid "than yesterday"
+msgstr "ontem"
+
+#: src/statistics.js:63
+msgid "than last week"
+msgstr "semana passada"
+
+
+#: src/statistics.js:63
+msgid "than last month"
+msgstr "mês passado"
+
+
+#: src/statistics.js:68 src/historic_row.js:32
+msgid "Break time"
+msgstr "Intervalo"
+
+#: src/statistics.js:89
+msgid "This week"
+msgstr "Essa semana"
+
+#: src/statistics.js:134
+msgid "This month"
+msgstr "Esse mês"
+
+#: src/historic_row.js:57
+msgid "Quantities of pomodoros"
+msgstr "Quantidate de Pomodoros"
+
+#: src/historic_row.js:72
+msgid "Remove"
+msgstr "Remover"
+
+#: src/historic_row.js:14
+msgid "Stop timer?"
+msgstr "Parar temporizador?"
+
+#: src/historic_row.js:16
+msgid "There is a running timer, wants to stop and exit the application?"
+msgstr "Existe um temporizador em execução, quer parar e sair do aplicativo?"
+
+#: src/historic_row.js:17
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/historic_row.js:18
+msgid "Exit"
+msgstr "Sair"
+#: src/historic_row.js:16
+msgid "Add new pomodoro"
+msgstr "Adicionar novo pomodoro"
+
+
+
