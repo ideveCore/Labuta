@@ -61,6 +61,7 @@ export const Timer = GObject.registerClass({
                 month: current_date.get_month(),
                 display_date: this.get_date(),
               },
+              id: GLib.uuid_string_random(),
               counts: 0,
             }
             this._timer_running = true;
@@ -83,10 +84,7 @@ export const Timer = GObject.registerClass({
               if (this._timer_state === 'paused') {
                 return GLib.SOURCE_CONTINUE
               }
-
               this._timer--
-
-
               if (this._timer === 1499) {
                 new Application_notify({ summary: `${_("Pomodoro started")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
               } else if (this._timer === 0) {
@@ -115,7 +113,7 @@ export const Timer = GObject.registerClass({
               new Application_notify({ summary: `${_("Pomodoro finished")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
               new Sound({ id: 'alarm' }).play()
               this.format_timer()
-              return GLib.SOURCE_REMOVE
+              return GLib.SOURCE_CONTINUE
             })
           }
           this._stack_timer_controls.visible_child_name = 'running_timer';
@@ -137,6 +135,7 @@ export const Timer = GObject.registerClass({
     timer_state.update(() => ('stopped'))
   }
   stop_timer() {
+    this._timer_running = false;
     this._title_entry.set_text('');
     this._description_entry.set_text('');
     this._break_timer = 300;

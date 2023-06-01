@@ -33,9 +33,9 @@ export const Historic = GObject.registerClass({
         });
         return
       }
-      const remove_items = this._list.filter(element => value.findIndex(array_item => array_item.title === element.title) < 0);
+      const remove_items = this._list.filter(element => value.findIndex(array_item => array_item.id === element.row.item.id) < 0);
       value.forEach((item, index) => {
-        const finded = this._list.find(array_item => array_item.title === item.title);
+        const finded = this._list.find(array_item => array_item.row.item.id === item.id);
         if (finded)
           return
         const row = new HistoricRow(item, index);

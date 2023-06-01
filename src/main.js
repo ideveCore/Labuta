@@ -23,7 +23,7 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 import Gst from 'gi://Gst';
-import { Application_data } from './utils.js';
+import { Application_data, close_request } from './utils.js';
 
 import { PomodoroWindow } from './window.js';
 import './timer.js';
@@ -42,7 +42,7 @@ export const PomodoroApplication = GObject.registerClass(
 
       const quit_action = new Gio.SimpleAction({ name: 'quit' });
       quit_action.connect('activate', action => {
-        this.quit();
+        close_request.bind(this)()
       });
       this.add_action(quit_action);
       this.set_accels_for_action('app.quit', ['<primary>q']);

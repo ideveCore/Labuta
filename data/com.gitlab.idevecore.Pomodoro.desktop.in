@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=pomodoro
+Name=Pomodoro
 Exec=com.gitlab.idevecore.Pomodoro
 Icon=com.gitlab.idevecore.Pomodoro
 Terminal=false

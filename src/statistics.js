@@ -43,8 +43,8 @@ export const Statistics = GObject.registerClass({
       const yesterday = value.filter((item) => item.date.day === this.get_day() - 1);
       const week = value.filter((item) => item.date.week === this.get_week());
       const last_week = value.filter((item) => item.date.week === this.get_week() - 1);
-      const month = value.filter((item) => item.date.month === this.get_month());
-      const last_month = value.filter((item) => item.date.month === this.get_month() - 1);
+      const month = value.filter((item) => item.date.month === this.get_month() - 1);
+      const last_month = value.filter((item) => item.date.month === this.get_month() - 2);
 
       const work_timer_today = today.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
       const work_timer_yesterday = yesterday.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
@@ -55,30 +55,31 @@ export const Statistics = GObject.registerClass({
 
       const percentage_work_timer_today_yesterday = () => {
         let value = ((work_timer_today - work_timer_yesterday) / work_timer_yesterday) * 100;
+        value = value ? value : 0
         value = value === Infinity ? 100 : value;
-        let adjective = 'more';
+        let adjective = _('more');
         if (value < 0)
-          adjective = 'less';
-        return `${Math.abs(value).toFixed(0)}% ${adjective} than yesterday`
+          adjective = _('less');
+        return `${Math.abs(value).toFixed(0)}% ${adjective} ${_("than yesterday")}`
       }
       const percentage_work_timer_week_last_week = () => {
         let value = ((work_timer_week - work_timer_last_week) / work_timer_last_week) * 100;
-
-        log(value)
+        value = value ? value : 0
         value = value === Infinity ? 100 : value;
 
-        let adjective = 'more';
+        let adjective = _('more');
         if (value < 0)
-          adjective = 'less';
-        return `${Math.abs(value).toFixed(0)}% ${adjective} than last week`
+          adjective = _('less');
+        return `${Math.abs(value).toFixed(0)}% ${adjective} ${_("than last week")}`
       }
       const percentage_work_timer_month_last_month = () => {
         let value = ((work_timer_month - work_timer_last_month) / work_timer_last_month) * 100;
+        value = value ? value : 0
         value = value === Infinity ? 100 : value;
-        let adjective = 'more';
+        let adjective = _('more');
         if (value < 0)
-          adjective = 'less';
-        return `${Math.abs(value).toFixed(0)}% ${adjective} than last month`
+          adjective = _('less');
+        return `${Math.abs(value).toFixed(0)}% ${adjective} ${_("than last month")}`
       }
       this._work_timer_today_label.set_text(this.format_timer(work_timer_today))
       this._work_timer_today.set_subtitle(percentage_work_timer_today_yesterday())

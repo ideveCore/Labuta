@@ -22,6 +22,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import { Application, navigation } from './stores.js';
+import { close_request } from './utils.js';
 
 export const PomodoroWindow = GObject.registerClass({
   GTypeName: 'PomodoroWindow',
@@ -34,6 +35,12 @@ export const PomodoroWindow = GObject.registerClass({
     navigation.$((value) => {
       if (value === "timer")
         return this._stack.visible_child_name = "timer"
+    })
+    this.connect('close-request', (event) => {
+      this.active_window = this;
+      this.application = application;
+      close_request.bind(this)()
+      return true
     })
   }
 });

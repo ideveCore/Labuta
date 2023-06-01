@@ -6,9 +6,6 @@
     <property name="default-width">400</property>
     <property name="default-height">600</property>
     <property name="title">Pomodoro</property>
-    <style>
-      <class name="devel" />
-    </style>
     <child>
       <object class="AdwLeaflet">
         <property name="orientation">vertical</property>

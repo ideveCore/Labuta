@@ -2,7 +2,37 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import Notify from 'gi://Notify'
 import Gst from 'gi://Gst';
-import { data, Application } from './stores.js';
+import Adw from 'gi://Adw';
+import { data, Application, timer_state } from './stores.js';
+
+export function close_request() {
+  timer_state.subscribe((value) => {
+    this._timer_state = value;
+  })
+  let dialog = new Adw.MessageDialog();
+  dialog.set_heading(_('Stop timer?'));
+  dialog.set_transient_for(this.active_window);
+  dialog.set_body(_('There is a running timer, wants to stop and exit the application?'));
+  dialog.add_response('continue', _('Continue'));
+  dialog.add_response('exit', _('Exit'));
+  dialog.set_response_appearance('exit', Adw.ResponseAppearance.DESTRUCTIVE);
+
+  dialog.connect('response', (dialog, id) => {
+    if (id === 'exit') {
+      timer_state.update(() => 'stopped')
+      setTimeout(() => {
+        if (this.application)
+          return this.application.quit()
+        this.quit()
+      }, 1000)
+    }
+  })
+  if (this._timer_state === 'running' || this._timer_state == 'paused')
+    return dialog.present()
+  if (this.application)
+    return this.application.quit()
+  this.quit()
+}
 
 export class Application_data {
   constructor() {

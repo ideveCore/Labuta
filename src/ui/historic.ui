@@ -10,7 +10,7 @@
             <property name="name">no_historic</property>
             <property name="child">
               <object class="AdwStatusPage">
-                <property name="icon-name">historic-undo-symbolic</property>
+                <property name="icon-name">history-undo-symbolic</property>
                 <child>
                   <object class="GtkButton">
                     <property name="label" translatable="yes">Add new pomodoro</property>
