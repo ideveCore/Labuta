@@ -104,7 +104,7 @@ export const Timer = GObject.registerClass({
                 return GLib.SOURCE_CONTINUE
               }
               timer_state.update(() => 'paused')
-              this._stack_timer_controls.visible_child_name = 'init_timer';
+              this._stack_timer_controls.visible_child_name = 'paused_timer';
               this._timer = 1500
               this._data.counts = this._data.counts + 1
               if (this._data.counts === 3) {
