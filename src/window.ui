@@ -53,7 +53,7 @@
                         <property name="use-underline">True</property>
                         <property name="icon-name">camera-timer-symbolic</property>
                         <property name="child">
-                          <object class="Timer"></object>
+                          <object class="Timer" />
                         </property>
                       </object>
                     </child>
@@ -66,7 +66,7 @@
                         <property name="use-underline">True</property>
                         <property name="icon-name">profit-symbolic</property>
                         <property name="child">
-                          <object class="Statistics"></object>
+                          <object class="Statistics" />
                         </property>
                       </object>
                     </child>
@@ -79,7 +79,7 @@
                         <property name="use-underline">True</property>
                         <property name="icon-name">history-undo-symbolic</property>
                         <property name="child">
-                          <object class="Historic"></object>
+                          <object class="Historic" />
                         </property>
                       </object>
                     </child>
@@ -118,3 +118,4 @@
     </section>
   </menu>
 </interface>
+

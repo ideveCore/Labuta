@@ -5,7 +5,7 @@ import { Application_data } from './utils.js';
 
 export const HistoricRow = GObject.registerClass({
   GTypeName: "HistoricRow",
-  Template: 'resource:///com/gitlab/idevecore/Pomodoro/ui/historic_row.ui',
+  Template: 'resource:///io/gitlab/idevecore/Pomodoro/ui/historic_row.ui',
   InternalChildren: ['work_time', 'break_time', 'description', 'counts'],
 }, class HistoricRow extends Adw.ExpanderRow {
   constructor(item, index) {

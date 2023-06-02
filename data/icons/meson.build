@@ -1,4 +1,4 @@
-application_id = 'com.gitlab.idevecore.Pomodoro'
+application_id = 'io.gitlab.idevecore.Pomodoro'
 
 scalable_dir = join_paths('hicolor', 'scalable', 'apps')
 install_data(

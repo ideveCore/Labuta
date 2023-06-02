@@ -5,7 +5,7 @@ import { data } from './stores.js';
 
 export const Statistics = GObject.registerClass({
   GTypeName: "Statistics",
-  Template: 'resource:///com/gitlab/idevecore/Pomodoro/ui/statistics.ui',
+  Template: 'resource:///io/gitlab/idevecore/Pomodoro/ui/statistics.ui',
   InternalChildren: [
     'work_timer_today',
     'work_timer_today_label',

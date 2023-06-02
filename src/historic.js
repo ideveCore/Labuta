@@ -5,7 +5,7 @@ import { data, navigation } from './stores.js';
 
 export const Historic = GObject.registerClass({
   GTypeName: "Historic",
-  Template: 'resource:///com/gitlab/idevecore/Pomodoro/ui/historic.ui',
+  Template: 'resource:///io/gitlab/idevecore/Pomodoro/ui/historic.ui',
   InternalChildren: ['stack', 'list_box'],
 }, class Historic extends Adw.Bin {
   constructor() {

@@ -26,7 +26,7 @@ import { close_request } from './utils.js';
 
 export const PomodoroWindow = GObject.registerClass({
   GTypeName: 'PomodoroWindow',
-  Template: 'resource:///com/gitlab/idevecore/Pomodoro/window.ui',
+  Template: 'resource:///io/gitlab/idevecore/Pomodoro/window.ui',
   InternalChildren: ['stack'],
 }, class PomodoroWindow extends Adw.ApplicationWindow {
   constructor(application) {

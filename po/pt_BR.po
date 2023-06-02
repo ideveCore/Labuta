@@ -20,6 +20,25 @@ msgstr ""
 "X-Generator: Gtranslator 42.0\n"
 "X-Project-Style: gnome\n"
 
+#: data/io.gitlab.idevecore.Pomodoro.desktop.in:3
+#: data/iio.gitlab.idevecore.Pomodoro.appdata.xml.in:6
+msgid "Amberol"
+msgstr "Amberol"
+
+#: data/io.gitlab.idevecore.Pomodoro.in:4
+msgid "Timer"
+msgstr "Temporizador"
+
+#: data/io.gitlab.idevecore.Pomodoro.in:12
+msgid "timer;clocks;stopwatch;"
+msgstr "tempo;relógio;temporizador"
+
+#: data/io.bassi.Amberol.appdata.xml.in.in:9
+msgid ""
+"Pomodoro is a timer utility with rules, ideal for better productivity."
+msgstr ""
+"Pomodoro é um utilitário de temporizador com regras, ideal para melhor a produtividade."
+
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"

@@ -23,9 +23,9 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 import Gst from 'gi://Gst';
-import { Application_data, close_request } from './utils.js';
 
 import { PomodoroWindow } from './window.js';
+import { Application_data, close_request } from './utils.js';
 import './timer.js';
 import './statistics.js';
 import './historic.js';
@@ -36,12 +36,11 @@ pkg.initFormat();
 export const PomodoroApplication = GObject.registerClass(
   class PomodoroApplication extends Adw.Application {
     constructor() {
-      super({ application_id: 'com.gitlab.idevecore.Pomodoro', flags: Gio.ApplicationFlags.DEFAULT_FLAGS });
-
+      super({ application_id: 'io.gitlab.idevecore.Pomodoro', flags: Gio.ApplicationFlags.DEFAULT_FLAGS });
       new Application_data().get()
-
       const quit_action = new Gio.SimpleAction({ name: 'quit' });
       quit_action.connect('activate', action => {
+        this.quit();
         close_request.bind(this)()
       });
       this.add_action(quit_action);
@@ -51,14 +50,14 @@ export const PomodoroApplication = GObject.registerClass(
       show_about_action.connect('activate', action => {
         let aboutParams = {
           transient_for: this.active_window,
-          application_name: 'pomodoro',
-          application_icon: 'com.gitlab.idevecore.Pomodoro',
-          developer_name: 'Francisco Jeferson dos Santos Freires',
+          application_name: 'Pomodoro',
+          application_icon: 'io.gitlab.idevecore.Pomodoro',
+          developer_name: 'Ideve Core',
           version: '0.1.0',
           developers: [
-            'Francisco Jeferson dos Santos Freires'
+            'Ideve Core'
           ],
-          copyright: '© 2023 Francisco Jeferson dos Santos Freires'
+          copyright: '© 2023 Ideve Core'
         };
         const aboutWindow = new Adw.AboutWindow(aboutParams);
         aboutWindow.present();

@@ -6,7 +6,7 @@ import { Application_data, Application_notify, Sound } from './utils.js';
 
 export const Timer = GObject.registerClass({
   GTypeName: "Timer",
-  Template: 'resource:///com/gitlab/idevecore/Pomodoro/ui/timer.ui',
+  Template: 'resource:///io/gitlab/idevecore/Pomodoro/ui/timer.ui',
   InternalChildren: [
     'title_entry',
     'description_entry',
