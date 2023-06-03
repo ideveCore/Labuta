@@ -172,7 +172,7 @@ msgstr "Essa semana"
 msgid "This month"
 msgstr "Esse mês"
 
-#: src/historic_row.js:57
+#: src/historic_row.ui:56
 msgid "Quantities of pomodoros"
 msgstr "Quantidate de Pomodoros"
 
