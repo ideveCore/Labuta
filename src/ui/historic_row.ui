@@ -53,7 +53,7 @@
     </child>
     <child>
       <object class="AdwActionRow">
-        <property name="title" translatable="yes">Quantities of pomodoro</property>
+        <property name="title" translatable="yes">Quantities of pomodoros</property>
         <property name="title_lines">1</property>
         <child>
           <object class="GtkLabel" id="counts">
