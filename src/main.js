@@ -20,12 +20,13 @@
 
 import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
-import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 import Gst from 'gi://Gst';
 
 import { PomodoroWindow } from './window.js';
 import { Application_data, close_request } from './utils.js';
+import { PomodoroPreferences } from './preferences.js';
+import { timer_state } from './stores.js';
 import './timer.js';
 import './statistics.js';
 import './historic.js';
@@ -38,13 +39,28 @@ export const PomodoroApplication = GObject.registerClass(
     constructor() {
       super({ application_id: 'io.gitlab.idevecore.Pomodoro', flags: Gio.ApplicationFlags.DEFAULT_FLAGS });
       new Application_data().get()
+
       const quit_action = new Gio.SimpleAction({ name: 'quit' });
+      const preferences = new Gio.SimpleAction({ name: 'preferences' });
+
       quit_action.connect('activate', action => {
-        this.quit();
         close_request.bind(this)()
       });
+
+      preferences.connect('activate', action => {
+        new PomodoroPreferences().present()
+      })
+
       this.add_action(quit_action);
+      this.add_action(preferences)
       this.set_accels_for_action('app.quit', ['<primary>q']);
+      this.window = null;
+      this.settings = new Gio.Settings({
+        schema_id: 'io.gitlab.idevecore.Pomodoro',
+        path: '/io/gitlab/idevecore/Pomodoro/',
+      });
+
+      this.run_in_background = this.settings.get_boolean('run-in-background');
 
       const show_about_action = new Gio.SimpleAction({ name: 'about' });
       show_about_action.connect('activate', action => {
@@ -65,6 +81,22 @@ export const PomodoroApplication = GObject.registerClass(
       this.add_action(show_about_action);
     }
 
+    request_quit() {
+      if (!this.run_in_background) {
+        this.quit();
+        return
+      }
+      timer_state.subscribe((value) => {
+        if (value === 'stopped') {
+          this.quit();
+          return
+        }
+        this.window.hide()
+      })
+      if (!this.window)
+        return
+    }
+
     vfunc_activate() {
       let { active_window } = this;
 
@@ -72,6 +104,7 @@ export const PomodoroApplication = GObject.registerClass(
         active_window = new PomodoroWindow(this);
 
       active_window.present();
+      this.window = active_window;
     }
   }
 );

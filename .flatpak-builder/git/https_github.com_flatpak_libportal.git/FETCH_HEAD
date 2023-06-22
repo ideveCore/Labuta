@@ -1,0 +1,123 @@
+55b8cf74c80ed50726462b06cc513060c52c7dc5		branch 'add-ci' of https://github.com/flatpak/libportal
+aebe31d226084b7f38862cdc469e6602127a98bc		branch 'add-dynamic-launcher' of https://github.com/flatpak/libportal
+41299bcc2c289ad9aeff065b3c201d998dea3770		branch 'build-portal-test' of https://github.com/flatpak/libportal
+676956b1dcd5154be38ed263cd1afba9e3de771c		branch 'extension-install' of https://github.com/flatpak/libportal
+a0d23e532698f2509c1a56ccee83078ef665f600		branch 'future-proof-api' of https://github.com/flatpak/libportal
+82438f103987edf27016e10ae36965419050aedf		branch 'gh-pages' of https://github.com/flatpak/libportal
+5872a3da21b2317ef95f09947b9cc092a0b20fba		branch 'gtk4' of https://github.com/flatpak/libportal
+e18162c3d3810840902046cf8660a8cc129df1ff		branch 'include-cleanup' of https://github.com/flatpak/libportal
+850d6081a6a692895ffc80837ee0755ff01116e1		branch 'main' of https://github.com/flatpak/libportal
+ac7a136c0e8d51bb9b2856cb337ae203eaaf4ab1		branch 'multi-camera' of https://github.com/flatpak/libportal
+356662251d5452fb4564fda2664a74a0513aeb3d		branch 'wip/hadess/add-open-dir' of https://github.com/flatpak/libportal
+e685074bbe628eb9d6fd7a3312d1f7b5d5722c81		branch 'wip/hadess/build-fixes' of https://github.com/flatpak/libportal
+93dd961e4b850fe3c73c6c85ed4357c0a4735148		branch 'wip/hadess/bump-gio-req' of https://github.com/flatpak/libportal
+55b8cf74c80ed50726462b06cc513060c52c7dc5		'refs/pull/1/head' of https://github.com/flatpak/libportal
+a0d23e532698f2509c1a56ccee83078ef665f600		'refs/pull/10/head' of https://github.com/flatpak/libportal
+06c24c7cb040b813f49c9adb939002c690f73f4f		'refs/pull/100/head' of https://github.com/flatpak/libportal
+c84d294ac51a4e2950964b6b8ef7802957a00555		'refs/pull/101/head' of https://github.com/flatpak/libportal
+84640e85465696a9c0922ee73a5ce6f1c91e74f6		'refs/pull/102/head' of https://github.com/flatpak/libportal
+6d7c683416330cddbe5a6b8e6035a23f3ac79c72		'refs/pull/103/head' of https://github.com/flatpak/libportal
+c0f7c772cf0e8a83c530a61afc361bd408355866		'refs/pull/104/head' of https://github.com/flatpak/libportal
+f0f70142a3b22ef0035486fee8cb09b21f400ed4		'refs/pull/105/head' of https://github.com/flatpak/libportal
+73f63ee57669c4fa604a7772484cd235d4fb612c		'refs/pull/106/head' of https://github.com/flatpak/libportal
+af4fc4a6f723cfc65178cba5762a5cd2fa3a0dbb		'refs/pull/107/head' of https://github.com/flatpak/libportal
+67371e68c8fac5fd373085a4fcfb97eeac612b8d		'refs/pull/108/head' of https://github.com/flatpak/libportal
+2eb1fd2be033a90ebcf1e30b05978b3b5f9c9d14		'refs/pull/109/head' of https://github.com/flatpak/libportal
+676956b1dcd5154be38ed263cd1afba9e3de771c		'refs/pull/11/head' of https://github.com/flatpak/libportal
+00e6f03209bc414b33f9b9da589532c75b4b6861		'refs/pull/11/merge' of https://github.com/flatpak/libportal
+77cb52107e1a0b5782596ac2c0b48023e78d065c		'refs/pull/111/head' of https://github.com/flatpak/libportal
+119d1cfc3a88f601e37f5fa777af3668d84ab972		'refs/pull/112/head' of https://github.com/flatpak/libportal
+4b4b4c5148a9e21bbfc85e9bb32bf96deba3b7d7		'refs/pull/112/merge' of https://github.com/flatpak/libportal
+b6da2a4f0184a80ea9e9d9ea0720a1d92e8ccdec		'refs/pull/113/head' of https://github.com/flatpak/libportal
+883f389de3e6062d9d42d8c748fb071c6502d28e		'refs/pull/114/head' of https://github.com/flatpak/libportal
+31907fdbe091b35aaa5396d030d7ae4a1df4d0cd		'refs/pull/114/merge' of https://github.com/flatpak/libportal
+c64bb9927113683bd73ec65763365e4ce51ba7d8		'refs/pull/115/head' of https://github.com/flatpak/libportal
+7fc41fb12c427a22344903beb7de9f9f81002b80		'refs/pull/116/head' of https://github.com/flatpak/libportal
+e1ff362a11d84298c6065bf8fbfba51670501eb0		'refs/pull/119/head' of https://github.com/flatpak/libportal
+3b510e4e451cb1ceb42b80579bd60a604470a743		'refs/pull/120/head' of https://github.com/flatpak/libportal
+dbca3004955cbd0af149c9649b8b8b6cf2f70929		'refs/pull/121/head' of https://github.com/flatpak/libportal
+692cea79ad684a7db954bed1737c5ed0e8a2a188		'refs/pull/122/head' of https://github.com/flatpak/libportal
+42198a1a0aee29eedea46ce22d2f72195ea03f9e		'refs/pull/14/head' of https://github.com/flatpak/libportal
+226c38924482dcecf9ad2d0a2baeb7b2388df9ec		'refs/pull/15/head' of https://github.com/flatpak/libportal
+a43f7b53430472fb2674f221648bea33cb86b562		'refs/pull/17/head' of https://github.com/flatpak/libportal
+7c74b65864d42190cf2fc95b2a618395548d896b		'refs/pull/18/head' of https://github.com/flatpak/libportal
+5120c8651619f92e5f33a473825c509e68bf2335		'refs/pull/19/head' of https://github.com/flatpak/libportal
+5872a3da21b2317ef95f09947b9cc092a0b20fba		'refs/pull/2/head' of https://github.com/flatpak/libportal
+78e2367ffd3ad23dffcb3521ba348e114efcd919		'refs/pull/20/head' of https://github.com/flatpak/libportal
+daf638ab51252273cd2d5aae866721987e4ac356		'refs/pull/23/head' of https://github.com/flatpak/libportal
+e685074bbe628eb9d6fd7a3312d1f7b5d5722c81		'refs/pull/24/head' of https://github.com/flatpak/libportal
+356662251d5452fb4564fda2664a74a0513aeb3d		'refs/pull/25/head' of https://github.com/flatpak/libportal
+e8069f6bf2a996fa5aeff581dfb6dd31cabbace0		'refs/pull/26/head' of https://github.com/flatpak/libportal
+93dd961e4b850fe3c73c6c85ed4357c0a4735148		'refs/pull/27/head' of https://github.com/flatpak/libportal
+31247bbcd9b3bed9d280e016cbf3029ae2335016		'refs/pull/28/head' of https://github.com/flatpak/libportal
+ace839ae3a1993d3b8db9ba172f81d9b3fabc919		'refs/pull/29/head' of https://github.com/flatpak/libportal
+9d9bc6e699d80cc0a06368441ea1b96354d197ac		'refs/pull/29/merge' of https://github.com/flatpak/libportal
+ac7a136c0e8d51bb9b2856cb337ae203eaaf4ab1		'refs/pull/30/head' of https://github.com/flatpak/libportal
+eba737a1acdf3cc5816a0af18ca760a3488d5258		'refs/pull/30/merge' of https://github.com/flatpak/libportal
+d3bebd2b334a9b03729af6498fa721e43de809d5		'refs/pull/34/head' of https://github.com/flatpak/libportal
+a2f434d22ff36faa519af8f1b9830ea1f6dcf8f6		'refs/pull/35/head' of https://github.com/flatpak/libportal
+e3309e0d7a40f2ef6a429cbef1dd9edc321e69d4		'refs/pull/38/head' of https://github.com/flatpak/libportal
+726b4c765928bf734321cb64e6f7ac8cbe6ac1f2		'refs/pull/39/head' of https://github.com/flatpak/libportal
+d90eba74e54a0df7aa0598d8356e02f4fb66a1fa		'refs/pull/4/head' of https://github.com/flatpak/libportal
+af55b8ac4699c4dc3e149023d49de6e9d39c034f		'refs/pull/40/head' of https://github.com/flatpak/libportal
+0308638091c02a530d8eef1bff1b1d22d29fb37a		'refs/pull/41/head' of https://github.com/flatpak/libportal
+0fb64b35b5106947628735b141147b67d42f4497		'refs/pull/42/head' of https://github.com/flatpak/libportal
+980de8fbba9681559e2a29891649d29b7015f68e		'refs/pull/43/head' of https://github.com/flatpak/libportal
+87ef052b74b64469906714fbbb851d864083154c		'refs/pull/44/head' of https://github.com/flatpak/libportal
+c496e6840dadacc3cf8d75728ee744e7e2c2793b		'refs/pull/45/head' of https://github.com/flatpak/libportal
+cfc129cb7dc585af8a00115c578af4161cf51a90		'refs/pull/46/head' of https://github.com/flatpak/libportal
+ce5c98f60785525ce2f8795d7f144d88568ae481		'refs/pull/48/head' of https://github.com/flatpak/libportal
+81c3821e149bc7fcd6d18ba63c3e0ac3997cbfc4		'refs/pull/49/head' of https://github.com/flatpak/libportal
+318d0a16a60bd934d8c0886ca234585acb610ffb		'refs/pull/5/head' of https://github.com/flatpak/libportal
+a495405c7b1a70fa2dedacbab2ebe9af6cad792c		'refs/pull/52/head' of https://github.com/flatpak/libportal
+c51bce6ff299e0cda31616c2b8e177289356879d		'refs/pull/53/head' of https://github.com/flatpak/libportal
+ab19e66c3f53bf7c01dffeca472631fc1b258e0a		'refs/pull/54/head' of https://github.com/flatpak/libportal
+0f70e59b3c9a85f5d8455166fbbe261060904d4e		'refs/pull/55/head' of https://github.com/flatpak/libportal
+48299b11c6a9ec760b2eb2fda3dd6723e447e2e4		'refs/pull/56/head' of https://github.com/flatpak/libportal
+acdedccd409a3fe9c7bb4d58fc9b2a29c577586a		'refs/pull/57/head' of https://github.com/flatpak/libportal
+a8b27ed4828e901b22c267fc9e42b03d2bfd715a		'refs/pull/58/head' of https://github.com/flatpak/libportal
+eabb9b53bc47dd1f5d831143220c22b431cdb39c		'refs/pull/59/head' of https://github.com/flatpak/libportal
+41299bcc2c289ad9aeff065b3c201d998dea3770		'refs/pull/6/head' of https://github.com/flatpak/libportal
+66a34386de3f82dbcddd0cab3102f73ca65ecfde		'refs/pull/60/head' of https://github.com/flatpak/libportal
+d38f548d912232eadb13ab0d4f24aa895ef45905		'refs/pull/61/head' of https://github.com/flatpak/libportal
+2b30d20c5495ba01ba650c430e9c71b58f623dad		'refs/pull/62/head' of https://github.com/flatpak/libportal
+c1b20b4b85b4af8b042d7d0c619ed15f063b8710		'refs/pull/63/head' of https://github.com/flatpak/libportal
+870c0685bee549aa0c57dea89e523cb26d09fb6a		'refs/pull/65/head' of https://github.com/flatpak/libportal
+48fdb17f5ce499db4d5c759fc86ff8d3d799ed9b		'refs/pull/68/head' of https://github.com/flatpak/libportal
+b7785ee21d54abc488ebc8d0c48a45873a395302		'refs/pull/69/head' of https://github.com/flatpak/libportal
+1539f601bc8baef82e304db417385f21a7add05c		'refs/pull/70/head' of https://github.com/flatpak/libportal
+31ea6905e003dc203e936b4132965efe31ac4667		'refs/pull/71/head' of https://github.com/flatpak/libportal
+74f58c7666818d915ee568e1eb145ced174ad1d1		'refs/pull/72/head' of https://github.com/flatpak/libportal
+876b966e7d82b45bd84525a77f9dfc764172b981		'refs/pull/72/merge' of https://github.com/flatpak/libportal
+2dca96ff3a350c1f39771a5cc7ede8f6f8064a1c		'refs/pull/73/head' of https://github.com/flatpak/libportal
+5666ed34a39bae1bb2ddc73b8915a836aebee9c4		'refs/pull/74/head' of https://github.com/flatpak/libportal
+edafef852c5f05da0a8c89858d074a8f53ae796e		'refs/pull/75/head' of https://github.com/flatpak/libportal
+35ad1072e50f517ed0197d70d631389bf10fb68f		'refs/pull/76/head' of https://github.com/flatpak/libportal
+24da66b454476e25d8ee5c6c392c8838c5b384fe		'refs/pull/77/head' of https://github.com/flatpak/libportal
+4819d1afdd0acbedaa5ca369e526ffa0a0e68ee5		'refs/pull/78/head' of https://github.com/flatpak/libportal
+1474a68562468c1bfa09cca074826f6566090be1		'refs/pull/79/head' of https://github.com/flatpak/libportal
+772a63b945181dc062d1ac37f5bbfadee80e044d		'refs/pull/80/head' of https://github.com/flatpak/libportal
+de9454bbcbc30c5d6f7735d85dabf159e3ece1e8		'refs/pull/81/head' of https://github.com/flatpak/libportal
+ee5d2b060b0edbd4764d9bbfb726455b3822dd12		'refs/pull/82/head' of https://github.com/flatpak/libportal
+e4e6e2de58c11d63206ee0d5cf54ba2966e783ce		'refs/pull/83/head' of https://github.com/flatpak/libportal
+cfb5c953fa55b2ced372c6be158ea44bf5ca69e7		'refs/pull/84/head' of https://github.com/flatpak/libportal
+7bc1d51bce6d5244aba80a4144de8b968ccdf095		'refs/pull/85/head' of https://github.com/flatpak/libportal
+65586caf7efab4439d448fa341d884edef6715ea		'refs/pull/88/head' of https://github.com/flatpak/libportal
+be9b3e8947e30506fd7d70fc376f3f83191914c1		'refs/pull/88/merge' of https://github.com/flatpak/libportal
+e18162c3d3810840902046cf8660a8cc129df1ff		'refs/pull/9/head' of https://github.com/flatpak/libportal
+d1e784d0e7b6cce4484aa84592e85acf936f40b5		'refs/pull/90/head' of https://github.com/flatpak/libportal
+5d1e8ff4a937b2a3db6c3d3f2070115446944446		'refs/pull/92/head' of https://github.com/flatpak/libportal
+723622bc8c44b7df5de82730ff0ff564af78ec70		'refs/pull/92/merge' of https://github.com/flatpak/libportal
+491be288f6f91abb8a66d040fcea10f3522d7cdd		'refs/pull/96/head' of https://github.com/flatpak/libportal
+3b2df6769987fa99698e6b3f57fbecf3175df9cf		'refs/pull/96/merge' of https://github.com/flatpak/libportal
+e72ca3cb83fe6f422d92b0b52c7b6465c8bb3dfa		'refs/pull/98/head' of https://github.com/flatpak/libportal
+7c9be51837de2a2c9acb8cec6d75fe0621186ea9		'refs/pull/99/head' of https://github.com/flatpak/libportal
+1ab0feb7d4586967c31f7d870ae16ebb979b95fd		tag '0.0.1' of https://github.com/flatpak/libportal
+775d1af5f4cfa15f831ec7ab14fad2ea6dbc08c0		tag '0.0.2' of https://github.com/flatpak/libportal
+575c2a54fd9699a4604ed23a1f3d71e776e3672d		tag '0.0.3' of https://github.com/flatpak/libportal
+1b9cbc95dc19d52b992de59e0637dae2a5ae47ee		tag '0.1' of https://github.com/flatpak/libportal
+9b12d65cf7eb56f8cc4b119d0d4887f73c885755		tag '0.2' of https://github.com/flatpak/libportal
+947581c55453c396373eac38d34f448eaaa36a54		tag '0.3' of https://github.com/flatpak/libportal
+c2f31c6f20cfcc50c5fdc79c40bee7451aff6d51		tag '0.4' of https://github.com/flatpak/libportal
+38983144ec2c0fc7c2cd236df7e9f675854d1aa5		tag '0.5' of https://github.com/flatpak/libportal
+13df0b887a7eb7b0f9b14069561a41f62e813155		tag '0.6' of https://github.com/flatpak/libportal

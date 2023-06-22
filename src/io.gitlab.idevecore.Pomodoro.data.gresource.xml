@@ -7,6 +7,7 @@
     <file preprocess="xml-stripblanks">ui/historic_row.ui</file>
     <file preprocess="xml-stripblanks">ui/statistics.ui</file>
     <file preprocess="xml-stripblanks">ui/timer.ui</file>
+    <file preprocess="xml-stripblanks">ui/preferences.ui</file>
     <file>style.css</file>
     <file alias="complete">sounds/complete.ogx</file>
     <file alias="alarm">sounds/alarm.ogx</file>

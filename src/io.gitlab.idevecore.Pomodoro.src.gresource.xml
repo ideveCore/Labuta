@@ -9,6 +9,7 @@
     <file>utils.js</file>
     <file>historic.js</file>
     <file>historic_row.js</file>
+    <file>preferences.js</file>
   </gresource>
 </gresources>
 

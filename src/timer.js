@@ -1,6 +1,8 @@
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
+import Xdp from 'gi://Xdp';
 import { timer_state, data } from './stores.js';
 import { Application_data, Application_notify, Sound } from './utils.js';
 
@@ -21,6 +23,7 @@ export const Timer = GObject.registerClass({
     this._break_timer = 300; //seconds
     this._is_break_timer = false;
     this._timer_state = null;
+    this.portal = new Xdp.Portal();
   }
 
   switch_class_errror(element) {
@@ -94,11 +97,13 @@ export const Timer = GObject.registerClass({
 
               if (this._timer > 0) {
                 this._data.work_time = this._data.work_time + 1
+                this.test(`Work: ${this.format_timer()}`)
               } else {
                 this._data.break_time = this._data.break_time + 1
+                this.test(`Break: ${this.format_timer()}`)
               }
 
-              this.format_timer()
+              this._timer_label.set_text(this.format_timer())
 
               if (this._timer > (this._break_timer * -1)) {
                 return GLib.SOURCE_CONTINUE
@@ -122,6 +127,34 @@ export const Timer = GObject.registerClass({
         }
       })
     }
+  }
+  test(message) {
+    const connection = Gio.DBus.session;
+    const messageVariant = new GLib.Variant('(a{sv})', [{
+      'message': new GLib.Variant('s', message)
+    }]);
+
+    connection.call(
+      'org.freedesktop.portal.Desktop',
+      '/org/freedesktop/portal/desktop',
+      'org.freedesktop.portal.Background',
+      'SetStatus',
+      messageVariant,
+      null,
+      Gio.DBusCallFlags.NONE,
+      -1,
+      null,
+      (connection, res) => {
+        try {
+          connection.call_finish(res);
+        } catch (e) {
+          if (e instanceof Gio.DBusError)
+            Gio.DBusError.strip_remote_error(e);
+
+          logError(e);
+        }
+      }
+    );
   }
   reset_timer() {
     this._timer_running = false;
@@ -178,6 +211,7 @@ export const Timer = GObject.registerClass({
       seconds = `0${seconds}`
     }
 
-    this._timer_label.label = `${hours}:${minutes}:${seconds}`
+
+    return `${hours}:${minutes}:${seconds}`
   }
 })

@@ -5,6 +5,7 @@
   <template class="PomodoroWindow" parent="AdwApplicationWindow">
     <property name="default-width">400</property>
     <property name="default-height">600</property>
+    <property name="hide-on-close">true</property>
     <property name="title">Pomodoro</property>
     <child>
       <object class="AdwLeaflet">
