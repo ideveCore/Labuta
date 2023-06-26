@@ -1,0 +1,78 @@
+<interface>
+  <requires lib="Gtk" version="4.0" />
+  <requires lib="Adw" version="1.0" />
+  <template class="HistoryRow" parent="AdwExpanderRow">
+    <child type="action">
+      <object class="GtkLabel" id="event_start_label">
+        <property name="xalign">1.0</property>
+        <style>
+          <class name="dim-label" />
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="AdwActionRow">
+        <property name="title" translatable="yes">Work time</property>
+        <property name="title_lines">1</property>
+        <child>
+          <object class="GtkLabel" id="work_time">
+            <property name="ellipsize">end</property>
+            <property name="label">00:00:00</property>
+            <style>
+              <class name="accent" />
+              <class name="dim-label" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwActionRow">
+        <property name="title" translatable="yes">Break time</property>
+        <property name="title_lines">1</property>
+        <child>
+          <object class="GtkLabel" id="break_time">
+            <property name="ellipsize">end</property>
+            <property name="label">00:00:00</property>
+            <style>
+              <class name="error" />
+              <class name="dim-label" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwActionRow" id="description">
+        <property name="title" translatable="yes">Description</property>
+        <property name="subtitle-selectable">True</property>
+        <style>
+          <class name="property" />
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="AdwActionRow">
+        <property name="title" translatable="yes">Quantities of pomodoros</property>
+        <property name="title_lines">1</property>
+        <child>
+          <object class="GtkLabel" id="counts">
+            <property name="ellipsize">end</property>
+            <style>
+              <class name="dim-label" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton">
+        <signal name="clicked" handler="remove_item" />
+        <property name="label" translatable="yes">Remove</property>
+        <style>
+          <class name="destructive-action" />
+        </style>
+      </object>
+    </child>
+  </template>
+</interface>

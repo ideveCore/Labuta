@@ -1,9 +1,13 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import Notify from 'gi://Notify'
-import Gst from 'gi://Gst';
+import Notify from 'gi://Notify';
+import GSound from 'gi://GSound';
 import Adw from 'gi://Adw';
-import { data, Application, timer_state } from './stores.js';
+import { data, timer_state  } from './stores.js';
+
+const gsound = new GSound.Context();
+gsound.init(null);
+
 
 export function close_request() {
   timer_state.subscribe((value) => {
@@ -88,32 +92,80 @@ export class Application_notify {
   }
 }
 
-
 export class Sound {
-  constructor({ id }) {
-    this._sound_id = id;
-    this.playbin = Gst.ElementFactory.make('playbin', 'playbin');
-    this.playbin.set_property('volume', 1);
-    this.playbin.set_property('mute', false);
-    this.playbin.set_state(Gst.State.READY);
-    Application.subscribe((value) => {
-      this._application = value;
-    })
-    this.mount_path()
-  }
-  mount_path() {
-    const uri = `resource://${this._application.resource_base_path}/${this._sound_id}`
-    this.playbin.set_property('uri', uri);
+  constructor({ name, cancellable }) {
+    this.name = name;
+    this.cancellable = cancellable;
   }
   play() {
-    this.bus = this.playbin.get_bus()
-    this.bus.add_signal_watch()
-    this.bus.connect('message::error', (error) => {
-      log(`${error}`)
-    })
-    this.bus.connect('message::eos', () => {
-      this.playbin.set_state(Gst.State.READY)
-    })
-    this.playbin.set_state(Gst.State.PLAYING)
+    return new Promise((resolve, reject) => {
+      gsound.play_full(
+        { 'event.id': this.name },
+        this.cancellable,
+        (source, res) => {
+          try {
+            resolve(source.play_full_finish(res));
+          } catch (e) {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 }
+
+const get_platform_data = (timestamp) => {
+  return { 'desktop-startup-id': new GLib.Variant('s', '_TIME' + timestamp) };
+}
+
+
+export const activate_action = (action, parameter, timestamp) => {
+  let wrapped_param = [];
+  if (parameter)
+    wrapped_param = [parameter];
+
+  Gio.DBus.session.call(pkg.name,
+    '/io/gitlab/idevecore/Pomodoro',
+    'org.freedesktop.Application',
+    'ActivateAction',
+    new GLib.Variant('(sava{sv})', [action, wrapped_param,
+      get_platform_data(timestamp)]),
+    null,
+    Gio.DBusCallFlags.NONE,
+    -1, null, (connection, result) => {
+      try {
+        connection.call_finish(result)
+      } catch (e) {
+        log('Failed to launch application: ' + e);
+      }
+    });
+}
+
+export const set_background_status = (message) => {
+  const connection = Gio.DBus.session;
+  const messageVariant = new GLib.Variant('(a{sv})', [{
+    'message': new GLib.Variant('s', message)
+  }]);
+  connection.call(
+    'org.freedesktop.portal.Desktop',
+    '/org/freedesktop/portal/desktop',
+    'org.freedesktop.portal.Background',
+    'SetStatus',
+    messageVariant,
+    null,
+    Gio.DBusCallFlags.NONE,
+    -1,
+    null,
+    (connection, res) => {
+      try {
+        connection.call_finish(res);
+      } catch (e) {
+        if (e instanceof Gio.DBusError)
+          Gio.DBusError.strip_remote_error(e);
+
+        logError(e);
+      }
+    }
+  );
+}
+

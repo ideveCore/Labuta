@@ -20,7 +20,8 @@
 
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
-import { Application, navigation } from './stores.js';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
 export const PomodoroWindow = GObject.registerClass({
   GTypeName: 'PomodoroWindow',
@@ -29,14 +30,34 @@ export const PomodoroWindow = GObject.registerClass({
 }, class PomodoroWindow extends Adw.ApplicationWindow {
   constructor(application) {
     super({ application });
-    Application.update(() => (application))
-    navigation.$((value) => {
-      if (value === "timer")
-        return this._stack.visible_child_name = "timer"
-    })
+
+    let navigation_action = new Gio.SimpleAction({
+      name: 'navigation',
+      parameter_type: new GLib.VariantType('s'),
+    });
+
+    navigation_action.connect('activate', (action, parameter) => {
+      let navigate = parameter.deep_unpack();
+      this.navigate(navigate)
+    });
+
+    application.add_action(navigation_action);
+
     this.connect('close-request', () => {
       application.request_quit()
     })
+    this._stack.connect('notify::visible-child', () => {
+      if (this._stack.visible_child_name == 'history') {
+        this._stack.visible_child.load_list()
+      } else if (this._stack.visible_child_name == 'statistics') {
+        this._stack.visible_child.load_data()
+      }
+    });
+  }
+
+  navigate(navigate) {
+    this._gsoundPlaySound('complete', null)
+    this._stack.visible_child_name = navigate;
   }
 });
 

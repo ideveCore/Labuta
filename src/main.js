@@ -26,10 +26,10 @@ import Gst from 'gi://Gst';
 import { PomodoroWindow } from './window.js';
 import { Application_data, close_request } from './utils.js';
 import { PomodoroPreferences } from './preferences.js';
-import { timer_state } from './stores.js';
+import { timer_state, application } from './stores.js';
 import './timer.js';
 import './statistics.js';
-import './historic.js';
+import './history.js';
 
 pkg.initGettext();
 pkg.initFormat();
@@ -39,7 +39,7 @@ export const PomodoroApplication = GObject.registerClass(
     constructor() {
       super({ application_id: 'io.gitlab.idevecore.Pomodoro', flags: Gio.ApplicationFlags.DEFAULT_FLAGS });
       new Application_data().get()
-
+      application.update(() => this)
       const quit_action = new Gio.SimpleAction({ name: 'quit' });
       const preferences = new Gio.SimpleAction({ name: 'preferences' });
 
@@ -60,8 +60,6 @@ export const PomodoroApplication = GObject.registerClass(
         path: '/io/gitlab/idevecore/Pomodoro/',
       });
 
-      this.run_in_background = this.settings.get_boolean('run-in-background');
-
       const show_about_action = new Gio.SimpleAction({ name: 'about' });
       show_about_action.connect('activate', action => {
         let aboutParams = {
@@ -79,9 +77,11 @@ export const PomodoroApplication = GObject.registerClass(
         aboutWindow.present();
       });
       this.add_action(show_about_action);
+
     }
 
     request_quit() {
+      this.run_in_background = this.settings.get_boolean('run-in-background');
       if (!this.run_in_background) {
         this.quit();
         return
@@ -100,8 +100,10 @@ export const PomodoroApplication = GObject.registerClass(
     vfunc_activate() {
       let { active_window } = this;
 
-      if (!active_window)
+      if (!active_window) {
         active_window = new PomodoroWindow(this);
+      }
+
 
       active_window.present();
       this.window = active_window;

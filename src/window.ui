@@ -75,12 +75,12 @@
                     <!-- Start Historic page-->
                     <child>
                       <object class="AdwViewStackPage">
-                        <property name="name">historic</property>
+                        <property name="name">history</property>
                         <property name="title" translatable="yes">_Historic</property>
                         <property name="use-underline">True</property>
                         <property name="icon-name">history-undo-symbolic</property>
                         <property name="child">
-                          <object class="Historic" />
+                          <object class="History" />
                         </property>
                       </object>
                     </child>

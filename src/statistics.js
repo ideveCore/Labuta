@@ -21,12 +21,11 @@ export const Statistics = GObject.registerClass({
   constructor() {
     super()
     this._current_date = GLib.DateTime.new_now_local();
+    this.load_data()
+  }
+  load_data() {
     this.load_work_timer()
     this.load_break_timer()
-    data.$(() => {
-      this.load_work_timer()
-      this.load_break_timer()
-    })
   }
   get_day() {
     return this._current_date.get_day_of_year();

@@ -7,8 +7,8 @@
     <file>statistics.js</file>
     <file>stores.js</file>
     <file>utils.js</file>
-    <file>historic.js</file>
-    <file>historic_row.js</file>
+    <file>history.js</file>
+    <file>history_row.js</file>
     <file>preferences.js</file>
   </gresource>
 </gresources>

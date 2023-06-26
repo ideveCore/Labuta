@@ -1,10 +1,8 @@
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
-import Gio from 'gi://Gio';
-import Xdp from 'gi://Xdp';
 import { timer_state, data } from './stores.js';
-import { Application_data, Application_notify, Sound } from './utils.js';
+import { Application_data, Application_notify, Sound, set_background_status } from './utils.js';
 
 export const Timer = GObject.registerClass({
   GTypeName: "Timer",
@@ -23,9 +21,7 @@ export const Timer = GObject.registerClass({
     this._break_timer = 300; //seconds
     this._is_break_timer = false;
     this._timer_state = null;
-    this.portal = new Xdp.Portal();
   }
-
   switch_class_errror(element) {
     if (element.get_text() === '') {
       element.get_style_context().add_class('error')
@@ -85,22 +81,27 @@ export const Timer = GObject.registerClass({
                 return GLib.SOURCE_REMOVE
               }
               if (this._timer_state === 'paused') {
+                set_background_status(`Paused timer`)
                 return GLib.SOURCE_CONTINUE
               }
+
               this._timer--
+
               if (this._timer === 1499) {
+                this._timer_label.get_style_context().remove_class('error');
                 new Application_notify({ summary: `${_("Pomodoro started")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
               } else if (this._timer === 0) {
+                this._timer_label.get_style_context().add_class('error');
                 new Application_notify({ summary: `${_("Pomodoro break time")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
-                new Sound({ id: 'complete' }).play()
+                new Sound({ name: 'complete', cancellable: null }).play();
               }
 
               if (this._timer > 0) {
                 this._data.work_time = this._data.work_time + 1
-                this.test(`Work: ${this.format_timer()}`)
+                set_background_status(`Work time: ${this.format_timer()}`)
               } else {
                 this._data.break_time = this._data.break_time + 1
-                this.test(`Break: ${this.format_timer()}`)
+                set_background_status(`Break time: ${this.format_timer()}`)
               }
 
               this._timer_label.set_text(this.format_timer())
@@ -116,8 +117,9 @@ export const Timer = GObject.registerClass({
                 this._break_timer = 900
               }
               new Application_notify({ summary: `${_("Pomodoro finished")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
-              new Sound({ id: 'alarm' }).play()
-              this.format_timer()
+              this._timer_label.get_style_context().remove_class('error');
+              new Sound({ name: 'alarm-clock-elapsed', cancellable: null }).play();
+              this._timer_label.set_text(this.format_timer());
               return GLib.SOURCE_CONTINUE
             })
           }
@@ -128,34 +130,6 @@ export const Timer = GObject.registerClass({
       })
     }
   }
-  test(message) {
-    const connection = Gio.DBus.session;
-    const messageVariant = new GLib.Variant('(a{sv})', [{
-      'message': new GLib.Variant('s', message)
-    }]);
-
-    connection.call(
-      'org.freedesktop.portal.Desktop',
-      '/org/freedesktop/portal/desktop',
-      'org.freedesktop.portal.Background',
-      'SetStatus',
-      messageVariant,
-      null,
-      Gio.DBusCallFlags.NONE,
-      -1,
-      null,
-      (connection, res) => {
-        try {
-          connection.call_finish(res);
-        } catch (e) {
-          if (e instanceof Gio.DBusError)
-            Gio.DBusError.strip_remote_error(e);
-
-          logError(e);
-        }
-      }
-    );
-  }
   reset_timer() {
     this._timer_running = false;
     this._timer = 1500;
@@ -164,8 +138,9 @@ export const Timer = GObject.registerClass({
     this._description_entry.editable = true;
     this._stack_timer_controls.visible_child_name = 'init_timer';
     this._data = null;
-    this.format_timer()
-    timer_state.update(() => ('stopped'))
+    this._timer_label.get_style_context().remove_class('error');
+    this._timer_label.set_text(this.format_timer());
+    timer_state.update(() => ('stopped'));
   }
   stop_timer() {
     this._timer_running = false;
@@ -176,15 +151,16 @@ export const Timer = GObject.registerClass({
     this._title_entry.editable = true;
     this._description_entry.editable = true;
     this._stack_timer_controls.visible_child_name = 'init_timer';
-    this.format_timer();
+    this._timer_label.get_style_context().remove_class('error');
+    this._timer_label.set_text(this.format_timer());
     data.subscribe((value) => {
       if (!this._data)
         return
       const array = value;
-      array.push(this._data)
-      data.update(() => (array))
-      new Application_data().save()
-    })
+      array.push(this._data);
+      data.update(() => (array));
+      new Application_data().save();
+    });
     this._data = null;
     timer_state.update(() => ('stopped'));
   }
@@ -210,8 +186,6 @@ export const Timer = GObject.registerClass({
     if (seconds.toString().split('').length < 2) {
       seconds = `0${seconds}`
     }
-
-
     return `${hours}:${minutes}:${seconds}`
   }
 })
