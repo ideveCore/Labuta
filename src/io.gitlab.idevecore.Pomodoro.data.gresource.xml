@@ -15,6 +15,7 @@
     <file preprocess="xml-stripblanks" alias="profit-symbolic.svg">icons/profit-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="history-undo-symbolic.svg">icons/history-undo-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="background-app-ghost-symbolic.svg">icons/background-app-ghost-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="dark-mode-symbolic.svg">icons/dark-mode-symbolic.svg</file>
   </gresource>
 </gresources>
 

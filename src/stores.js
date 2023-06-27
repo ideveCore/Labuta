@@ -1,3 +1,5 @@
+  import Gio from 'gi://Gio';
+
 class Writable {
   constructor(initial_value) {
     this._value = initial_value;
@@ -13,4 +15,8 @@ class Writable {
 export const timer_state = new Writable('stopped');
 export const data = new Writable([]);
 export const application = new Writable(null);
+export const settings = new Gio.Settings({
+  schema_id: 'io.gitlab.idevecore.Pomodoro',
+  path: '/io/gitlab/idevecore/Pomodoro/',
+});
 

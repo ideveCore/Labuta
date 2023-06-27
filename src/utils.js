@@ -3,11 +3,10 @@ import Gio from 'gi://Gio';
 import Notify from 'gi://Notify';
 import GSound from 'gi://GSound';
 import Adw from 'gi://Adw';
-import { data, timer_state  } from './stores.js';
+import { data, timer_state, settings } from './stores.js';
 
 const gsound = new GSound.Context();
 gsound.init(null);
-
 
 export function close_request() {
   timer_state.subscribe((value) => {
@@ -169,3 +168,14 @@ export const set_background_status = (message) => {
   );
 }
 
+
+export const set_theme = () => {
+  const style_manager = Adw.StyleManager.get_default()
+  if (settings.get_string('theme') === 'default') {
+    style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+  } else if (settings.get_string('theme') === 'dark') {
+    style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+  } else {
+    style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+  }
+}

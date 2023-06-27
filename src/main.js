@@ -24,9 +24,9 @@ import Adw from 'gi://Adw?version=1';
 import Gst from 'gi://Gst';
 
 import { PomodoroWindow } from './window.js';
-import { Application_data, close_request } from './utils.js';
+import { Application_data, close_request, set_theme } from './utils.js';
 import { PomodoroPreferences } from './preferences.js';
-import { timer_state, application } from './stores.js';
+import { timer_state, application, settings } from './stores.js';
 import './timer.js';
 import './statistics.js';
 import './history.js';
@@ -55,10 +55,7 @@ export const PomodoroApplication = GObject.registerClass(
       this.add_action(preferences)
       this.set_accels_for_action('app.quit', ['<primary>q']);
       this.window = null;
-      this.settings = new Gio.Settings({
-        schema_id: 'io.gitlab.idevecore.Pomodoro',
-        path: '/io/gitlab/idevecore/Pomodoro/',
-      });
+      set_theme()
 
       const show_about_action = new Gio.SimpleAction({ name: 'about' });
       show_about_action.connect('activate', action => {
@@ -81,7 +78,7 @@ export const PomodoroApplication = GObject.registerClass(
     }
 
     request_quit() {
-      this.run_in_background = this.settings.get_boolean('run-in-background');
+      this.run_in_background = settings.get_boolean('run-in-background');
       if (!this.run_in_background) {
         this.quit();
         return
