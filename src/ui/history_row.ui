@@ -3,11 +3,8 @@
   <requires lib="Adw" version="1.0" />
   <template class="HistoryRow" parent="AdwExpanderRow">
     <child type="action">
-      <object class="GtkLabel" id="event_start_label">
-        <property name="xalign">1.0</property>
-        <style>
-          <class name="dim-label" />
-        </style>
+      <object class="GtkCheckButton" id="selection">
+        <property name="visible">false</property>
       </object>
     </child>
     <child>

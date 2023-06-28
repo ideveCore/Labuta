@@ -44,7 +44,6 @@ export const Statistics = GObject.registerClass({
       const last_week = value.filter((item) => item.date.week === this.get_week() - 1);
       const month = value.filter((item) => item.date.month === this.get_month() - 1);
       const last_month = value.filter((item) => item.date.month === this.get_month() - 2);
-
       const work_timer_today = today.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
       const work_timer_yesterday = yesterday.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
       const work_timer_week = week.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);

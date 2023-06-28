@@ -11,6 +11,10 @@ export const PomodoroPreferences = GObject.registerClass({
   constructor() {
     super();
     this._run_in_background.set_active(settings.get_boolean('run-in-background'));
+    settings.get_string('theme') === 'default' ?
+      this._theme.set_selected(2) :
+      settings.get_string('theme') === 'dark' ?
+        this._theme.set_selected(1) : this._theme.set_selected(0)
     this._theme.connect('notify', (sender, e) => {
       if (e.get_name() === 'selected-item') {
         this.change_theme(this._theme.get_selected_item().get_string())

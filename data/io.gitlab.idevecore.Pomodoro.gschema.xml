@@ -7,5 +7,11 @@
     <key type="s" name="theme">
       <default>"default"</default>
     </key>
+    <key type="s" name="sort-by">
+      <default>"name"</default>
+    </key>
+    <key type="s" name="order-by">
+      <default>"ascending"</default>
+    </key>
   </schema>
 </schemalist>
