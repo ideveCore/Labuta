@@ -20,11 +20,6 @@ msgstr ""
 "X-Generator: Gtranslator 42.0\n"
 "X-Project-Style: gnome\n"
 
-#: data/io.gitlab.idevecore.Pomodoro.desktop.in:3
-#: data/iio.gitlab.idevecore.Pomodoro.appdata.xml.in:6
-msgid "Amberol"
-msgstr "Amberol"
-
 #: data/io.gitlab.idevecore.Pomodoro.in:4
 msgid "Timer"
 msgstr "Temporizador"
@@ -67,10 +62,10 @@ msgid "_Statistics"
 msgstr "_Estatísticas"
 
 #: src/window.ui:78
-msgid "_Historic"
+msgid "_History"
 msgstr "_Histórico"
 
-#: src/window.ui:107
+#: src/window.ui:107 src/preferences.ui:10
 msgid "_Preferences"
 msgstr "_Preferências"
 
@@ -172,6 +167,30 @@ msgstr "Essa semana"
 msgid "This month"
 msgstr "Esse mês"
 
+#: src/historic.js:60 src/history.ui:154
+msgid "Name"
+msgstr "Nome"
+
+#: src/historic.js:60 src/history.ui:159
+msgid "Date"
+msgstr "Data"
+
+#: src/historic.js:60 src/history.ui:171
+msgid "Total work"
+msgstr "Trabalho total"
+
+#: src/historic.js:60 src/history.ui:172
+msgid "Total break"
+msgstr "Intervalo total"
+
+#: src/history.ui:166
+msgid "Ascending"
+msgstr "Crescente"
+
+#: src/history.ui:171
+msgid "Descending"
+msgstr "Decrescente"
+
 #: src/historic_row.ui:56
 msgid "Quantities of pomodoros"
 msgstr "Quantidate de Pomodoros"
@@ -199,5 +218,30 @@ msgstr "Sair"
 msgid "Add new pomodoro"
 msgstr "Adicionar novo pomodoro"
 
+#: src/preferences.ui:10
+msgid "User interface"
+msgstr "Interface de usuário"
 
+#: src/preferences.ui:17
+msgid "Theme"
+msgstr "Tema"
 
+#: src/preferences.ui:21
+msgid "Light"
+msgstr "Claro"
+
+#: src/preferences.ui:17
+msgid "Dark"
+msgstr "Escuro"
+
+#: src/preferences.ui:17
+msgid "System"
+msgstr "Sistema"
+
+#: src/preferences.ui:31
+msgid "Allow execution in the background"
+msgstr "Permitir execução em segundo plano"
+
+#: src/preferences.ui:32
+msgid "Hides the window instead of leaving if there is pomodoro running"
+msgstr "Oculta a janela em vez de sair se houver pomodoro em execução"
