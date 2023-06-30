@@ -101,8 +101,6 @@ export class Application_notify {
     this.notification.set_title(title);
     this.notification.set_body(body);
     this.notification.set_default_action("app.notification-reply");
-    this.icon = new Gio.ThemedIcon({ name: "clock-alt-symbolic" });
-    this.notification.set_icon(this.icon);
     this.application = Gtk.Application.get_default();
     this.application.send_notification("lunch-is-ready", this.notification);
   }

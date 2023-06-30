@@ -18,8 +18,10 @@
   </defs>
   <g id="layer1" style="display:inline" transform="matrix(1, 0, 0, 1, 14.211807, -159.790039)">
     <g id="layer4" style="display:inline">
-      <rect y="172" x="9.2651362e-08" height="128" width="128" id="hicolor" style="display:inline;overflow:visible;visibility:visible;fill:#f0f0f0;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:0.5;marker:none;enable-background:accumulate"/>
-      <rect style="display:inline;overflow:visible;visibility:visible;fill:#f0f0f0;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:0.5;marker:none;enable-background:accumulate" id="symbolic" width="16" height="16" x="160" y="172"/>
+      <rect y="172" x="9.2651362e-08" height="128" width="128" id="hicolor" style="display: inline; overflow: visible; visibility: visible; fill-opacity: 0; fill-rule: nonzero; stroke: none; stroke-width: 0.5; marker: none; fill: none;"/>
+      <rect style="display: inline; overflow: visible; visibility: visible; fill-opacity: 0; fill-rule: nonzero; stroke: none; stroke-width: 0.5; marker: none; fill: none;" id="symbolic" width="16" height="16" x="160" y="172"/>
+      <path d="M 168 172 C 163.594 172 160 175.594 160 180 C 160 184.406 163.594 188 168 188 C 172.406 188 176 184.406 176 180 C 176 175.594 172.406 172 168 172 Z M 168 174 C 171.324 174 174 176.676 174 180 C 174 183.324 171.324 186 168 186 C 164.676 186 162 183.324 162 180 C 162 176.676 164.676 174 168 174 Z M 168 174"/>
+      <path d="M 164.961 176.983 C 164.832 176.987 164.703 177.041 164.61 177.135 C 164.418 177.331 164.422 177.647 164.617 177.842 L 167.731 180.885 C 167.836 180.983 167.977 181.03 168.117 181.014 L 171.032 181.014 C 171.309 181.014 171.532 180.791 171.532 180.514 C 171.532 180.241 171.309 180.014 171.032 180.014 L 168.27 180.014 L 165.317 177.127 C 165.223 177.034 165.094 176.983 164.961 176.983 Z M 164.961 176.983"/>
     </g>
     <g id="layer9" style="display:inline"/>
     <g id="layer3" style="display:inline">
@@ -60,8 +62,5 @@
       </g>
       <path id="path-7" d="M -618.011 359.551 C -647.835 359.551 -672.011 383.728 -672.011 413.551 C -672.002 413.942 -671.988 414.332 -671.97 414.722 C -671.517 385.239 -647.498 361.571 -618.011 361.551 C -588.656 361.567 -564.69 385.031 -564.053 414.379 C -564.037 414.103 -564.023 413.827 -564.011 413.551 C -564.011 383.728 -588.188 359.551 -618.011 359.551 L -618.011 359.551 Z" style="display: inline; opacity: 0.1; fill-opacity: 1; stroke: none; stroke-width: 0.0112982px; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-dashoffset: 0; stroke-opacity: 1; marker: none; paint-order: normal;"/>
     </g>
-    <path d="M 168.017 171.899 C 163.611 171.899 160.017 175.493 160.017 179.899 C 160.017 184.305 163.611 187.899 168.017 187.899 C 172.423 187.899 176.017 184.305 176.017 179.899 C 176.017 175.493 172.423 171.899 168.017 171.899 Z M 168.017 173.899 C 171.341 173.899 174.017 176.575 174.017 179.899 C 174.017 183.223 171.341 185.899 168.017 185.899 C 164.693 185.899 162.017 183.223 162.017 179.899 C 162.017 176.575 164.693 173.899 168.017 173.899 Z M 168.017 173.899" style=""/>
-    <path d="M 165.016 176.594 C 164.887 176.598 164.758 176.653 164.664 176.747 C 164.473 176.942 164.477 177.258 164.672 177.454 L 167.785 180.497 C 167.891 180.594 168.031 180.641 168.172 180.626 L 171.086 180.626 C 171.363 180.626 171.586 180.403 171.586 180.126 C 171.586 179.852 171.363 179.626 171.086 179.626 L 168.324 179.626 L 165.371 176.739 C 165.277 176.645 165.149 176.594 165.016 176.594 Z M 165.016 176.594"/>
-    <ellipse style="" cx="168.017" cy="179.899" rx="0.862" ry="0.901"/>
   </g>
 </svg>
