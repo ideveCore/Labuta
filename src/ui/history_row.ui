@@ -6,6 +6,9 @@
     <child type="action">
       <object class="GtkCheckButton" id="selection">
         <property name="visible">false</property>
+        <style>
+          <class name="selection-mode" />
+        </style>
       </object>
     </child>
     <child>
