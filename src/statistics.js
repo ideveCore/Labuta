@@ -1,7 +1,28 @@
+/* statistics.js
+ *
+ * Copyright 2023 Ideve Core
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import { data } from './stores.js';
+import { format_timer } from './utils.js';
 
 export const Statistics = GObject.registerClass({
   GTypeName: "Statistics",
@@ -79,11 +100,11 @@ export const Statistics = GObject.registerClass({
           adjective = _('less');
         return `${Math.abs(value).toFixed(0)}% ${adjective} ${_("than last month")}`
       }
-      this._work_timer_today_label.set_text(this.format_timer(work_timer_today))
+      this._work_timer_today_label.set_text(format_timer(work_timer_today))
       this._work_timer_today.set_subtitle(percentage_work_timer_today_yesterday())
-      this._work_timer_week_label.set_text(this.format_timer(work_timer_week))
+      this._work_timer_week_label.set_text(format_timer(work_timer_week))
       this._work_timer_week.set_subtitle(percentage_work_timer_week_last_week())
-      this._work_timer_month_label.set_text(this.format_timer(work_timer_month))
+      this._work_timer_month_label.set_text(format_timer(work_timer_month))
       this._work_timer_month.set_subtitle(percentage_work_timer_month_last_month())
     })
   }
@@ -97,25 +118,9 @@ export const Statistics = GObject.registerClass({
       const break_timer_week = week.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
       const break_timer_month = month.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
 
-      this._break_timer_today_label.set_text(this.format_timer(break_timer_today))
-      this._break_timer_week_label.set_text(this.format_timer(break_timer_week))
-      this._break_timer_month_label.set_text(this.format_timer(break_timer_month))
+      this._break_timer_today_label.set_text(format_timer(break_timer_today))
+      this._break_timer_week_label.set_text(format_timer(break_timer_week))
+      this._break_timer_month_label.set_text(format_timer(break_timer_month))
     })
-  }
-  format_timer(timer) {
-    let hours = Math.floor(timer / 60 / 60)
-    let minutes = Math.floor(timer / 60) % 60;
-    let seconds = timer % 60;
-
-    if (hours.toString().split('').length < 2) {
-      hours = `0${hours}`
-    }
-    if (minutes.toString().split('').length < 2) {
-      minutes = `0${minutes}`
-    }
-    if (seconds.toString().split('').length < 2) {
-      seconds = `0${seconds}`
-    }
-    return `${hours}:${minutes}:${seconds}`
   }
 })

@@ -3,7 +3,7 @@
   <requires lib="gtk" version="4.0" />
   <requires lib="Adw" version="1.0" />
   <template class="PomodoroWindow" parent="AdwApplicationWindow">
-    <property name="default-width">400</property>
+    <property name="default-width">450</property>
     <property name="default-height">600</property>
     <property name="hide-on-close">true</property>
     <property name="title">Pomodoro</property>

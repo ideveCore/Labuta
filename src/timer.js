@@ -1,5 +1,26 @@
+/* timer.js
+ *
+ * Copyright 2023 Ideve Core
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
+import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import { timer_state, data } from './stores.js';
 import { Application_data, Application_notify, Sound, set_background_status } from './utils.js';
@@ -17,10 +38,11 @@ export const Timer = GObject.registerClass({
   constructor() {
     super();
     this._timer_running = false;
-    this._timer = 1500; //seconds
     this._break_timer = 300; //seconds
+    this._timer = 1500; //seconds
     this._is_break_timer = false;
     this._timer_state = null;
+    this.application = Gtk.Application.get_default();
   }
   switch_class_errror(element) {
     if (element.get_text() === '') {
@@ -81,7 +103,8 @@ export const Timer = GObject.registerClass({
                 return GLib.SOURCE_REMOVE
               }
               if (this._timer_state === 'paused') {
-                set_background_status(`Paused timer`)
+                if (!this.application.active_window.visible)
+                  set_background_status(`Paused timer`)
                 return GLib.SOURCE_CONTINUE
               }
 
@@ -89,19 +112,21 @@ export const Timer = GObject.registerClass({
 
               if (this._timer === 1499) {
                 this._timer_label.get_style_context().remove_class('error');
-                new Application_notify({ summary: `${_("Pomodoro started")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
+                new Application_notify({ title: `${_("Pomodoro started")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
               } else if (this._timer === 0) {
                 this._timer_label.get_style_context().add_class('error');
-                new Application_notify({ summary: `${_("Pomodoro break time")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
+                new Application_notify({ title: `${_("Pomodoro break time")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
                 new Sound({ name: 'complete', cancellable: null }).play();
               }
 
               if (this._timer > 0) {
                 this._data.work_time = this._data.work_time + 1
-                set_background_status(`Work time: ${this.format_timer()}`)
+                if (!this.application.active_window.visible)
+                  set_background_status(`Work time: ${this.format_timer()}`)
               } else {
                 this._data.break_time = this._data.break_time + 1
-                set_background_status(`Break time: ${this.format_timer()}`)
+                if (!this.application.active_window.visible)
+                  set_background_status(`Break time: ${this.format_timer()}`)
               }
 
               this._timer_label.set_text(this.format_timer())
@@ -116,7 +141,7 @@ export const Timer = GObject.registerClass({
               if (this._data.counts === 3) {
                 this._break_timer = 900
               }
-              new Application_notify({ summary: `${_("Pomodoro finished")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
+              new Application_notify({ title: `${_("Pomodoro finished")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
               this._timer_label.get_style_context().remove_class('error');
               new Sound({ name: 'alarm-clock-elapsed', cancellable: null }).play();
               this._timer_label.set_text(this.format_timer());

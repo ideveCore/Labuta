@@ -1,11 +1,31 @@
+/* history.js
+ *
+ * Copyright 2023 Ideve Core
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
+import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import { HistoryRow } from './history_row.js';
 import { data, settings } from './stores.js';
-import { activate_action, Application_data, capitalize } from './utils.js';
-
+import { Application_data, format_timer } from './utils.js';
 
 export const History = GObject.registerClass({
   GTypeName: "History",
@@ -24,6 +44,7 @@ export const History = GObject.registerClass({
     this._list = [];
     this.sort_by = settings.get_string('sort-by');
     this.order_by = settings.get_string('order-by');
+    this.application = Gtk.Application.get_default();
     const load = new Gio.SimpleAction({ name: 'load' });
     const action_group = new Gio.SimpleActionGroup();
     action_group.insert(load);
@@ -36,7 +57,7 @@ export const History = GObject.registerClass({
     sort_action_group.add_action(order_action);
 
     const load_sorting_button_content = () => {
-      this._sorting_button_content.set_label(capitalize(this.sort_by));
+      this._sorting_button_content.set_label(_(this.capitalize(this.sort_by)));
       this._sorting_button_content.set_icon_name(this.order_by === 'ascending' ? 'view-sort-ascending-symbolic' : 'view-sort-descending-symbolic');
     }
 
@@ -58,7 +79,6 @@ export const History = GObject.registerClass({
       load_sorting_button_content()
       this._list = []
       this.load_list()
-
     })
 
     order_action.connect('activate', (action, parameter) => {
@@ -91,6 +111,7 @@ export const History = GObject.registerClass({
       if (this.order_by === 'descending') {
         value = value.slice(0).reverse()
       }
+
       this.load_time(value)
       if (value.length === 0)
         return this._stack.visible_child_name = "no_history";
@@ -128,7 +149,7 @@ export const History = GObject.registerClass({
     })
   }
   navigate() {
-    activate_action('navigation', new GLib.Variant('s', 'timer'), 1);
+    this.application.active_window.navigate('timer')
   }
   active_selection() {
     this.activated_selection = !this.activated_selection;
@@ -148,24 +169,8 @@ export const History = GObject.registerClass({
   load_time(time) {
     const total_work_timer = time.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const total_break_timer = time.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
-    this._total_work_time.set_text(`Total work: ${this.format_timer(total_work_timer)}`)
-    this._total_break_time.set_text(`Total break: ${this.format_timer(total_break_timer)}`)
-  }
-  format_timer(timer) {
-    let hours = Math.floor(timer / 60 / 60)
-    let minutes = Math.floor(timer / 60) % 60;
-    let seconds = timer % 60;
-
-    if (hours.toString().split('').length < 2) {
-      hours = `0${hours}`
-    }
-    if (minutes.toString().split('').length < 2) {
-      minutes = `0${minutes}`
-    }
-    if (seconds.toString().split('').length < 2) {
-      seconds = `0${seconds}`
-    }
-    return `${hours}:${minutes}:${seconds}`
+    this._total_work_time.set_text(`${_("Total work")}: ${format_timer(total_work_timer)}`)
+    this._total_break_time.set_text(`${_("Total break")}: ${format_timer(total_break_timer)}`)
   }
   on_selected() {
     const selecteds = this._list.filter((item) => item.row.selected === true)
@@ -193,5 +198,8 @@ export const History = GObject.registerClass({
       this._delete_button.set_icon_name('user-trash-symbolic');
       this.active_selection();
     })
+  }
+  capitalize(str, lower = false) {
+    return (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());
   }
 })

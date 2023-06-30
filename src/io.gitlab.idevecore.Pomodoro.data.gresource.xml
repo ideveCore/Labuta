@@ -19,6 +19,7 @@
     <file preprocess="xml-stripblanks" alias="check-round-outline-symbolic.svg">icons/check-round-outline-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="user-trash-full-symbolic.svg">icons/user-trash-full-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="user-trash-symbolic.svg">icons/user-trash-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="clock-alt-symbolic.svg">icons/clock-alt-symbolic.svg</file>
   </gresource>
 </gresources>
 

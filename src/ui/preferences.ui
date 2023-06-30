@@ -4,7 +4,7 @@
   <template class="PomodoroPreferences" parent="AdwPreferencesWindow">
     <property name="modal">true</property>
     <property name="default-height">450</property>
-    <property name="default-width">350</property>
+    <property name="default-width">400</property>
     <child>
       <object class="AdwPreferencesPage">
         <property name="title" translatable="yes">_Preferences</property>
@@ -18,9 +18,9 @@
                 <property name="model">
                   <object class="GtkStringList">
                     <items>
-                      <item translatable="yes" context="C_Theme">Light</item>
-                      <item translatable="yes" context="C_Theme">Dark</item>
-                      <item translatable="yes" context="C_Theme">System</item>
+                      <item translatable="yes">Light</item>
+                      <item translatable="yes">Dark</item>
+                      <item translatable="yes">System</item>
                     </items>
                   </object>
                 </property>

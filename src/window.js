@@ -1,6 +1,6 @@
 /* window.js
  *
- * Copyright 2023 Francisco Jeferson dos Santos Freires
+ * Copyright 2023 Ideve Core
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@
 
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
-import GLib from 'gi://GLib';
 
 export const PomodoroWindow = GObject.registerClass({
   GTypeName: 'PomodoroWindow',
@@ -30,18 +28,6 @@ export const PomodoroWindow = GObject.registerClass({
 }, class PomodoroWindow extends Adw.ApplicationWindow {
   constructor(application) {
     super({ application });
-
-    let navigation_action = new Gio.SimpleAction({
-      name: 'navigation',
-      parameter_type: new GLib.VariantType('s'),
-    });
-
-    navigation_action.connect('activate', (action, parameter) => {
-      let navigate = parameter.deep_unpack();
-      this.navigate(navigate)
-    });
-
-    application.add_action(navigation_action);
 
     this.connect('close-request', () => {
       application.request_quit()
@@ -54,9 +40,7 @@ export const PomodoroWindow = GObject.registerClass({
       }
     });
   }
-
   navigate(navigate) {
-    this._gsoundPlaySound('complete', null)
     this._stack.visible_child_name = navigate;
   }
 });

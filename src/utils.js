@@ -1,12 +1,28 @@
+/* utils.js
+ *
+ * Copyright 2023 Ideve Core
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import Notify from 'gi://Notify';
-import GSound from 'gi://GSound';
 import Adw from 'gi://Adw';
+import Gtk from 'gi://Gtk';
 import { data, timer_state, settings } from './stores.js';
-
-const gsound = new GSound.Context();
-gsound.init(null);
 
 export function close_request() {
   timer_state.subscribe((value) => {
@@ -79,26 +95,27 @@ export class Handler_json {
 }
 
 export class Application_notify {
-  constructor({ summary, body }) {
-    this._summary = summary;
-    this._body = body;
-    Notify.init('com.gitlab.idevecore.Pomodoro');
-    const notification = new Notify.Notification({
-      summary: this._summary,
-      body: this._body,
-    })
-    notification.show()
+  constructor({ title, body }) {
+    this.notification = new Gio.Notification();
+    this.notification.set_title(title);
+    this.notification.set_body(body);
+    this.notification.set_default_action("app.notification-reply");
+    this.icon = new Gio.ThemedIcon({ name: "clock-alt-symbolic" });
+    this.notification.set_icon(this.icon);
+    this.application = Gtk.Application.get_default();
+    this.application.send_notification("lunch-is-ready", this.notification);
   }
 }
 
 export class Sound {
   constructor({ name, cancellable }) {
+    this.application = Gtk.Application.get_default();
     this.name = name;
     this.cancellable = cancellable;
   }
   play() {
     return new Promise((resolve, reject) => {
-      gsound.play_full(
+      this.application.gsound.play_full(
         { 'event.id': this.name },
         this.cancellable,
         (source, res) => {
@@ -111,33 +128,6 @@ export class Sound {
       );
     });
   }
-}
-
-const get_platform_data = (timestamp) => {
-  return { 'desktop-startup-id': new GLib.Variant('s', '_TIME' + timestamp) };
-}
-
-
-export const activate_action = (action, parameter, timestamp) => {
-  let wrapped_param = [];
-  if (parameter)
-    wrapped_param = [parameter];
-
-  Gio.DBus.session.call(pkg.name,
-    '/io/gitlab/idevecore/Pomodoro',
-    'org.freedesktop.Application',
-    'ActivateAction',
-    new GLib.Variant('(sava{sv})', [action, wrapped_param,
-      get_platform_data(timestamp)]),
-    null,
-    Gio.DBusCallFlags.NONE,
-    -1, null, (connection, result) => {
-      try {
-        connection.call_finish(result)
-      } catch (e) {
-        log('Failed to launch application: ' + e);
-      }
-    });
 }
 
 export const set_background_status = (message) => {
@@ -168,7 +158,6 @@ export const set_background_status = (message) => {
   );
 }
 
-
 export const set_theme = () => {
   const style_manager = Adw.StyleManager.get_default()
   if (settings.get_string('theme') === 'default') {
@@ -180,6 +169,18 @@ export const set_theme = () => {
   }
 }
 
-export const capitalize = (str, lower = false) =>
-  (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());
-;
+export const format_timer = (timer) => {
+  let hours = Math.floor(timer / 60 / 60)
+  let minutes = Math.floor(timer / 60) % 60;
+  let seconds = timer % 60;
+  if (hours.toString().split('').length < 2) {
+    hours = `0${hours}`
+  }
+  if (minutes.toString().split('').length < 2) {
+    minutes = `0${minutes}`
+  }
+  if (seconds.toString().split('').length < 2) {
+    seconds = `0${seconds}`
+  }
+  return `${hours}:${minutes}:${seconds}`
+}

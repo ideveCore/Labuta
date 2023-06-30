@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="Gtk" version="4.0" />
   <requires lib="Adw" version="1.0" />
@@ -15,16 +16,12 @@
                   <object class="GtkBox">
                     <property name="margin-start">12</property>
                     <property name="margin-end">12</property>
-                    <style>
-                      <class name="background" />
-                    </style>
                     <child>
                       <object class="GtkBox">
                         <property name="orientation">vertical</property>
                         <property name="halign">start</property>
                         <child>
                           <object class="GtkLabel" id="total_work_time">
-                            <property name="label">Total work: 00:00:00</property>
                             <style>
                               <class name="title-4" />
                               <class name="accent" />
@@ -33,7 +30,6 @@
                         </child>
                         <child>
                           <object class="GtkLabel" id="total_break_time">
-                            <property name="label">Total break: 10:00:00</property>
                             <style>
                               <class name="title-5" />
                               <class name="error" />
@@ -155,24 +151,24 @@
   <menu id="sorting_menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Name</attribute>
+        <attribute name="label" translatable="yes">Name</attribute>
         <attribute name="action">sort.sort</attribute>
         <attribute name="target">name</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_Date</attribute>
+        <attribute name="label" translatable="yes">Date</attribute>
         <attribute name="action">sort.sort</attribute>
         <attribute name="target">date</attribute>
       </item>
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Ascending</attribute>
+        <attribute name="label" translatable="yes">Ascending</attribute>
         <attribute name="action">sort.order</attribute>
         <attribute name="target">ascending</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_Descending</attribute>
+        <attribute name="label" translatable="yes">Descending</attribute>
         <attribute name="action">sort.order</attribute>
         <attribute name="target">descending</attribute>
       </item>
