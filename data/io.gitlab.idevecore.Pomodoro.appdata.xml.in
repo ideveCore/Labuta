@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-	<id>io.gitlab.idevecore.Pomodoro</id>
-	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>GPL-3.0-or-later</project_license>
+  <id>io.gitlab.idevecore.Pomodoro</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
   <name>Pomodoro</name>
   <summary>Pomodoro is a productivity-focused timer</summary>
-	<description>
-	  <p>Pomodoro is a timer utility with rules, ideal for better productivity.</p>
-	</description>
+  <description>
+    <p>Pomodoro is a timer utility with rules, ideal for better productivity.</p>
+  </description>
   <url type="homepage">https://gitlab.com/idevecore/pomodoro</url>
   <url type="bugtracker">https://gitlab.com/idevecore/pomodoro/-/issues</url>
-   <releases>
+  <url type="donation">https://ko-fi.com/idevecore</url>
+
+  <releases>
+    <release version="1.1.0" date="2023-06-30">
+      <description>
+        <p>In this version, some tweaks and functions were added, as well as bug removal, visibility and performance improvements.</p>
+        <ul>
+          <li>Pomodoro now works in the background.</li>
+          <li>Added preferences section.</li>
+          <li>Added theme choice and permission to run in background in preferences section.</li>
+          <li>The app's alarms and feedback sounds now use the system default.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2023-06-03">
       <description>
         <p>Pomodoro 1.0.0: Application launch</p>
@@ -18,14 +31,14 @@
     </release>
   </releases>
   <requires>
-    <display_length compare="ge">361</display_length>
+    <display_length compare="ge">400</display_length>
   </requires>
-   <recommends>
+  <recommends>
     <control>keyboard</control>
     <control>pointing</control>
     <control>touch</control>
   </recommends>
-   <screenshots>
+  <screenshots>
     <screenshot type="default">
       <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/01.png</image>
     </screenshot>
@@ -42,7 +55,7 @@
       <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/05.png</image>
     </screenshot>
   </screenshots>
-   <content_rating type="oars-1.1">
+  <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
     <content_attribute id="violence-fantasy">none</content_attribute>
     <content_attribute id="violence-realistic">none</content_attribute>
@@ -66,7 +79,6 @@
     <content_attribute id="money-purchasing">none</content_attribute>
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
-   <developer_name>Ideve Core</developer_name>
-
+  <developer_name>Ideve Core</developer_name>
 </component>
 

@@ -41,7 +41,11 @@ export const PomodoroApplication = GObject.registerClass(
       const quit_action = new Gio.SimpleAction({ name: 'quit' });
       const preferences = new Gio.SimpleAction({ name: 'preferences' });
       quit_action.connect('activate', () => {
-        close_request.bind(this)()
+        if (this.active_window.visible) {
+          this.request_quit()
+        } else {
+          close_request.bind(this)()
+        }
       });
       preferences.connect('activate', () => {
         new PomodoroPreferences().present()
