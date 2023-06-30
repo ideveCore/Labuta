@@ -46,8 +46,9 @@ export function close_request() {
       }, 1000)
     }
   })
-  if (this._timer_state === 'running' || this._timer_state == 'paused')
+  if (this._timer_state === 'running' || this._timer_state == 'paused') {
     return dialog.present()
+  }
   if (this.application)
     return this.application.quit()
   this.quit()

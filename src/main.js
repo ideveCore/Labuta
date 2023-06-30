@@ -72,7 +72,7 @@ export const PomodoroApplication = GObject.registerClass(
     request_quit() {
       this.run_in_background = settings.get_boolean('run-in-background');
       if (!this.run_in_background) {
-        this.quit();
+        close_request.bind(this)()
         return
       }
       timer_state.subscribe((value) => {

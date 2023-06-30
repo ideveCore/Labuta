@@ -31,7 +31,9 @@ export const PomodoroWindow = GObject.registerClass({
 
     this.connect('close-request', () => {
       application.request_quit()
+      return true
     })
+
     this._stack.connect('notify::visible-child', () => {
       if (this._stack.visible_child_name == 'history') {
         this._stack.visible_child.load_list()
