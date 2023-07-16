@@ -25,6 +25,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import { gettext as _ } from 'gettext';
 import Window from './window.js';
+import Preferences from './preferences.js';
 import './style.css';
 
 export default class Application extends Adw.Application {
@@ -37,16 +38,21 @@ export default class Application extends Adw.Application {
     const quit_action = new Gio.SimpleAction({ name: 'quit' });
     const preferences_action = new Gio.SimpleAction({ name: 'preferences' });
     const show_about_action = new Gio.SimpleAction({ name: 'about' });
+    this.settings = new Gio.Settings({
+      schema_id: pkg.name,
+      path: '/io/gitlab/idevecore/Pomodoro/',
+    });
 
     quit_action.connect('activate', () => {
-      if (this.active_window.visible) {
-        this.request_quit();
-      } else {
-        this.close_request.bind(this)()
-      }
+      this.quit();
+      // if (this.active_window.visible) {
+      //   this.request_quit();
+      // } else {
+      //   this.close_request.bind(this)()
+      // }
     });
     preferences_action.connect('activate', () => {
-      console.log('preferences')
+      new Preferences(this).present();
     });
     show_about_action.connect('activate', () => {
       let aboutParams = {
@@ -68,12 +74,23 @@ export default class Application extends Adw.Application {
     this.add_action(preferences_action);
     this.set_accels_for_action('app.quit', ['<primary>q']);
     this.add_action(show_about_action);
+    this.set_theme();
   }
   request_quit() {
 
   }
   close_request() {
 
+  }
+  set_theme() {
+    const style_manager = Adw.StyleManager.get_default()
+    if (this.settings.get_string('theme') === 'default') {
+      style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+    } else if (this.settings.get_string('theme') === 'dark') {
+      style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+    } else {
+      style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+    }
   }
   vfunc_activate() {
     let { active_window } = this;

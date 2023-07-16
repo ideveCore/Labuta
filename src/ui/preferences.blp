@@ -1,0 +1,34 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Gjs_Preferences : Adw.PreferencesWindow {
+  modal: true;
+  default-height: 450;
+  default-width: 400;
+  Adw.PreferencesPage {
+    title: _("Preferences");
+    Adw.PreferencesGroup {
+      title: _("User interface");
+      Adw.ComboRow select_theme {
+        notify::selected-item => $_change_theme();
+        title: _("Theme");
+        icon-name: 'dark-mode-symbolic';
+        model: StringList list {
+          strings [_("Ligth"), _("Dark"), _("System")]
+        };
+      }
+      Adw.ActionRow  {
+        title: _("Allow execution in the background");
+        subtitle: _("Hides the window instead of leaving if there is pomodoro running");
+        icon-name: "background-app-ghost-symbolic";
+        activatable-widget: switch_run_in_background;
+        [suffix]
+        Switch switch_run_in_background {
+          state-set => $_on_boolean_state_set();
+          name: "run-in-background";
+          valign: center;
+        }
+      }
+    }
+  }
+}

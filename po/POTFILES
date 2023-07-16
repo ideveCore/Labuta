@@ -7,3 +7,5 @@ src/window.ui
 
 src/ui/window.blp
 src/application.js
+src/ui/preferences.blp
+src/preferences.js

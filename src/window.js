@@ -23,8 +23,6 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Template from './ui/window.blp' assert { type: 'uri' };
 
-console.log(Template)
-
 export default class Window extends Adw.ApplicationWindow {
   static {
     GObject.registerClass({
