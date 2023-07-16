@@ -1,0 +1,6 @@
+data/io.gitlab.idevecore.Pomodoro.desktop.in
+data/io.gitlab.idevecore.Pomodoro.appdata.xml.in
+data/io.gitlab.idevecore.Pomodoro.gschema.xml
+src/main.js
+src/window.js
+src/window.ui
