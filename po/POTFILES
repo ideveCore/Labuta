@@ -4,3 +4,6 @@ data/io.gitlab.idevecore.Pomodoro.gschema.xml
 src/main.js
 src/window.js
 src/window.ui
+
+src/ui/window.blp
+src/application.js

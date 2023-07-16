@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="pomodoro">
-	<schema id="io.gitlab.idevecore.Pomodoro" path="/io/gitlab/idevecore/Pomodoro/">
-	</schema>
+  <schema id="@app_id@" path="/io/gitlab/idevecore/Pomodoro/" gettext-domain="@app_id@">
+    <key type="b" name="run-in-background">
+      <default>true</default>
+    </key>
+    <key type="s" name="theme">
+      <default>"default"</default>
+    </key>
+    <key type="s" name="sort-by">
+      <default>"name"</default>
+    </key>
+    <key type="s" name="order-by">
+      <default>"ascending"</default>
+    </key>
+  </schema>
 </schemalist>
+
