@@ -26,6 +26,8 @@ import Gtk from 'gi://Gtk';
 import { gettext as _ } from 'gettext';
 import Window from './window.js';
 import Preferences from './preferences.js';
+import Shortcuts from './shortcuts.js';
+import Timer from './timer.js';
 import './style.css';
 
 export default class Application extends Adw.Application {
@@ -37,6 +39,7 @@ export default class Application extends Adw.Application {
 
     const quit_action = new Gio.SimpleAction({ name: 'quit' });
     const preferences_action = new Gio.SimpleAction({ name: 'preferences' });
+    const shortcuts_action = new Gio.SimpleAction({ name: 'shortcuts' });
     const show_about_action = new Gio.SimpleAction({ name: 'about' });
     this.settings = new Gio.Settings({
       schema_id: pkg.name,
@@ -54,6 +57,9 @@ export default class Application extends Adw.Application {
     preferences_action.connect('activate', () => {
       new Preferences(this).present();
     });
+    shortcuts_action.connect('activate', () => {
+      new Shortcuts(this).present();
+    })
     show_about_action.connect('activate', () => {
       let aboutParams = {
         transient_for: this.active_window,
@@ -64,7 +70,7 @@ export default class Application extends Adw.Application {
         developers: [
           'Ideve Core'
         ],
-        copyright: '© 2023 Ideve Core'
+        copyright: '© 2023 Ideve Core',
       };
       const aboutWindow = new Adw.AboutWindow(aboutParams);
       aboutWindow.present();
@@ -72,9 +78,11 @@ export default class Application extends Adw.Application {
 
     this.add_action(quit_action);
     this.add_action(preferences_action);
+    this.add_action(shortcuts_action);
     this.set_accels_for_action('app.quit', ['<primary>q']);
     this.add_action(show_about_action);
     this.set_theme();
+    this.settings.connect("changed::theme", this.set_theme.bind(this));
   }
   request_quit() {
 

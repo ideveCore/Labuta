@@ -27,7 +27,13 @@ export default class Preferences extends Adw.PreferencesWindow {
   static {
     GObject.registerClass({
       Template,
-      InternalChildren: ['select_theme', 'switch_run_in_background'],
+      InternalChildren: [
+        'select_theme',
+        'switch_run_in_background',
+        'set_break_time_after_4_pomodoris',
+        'set_break_time',
+        'set_work_time',
+      ],
     }, this);
   }
   constructor(application) {
@@ -37,8 +43,15 @@ export default class Preferences extends Adw.PreferencesWindow {
     this.Application.settings.get_string('theme') === 'default' ?
       this._select_theme.set_selected(2) :
       this.Application.settings.get_string('theme') === 'dark' ?
-        this._select_theme.set_selected(1) : this._select_theme.set_selected(0)
+        this._select_theme.set_selected(1) : this._select_theme.set_selected(0);
     this._switch_run_in_background.set_active(this.Application.settings.get_boolean('run-in-background'));
+    this.work_time = this.Application.settings.get_int('work-time');
+    this.break_time = this.Application.settings.get_int('break-time');
+    this.break_after_4_pomodoris = this.Application.settings.get_int('break-time-after-4-pomodoris');
+    this._set_work_time.set_value(Math.floor(this.work_time / 60) % 60);
+    this._set_break_time.set_value(Math.floor(this.break_time / 60) % 60);
+    this._set_break_time_after_4_pomodoris.set_value(Math.floor(this.break_after_4_pomodoris / 60) % 60);
+
   }
   _change_theme(_item) {
     const index = _item.get_selected();
@@ -47,12 +60,20 @@ export default class Preferences extends Adw.PreferencesWindow {
     } else {
       this.Application.settings.set_string('theme', 'default');
     }
-    this.Application.set_theme();
   }
   _on_boolean_state_set(widget, state) {
     const setting = widget.get_name()
     if (setting === 'run-in-background') {
       this.Application.settings.set_boolean(setting, state)
     }
+  }
+  _on_work_time_changed(_spin_button) {
+    this.Application.settings.set_int('work-time', _spin_button.get_value() * 60)
+  }
+  _on_break_time_changed(_spin_button) {
+    this.Application.settings.set_int('break-time', _spin_button.get_value() * 60)
+  }
+  _on_break_time_after_4_pomodoris_changed(_spin_button) {
+    this.Application.settings.set_int('break-time-after-4-pomodoris', _spin_button.get_value() * 60)
   }
 }

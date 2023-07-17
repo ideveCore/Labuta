@@ -30,5 +30,56 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         }
       }
     }
+    Adw.PreferencesGroup {
+      title: _("Customize application");
+      Adw.ActionRow  {
+        title: _("Work time - (minutes)");
+        subtitle: "The ideal is to follow the rules of the Pomodoro";
+        SpinButton set_work_time {
+          value-changed => $_on_work_time_changed();
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 5;
+              upper: 300;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
+      Adw.ActionRow  {
+        title: _("Break time - (minutes)");
+        subtitle: "The ideal is to follow the rules of the Pomodoro";
+        SpinButton set_break_time {
+          value-changed => $_on_break_time_changed();
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 2;
+              upper: 30;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
+      Adw.ActionRow  {
+        title: _("Break time after 4 pomodoris - (minutes)");
+        subtitle: "The ideal is to follow the rules of the Pomodoro";
+        SpinButton set_break_time_after_4_pomodoris {
+          value-changed => $_on_break_time_after_4_pomodoris_changed();
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 15;
+              upper: 60;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
+    }
   }
 }

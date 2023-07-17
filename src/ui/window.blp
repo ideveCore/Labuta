@@ -41,9 +41,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
             use-underline: true;
             icon-name: "hourglass-symbolic";
             child:
-            Label {
-              label: 'Timer';
-            };
+              $Gjs_Timer {};
           }
           Adw.ViewStackPage {
             name: "statistics";
@@ -67,7 +65,6 @@ template $Gjs_Window : Adw.ApplicationWindow {
           }
         }
         Adw.ViewSwitcherBar {
-          styles ['flat']
           stack: stack;
           reveal: bind-property view_switcher_title.title-visible;
         }
@@ -85,7 +82,7 @@ menu primary_menu {
 
     item {
       label: _("_Keyboard Shortcuts");
-      action: "win.show-help-overlay";
+      action: "app.shortcuts";
     }
 
     item {
