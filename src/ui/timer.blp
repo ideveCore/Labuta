@@ -36,6 +36,7 @@ template $Gjs_Timer : Adw.Bin {
             [suffix]
               Gtk.Overlay {
                 valign: start;
+                visible: false;
                 child: Gtk.DrawingArea tag_area {
                   height-request: 25;
                   width-request: 25;
@@ -89,6 +90,7 @@ template $Gjs_Timer : Adw.Bin {
               name: "paused_timer";
               child:
                 Grid {
+                  halign: center;
                   column-spacing: 18;
                   column-homogeneous: true;
                   Button {

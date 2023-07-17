@@ -47,7 +47,7 @@ export default class Preferences extends Adw.PreferencesWindow {
     this._switch_run_in_background.set_active(this.Application.settings.get_boolean('run-in-background'));
     this.work_time = this.Application.settings.get_int('work-time');
     this.break_time = this.Application.settings.get_int('break-time');
-    this.break_after_4_pomodoris = this.Application.settings.get_int('break-time-after-4-pomodoris');
+    this.break_after_4_pomodoris = this.Application.settings.get_int('end-time-interval');
     this._set_work_time.set_value(Math.floor(this.work_time / 60) % 60);
     this._set_break_time.set_value(Math.floor(this.break_time / 60) % 60);
     this._set_break_time_after_4_pomodoris.set_value(Math.floor(this.break_after_4_pomodoris / 60) % 60);
@@ -74,6 +74,6 @@ export default class Preferences extends Adw.PreferencesWindow {
     this.Application.settings.set_int('break-time', _spin_button.get_value() * 60)
   }
   _on_break_time_after_4_pomodoris_changed(_spin_button) {
-    this.Application.settings.set_int('break-time-after-4-pomodoris', _spin_button.get_value() * 60)
+    this.Application.settings.set_int('end-time-interval', _spin_button.get_value() * 60)
   }
 }

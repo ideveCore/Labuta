@@ -45,6 +45,8 @@ export default class Application extends Adw.Application {
       schema_id: pkg.name,
       path: '/io/gitlab/idevecore/Pomodoro/',
     });
+    this.timer_state = 'stopped';
+    this.data = [];
 
     quit_action.connect('activate', () => {
       this.quit();
@@ -83,6 +85,7 @@ export default class Application extends Adw.Application {
     this.add_action(show_about_action);
     this.set_theme();
     this.settings.connect("changed::theme", this.set_theme.bind(this));
+    this.load_data();
   }
   request_quit() {
 
@@ -98,6 +101,79 @@ export default class Application extends Adw.Application {
       style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
     } else {
       style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+    }
+  }
+  notify({ title, body }) {
+    const notification = new Gio.Notification();
+    notification.set_title(title);
+    notification.set_body(body);
+    notification.set_default_action("app.notification-reply");
+    this.send_notification("lunch-is-ready", notification);
+  }
+  sound({ name, cancellable }) {
+    return new Promise((resolve, reject) => {
+      this.application.gsound.play_full(
+        { 'event.id': name },
+        cancellable,
+        (source, res) => {
+          try {
+            resolve(source.play_full_finish(res));
+          } catch (e) {
+            reject(e);
+          }
+        }
+      );
+    });
+  }
+  set_background_status(message) {
+    const connection = Gio.DBus.session;
+    const messageVariant = new GLib.Variant('(a{sv})', [{
+      'message': new GLib.Variant('s', message)
+    }]);
+    connection.call(
+      'org.freedesktop.portal.Desktop',
+      '/org/freedesktop/portal/desktop',
+      'org.freedesktop.portal.Background',
+      'SetStatus',
+      messageVariant,
+      null,
+      Gio.DBusCallFlags.NONE,
+      -1,
+      null,
+      (connection, res) => {
+        try {
+          connection.call_finish(res);
+        } catch (e) {
+          if (e instanceof Gio.DBusError)
+            Gio.DBusError.strip_remote_error(e);
+
+          logError(e);
+        }
+      }
+    );
+  }
+  save_data() {
+    const data_dir = GLib.get_user_config_dir();
+    const destination = GLib.build_filenamev([data_dir, 'data.json'])
+    const destination_file = Gio.File.new_for_path(destination)
+
+    destination_file.replace_contents(JSON.stringify(value), null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+  }
+  load_data() {
+    const data_dir = GLib.get_user_config_dir();
+    const destination = GLib.build_filenamev([data_dir, 'data.json'])
+    const destination_file = Gio.File.new_for_path(destination)
+
+    try {
+      const [, contents] = destination_file.load_contents(null);
+      const decoder = new TextDecoder('utf-8');
+      this.data = JSON.parse(decoder.decode(contents));
+    } catch (error) {
+      destination_file.create(Gio.FileCreateFlags.NONE, null);
+      destination_file.replace_contents(JSON.stringify([]), null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+      const [, contents] = destination_file.load_contents(null);
+      const decoder = new TextDecoder('utf-8');
+      this.data = JSON.parse(decoder.decode(contents));
     }
   }
   vfunc_activate() {

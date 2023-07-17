@@ -19,7 +19,7 @@
     <key type="i" name="break-time">
       <default>300</default>
     </key>
-    <key type="i" name="break-time-after-4-pomodoris">
+    <key type="i" name="end-time-interval">
       <default>1800</default>
     </key>
   </schema>
