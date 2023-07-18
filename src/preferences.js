@@ -45,6 +45,9 @@ export default class Preferences extends Adw.PreferencesWindow {
       this.Application.settings.get_string('theme') === 'dark' ?
         this._select_theme.set_selected(1) : this._select_theme.set_selected(0);
     this._switch_run_in_background.set_active(this.Application.settings.get_boolean('run-in-background'));
+
+    this.Application.settings.set_int('work-time', 10);
+    this.Application.settings.set_int('break-time', 10);
     this.work_time = this.Application.settings.get_int('work-time');
     this.break_time = this.Application.settings.get_int('break-time');
     this.break_after_4_pomodoris = this.Application.settings.get_int('end-time-interval');

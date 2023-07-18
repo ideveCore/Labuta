@@ -98,7 +98,7 @@ export default class Timer extends Adw.Bin {
     if (this.application.timer_state === 'running') {
       if (!this.timer_running) {
         const current_date = GLib.DateTime.new_now_local()
-        this._data = {
+        this.data = {
           title: title ? title : `${_('Started at')} ${this._get_schedule()}`,
           description,
           work_time: 0,
@@ -115,13 +115,13 @@ export default class Timer extends Adw.Bin {
         this.timer_running = true;
         GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => {
           if (this.application.timer_state === 'stopped') {
-            if (!this._data)
+            if (!this.data)
               return
             const array = this.application.data;
-            array.push(this._data);
+            array.push(this.data);
             this.application.data = array;
-            new Application_data().save()
-            this._data = null;
+            this.application.save_data();
+            this.data = null;
             return GLib.SOURCE_REMOVE
           }
           if (this.application.timer_state === 'paused') {
@@ -133,38 +133,38 @@ export default class Timer extends Adw.Bin {
           this.current_work_time--
 
           if (this.current_work_time === this.work_time - 1) {
-            console.log('e')
             this._timer_label.get_style_context().remove_class('error');
-            this.application.notify({ title: `${_("Pomodoro started")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
+            this.application.notify({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
           } else if (this.current_work_time === 0) {
             this._timer_label.get_style_context().add_class('error');
-            this.application.notify({ title: `${_("Pomodoro break time")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
+            this.application.notify({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
             this.application.sound({ name: 'complete', cancellable: null })
           }
 
           if (this.current_work_time > 0) {
-            this._data.work_time = this._data.work_time + 1
+            this.data.work_time = this.data.work_time + 1
             if (!this.application.active_window.visible)
-              set_background_status(`Work time: ${this.format_timer()}`)
+              this.application.set_background_status(`Work time: ${this.format_timer()}`)
           } else {
-            this._data.break_time = this._data.break_time + 1
+            this.data.break_time = this.data.break_time + 1
             if (!this.application.active_window.visible)
-              set_background_status(`Break time: ${this.format_timer()}`)
+              this.application.set_background_status(`Break time: ${this.format_timer()}`)
           }
-          console.log('knwed')
+
           this._timer_label.set_text(this._format_timer())
 
           if (this.current_work_time > (this.current_break_time * -1)) {
             return GLib.SOURCE_CONTINUE
           }
+
           this.application.timer_state = 'paused';
           this._stack_timer_controls.visible_child_name = 'paused_timer';
-          this._timer = 1500
-          this._data.counts = this._data.counts + 1
-          if (this._data.counts === 3) {
-            this._break_timer = 900
+          this.current_work_time = this.work_time;
+          this.data.counts = this.data.counts + 1;
+          if (this.data.counts === 3) {
+            this.current_work_time = this.end_time_interval;
           }
-          this.application.notify({ title: `${_("Pomodoro finished")} - ${this._data.title}`, body: `${_("Description")}: ${this._data.description}\n${_("Created date")}: ${this._data.date.display_date}` })
+          this.application.notify({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
           this._timer_label.get_style_context().remove_class('error');
           this.application.sound({ name: 'alarm-clock-elapsed', cancellable: null })
           this._timer_label.set_text(this._format_timer());
@@ -177,10 +177,36 @@ export default class Timer extends Adw.Bin {
     }
   }
   _on_reset_timer() {
-    console.log('reset timer');
+    this.timer_running = false;
+    this.current_work_time = this.work_time;
+    this.current_break_time = this.break_time;
+    this._title_entry.editable = true;
+    this._description_entry.editable = true;
+    this._stack_timer_controls.visible_child_name = 'init_timer';
+    this.data = null;
+    this._timer_label.get_style_context().remove_class('error');
+    this._timer_label.set_text(this.format_timer());
+    this.application.timer_state = 'stopped'
   }
   _on_stop_timer() {
-    console.log('stop timer');
+    this.timer_running = false;
+    this._title_entry.set_text('');
+    this._description_entry.set_text('');
+    this.current_work_time = this.work_time;
+    this.current_break_time = this.break_time;
+    this._title_entry.editable = true;
+    this._description_entry.editable = true;
+    this._stack_timer_controls.visible_child_name = 'init_timer';
+    this._timer_label.get_style_context().remove_class('error');
+    this._timer_label.set_text(this.format_timer());
+    if (this.data) {
+      const array = this.application.data;
+      array.push(this.data);
+      this.application.data = array;
+      this.application.save_data();
+    }
+    this.data = null;
+    this.application.timer_state = 'stopped';
   }
   _DrawTag(area, cr, width, height) {
     const color = new Gdk.RGBA();

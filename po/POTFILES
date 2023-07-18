@@ -13,3 +13,4 @@ src/ui/shortcuts.blp
 src/shortcuts.js
 src/ui/timer.blp
 src/timer.js
+src/utils.js

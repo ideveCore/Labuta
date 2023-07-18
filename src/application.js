@@ -86,6 +86,7 @@ export default class Application extends Adw.Application {
     this.set_theme();
     this.settings.connect("changed::theme", this.set_theme.bind(this));
     this.load_data();
+    console.log(this.data)
   }
   request_quit() {
 
@@ -112,7 +113,7 @@ export default class Application extends Adw.Application {
   }
   sound({ name, cancellable }) {
     return new Promise((resolve, reject) => {
-      this.application.gsound.play_full(
+      this.gsound.play_full(
         { 'event.id': name },
         cancellable,
         (source, res) => {
