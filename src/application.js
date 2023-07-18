@@ -41,6 +41,7 @@ export default class Application extends Adw.Application {
     const preferences_action = new Gio.SimpleAction({ name: 'preferences' });
     const shortcuts_action = new Gio.SimpleAction({ name: 'shortcuts' });
     const show_about_action = new Gio.SimpleAction({ name: 'about' });
+    const active_action = new Gio.SimpleAction({ name: 'open' });
     this.settings = new Gio.Settings({
       schema_id: pkg.name,
       path: '/io/gitlab/idevecore/Pomodoro/',
@@ -49,12 +50,11 @@ export default class Application extends Adw.Application {
     this.data = [];
 
     quit_action.connect('activate', () => {
-      this.quit();
-      // if (this.active_window.visible) {
-      //   this.request_quit();
-      // } else {
-      //   this.close_request.bind(this)()
-      // }
+      if (this.active_window.visible) {
+        this.request_quit()
+      } else {
+        this.close_request()
+      }
     });
     preferences_action.connect('activate', () => {
       new Preferences(this).present();
@@ -77,22 +77,55 @@ export default class Application extends Adw.Application {
       const aboutWindow = new Adw.AboutWindow(aboutParams);
       aboutWindow.present();
     });
+    active_action.connect("activate", () => {
+      this.active_window.show();
+    })
 
     this.add_action(quit_action);
     this.add_action(preferences_action);
     this.add_action(shortcuts_action);
     this.set_accels_for_action('app.quit', ['<primary>q']);
     this.add_action(show_about_action);
+    this.add_action(active_action);
     this.set_theme();
     this.settings.connect("changed::theme", this.set_theme.bind(this));
     this.load_data();
-    console.log(this.data)
   }
   request_quit() {
-
+    this.run_in_background = this.settings.get_boolean('run-in-background');
+    if (!this.run_in_background) {
+      this.close_request()
+      return
+    }
+    if (this.timer_state === 'stopped') {
+      this.quit();
+      return
+    }
+    this.active_window.hide()
+    if (!this.active_window)
+      return
   }
   close_request() {
+    let dialog = new Adw.MessageDialog();
+    dialog.set_heading(_('Stop timer?'));
+    dialog.set_transient_for(this.active_window);
+    dialog.set_body(_('There is a running timer, wants to stop and exit the application?'));
+    dialog.add_response('continue', _('Continue'));
+    dialog.add_response('exit', _('Exit'));
+    dialog.set_response_appearance('exit', Adw.ResponseAppearance.DESTRUCTIVE);
 
+    dialog.connect('response', (dialog, id) => {
+      if (id === 'exit') {
+        this.timer_state = 'stopped';
+        setTimeout(() => {
+          this.quit()
+        }, 1000)
+      }
+    })
+    if (this.timer_state === 'running' || this.timer_state == 'paused') {
+      return dialog.present()
+    }
+    this.quit()
   }
   set_theme() {
     const style_manager = Adw.StyleManager.get_default()
@@ -108,10 +141,12 @@ export default class Application extends Adw.Application {
     const notification = new Gio.Notification();
     notification.set_title(title);
     notification.set_body(body);
-    notification.set_default_action("app.notification-reply");
+    notification.set_priority('presence');
+    notification.set_default_action("app.open");
     this.send_notification("lunch-is-ready", notification);
   }
   sound({ name, cancellable }) {
+    if (!this.settings.get_boolean('play-sounds')) return
     return new Promise((resolve, reject) => {
       this.gsound.play_full(
         { 'event.id': name },
@@ -158,7 +193,7 @@ export default class Application extends Adw.Application {
     const destination = GLib.build_filenamev([data_dir, 'data.json'])
     const destination_file = Gio.File.new_for_path(destination)
 
-    destination_file.replace_contents(JSON.stringify(value), null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+    destination_file.replace_contents(JSON.stringify(this.data), null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
   }
   load_data() {
     const data_dir = GLib.get_user_config_dir();
@@ -180,7 +215,7 @@ export default class Application extends Adw.Application {
   vfunc_activate() {
     let { active_window } = this;
     if (!active_window) {
-      active_window = new Window({ application: this });
+      active_window = new Window(this);
     }
     active_window.present();
   }

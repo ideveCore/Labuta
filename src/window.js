@@ -30,7 +30,12 @@ export default class Window extends Adw.ApplicationWindow {
       InternalChildren: [],
     }, this);
   }
-  constructor(constructProperties = {}) {
-    super(constructProperties);
+  constructor(application) {
+    super({application});
+
+    this.connect('close-request', () => {
+      application.request_quit()
+      return true
+    })
   }
 }

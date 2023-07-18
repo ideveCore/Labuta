@@ -4,6 +4,9 @@
     <key type="b" name="run-in-background">
       <default>true</default>
     </key>
+    <key type="b" name="play-sounds">
+      <default>true</default>
+    </key>
     <key type="s" name="theme">
       <default>"default"</default>
     </key>

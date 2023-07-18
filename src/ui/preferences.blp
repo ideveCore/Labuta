@@ -29,9 +29,21 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
           valign: center;
         }
       }
+      Adw.ActionRow  {
+        title: _("Allow play sounds");
+        subtitle: _("Plays the feedback sounds");
+        icon-name: "sound-wave-symbolic";
+        activatable-widget: switch_play_sounds;
+        [suffix]
+        Switch switch_play_sounds {
+          state-set => $_on_boolean_state_set();
+          name: "play-sounds";
+          valign: center;
+        }
+      }
     }
     Adw.PreferencesGroup {
-      title: _("Customize application");
+      title: _("Customize pomodoro");
       Adw.ActionRow  {
         title: _("Work time - (minutes)");
         subtitle: "The ideal is to follow the rules of the Pomodoro";

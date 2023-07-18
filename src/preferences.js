@@ -30,6 +30,7 @@ export default class Preferences extends Adw.PreferencesWindow {
       InternalChildren: [
         'select_theme',
         'switch_run_in_background',
+        'switch_play_sounds',
         'set_break_time_after_4_pomodoris',
         'set_break_time',
         'set_work_time',
@@ -45,9 +46,10 @@ export default class Preferences extends Adw.PreferencesWindow {
       this.Application.settings.get_string('theme') === 'dark' ?
         this._select_theme.set_selected(1) : this._select_theme.set_selected(0);
     this._switch_run_in_background.set_active(this.Application.settings.get_boolean('run-in-background'));
+    this._switch_play_sounds.set_active(this.Application.settings.get_boolean('play-sounds'));
 
-    this.Application.settings.set_int('work-time', 10);
-    this.Application.settings.set_int('break-time', 10);
+    // this.Application.settings.set_int('work-time', 10);
+    // this.Application.settings.set_int('break-time', 10);
     this.work_time = this.Application.settings.get_int('work-time');
     this.break_time = this.Application.settings.get_int('break-time');
     this.break_after_4_pomodoris = this.Application.settings.get_int('end-time-interval');
@@ -66,9 +68,7 @@ export default class Preferences extends Adw.PreferencesWindow {
   }
   _on_boolean_state_set(widget, state) {
     const setting = widget.get_name()
-    if (setting === 'run-in-background') {
-      this.Application.settings.set_boolean(setting, state)
-    }
+    this.Application.settings.set_boolean(setting, state)
   }
   _on_work_time_changed(_spin_button) {
     this.Application.settings.set_int('work-time', _spin_button.get_value() * 60)

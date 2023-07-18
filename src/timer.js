@@ -56,6 +56,7 @@ export default class Timer extends Adw.Bin {
     this.current_break_time = this.break_time;
     this.is_break_timer = false;
     this.timer_state = null;
+    this._timer_label.set_text(this._format_timer())
   }
   _get_date() {
     const current_date = GLib.DateTime.new_now_local();
@@ -144,11 +145,11 @@ export default class Timer extends Adw.Bin {
           if (this.current_work_time > 0) {
             this.data.work_time = this.data.work_time + 1
             if (!this.application.active_window.visible)
-              this.application.set_background_status(`Work time: ${this.format_timer()}`)
+              this.application.set_background_status(`Work time: ${this._format_timer()}`)
           } else {
             this.data.break_time = this.data.break_time + 1
             if (!this.application.active_window.visible)
-              this.application.set_background_status(`Break time: ${this.format_timer()}`)
+              this.application.set_background_status(`Break time: ${this._format_timer()}`)
           }
 
           this._timer_label.set_text(this._format_timer())
