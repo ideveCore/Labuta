@@ -32,6 +32,7 @@ export default class Timer extends Adw.Bin {
       InternalChildren: [
         "tag_label",
         "tag_area",
+        "pomodoro_counts",
         'title_entry',
         'description_entry',
         'timer_label',
@@ -44,7 +45,6 @@ export default class Timer extends Adw.Bin {
     var sizeGroup = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
     sizeGroup.add_widget(this._tag_area);
     sizeGroup.add_widget(this._tag_label);
-    this._tag_label.set_label(`<span weight="bold" size="9pt">2</span>`);
     this._tag_area.set_draw_func(this._DrawTag);
 
     this.application = Gtk.Application.get_default();
@@ -162,8 +162,12 @@ export default class Timer extends Adw.Bin {
           this._stack_timer_controls.visible_child_name = 'paused_timer';
           this.current_work_time = this.work_time;
           this.data.counts = this.data.counts + 1;
+          if (this.data.counts > 0) {
+            this._tag_label.set_label(`<span weight="bold" size="9pt">${this.data.counts}</span>`);
+            this._pomodoro_counts.set_visible(true);
+          }
           if (this.data.counts === 3) {
-            this.current_work_time = this.end_time_interval;
+            this.current_break_time = this.end_time_interval;
           }
           this.application.notify({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
           this._timer_label.get_style_context().remove_class('error');
@@ -178,6 +182,10 @@ export default class Timer extends Adw.Bin {
     }
   }
   _on_reset_timer() {
+    this.work_time = this.application.settings.get_int('work-time');
+    this.break_time = this.application.settings.get_int('break-time');
+    this.end_time_interval = this.application.settings.get_int('end-time-interval');
+    this._pomodoro_counts.set_visible(false);
     this.timer_running = false;
     this.current_work_time = this.work_time;
     this.current_break_time = this.break_time;
@@ -186,10 +194,14 @@ export default class Timer extends Adw.Bin {
     this._stack_timer_controls.visible_child_name = 'init_timer';
     this.data = null;
     this._timer_label.get_style_context().remove_class('error');
-    this._timer_label.set_text(this.format_timer());
+    this._timer_label.set_text(this._format_timer());
     this.application.timer_state = 'stopped'
   }
   _on_stop_timer() {
+    this.work_time = this.application.settings.get_int('work-time');
+    this.break_time = this.application.settings.get_int('break-time');
+    this.end_time_interval = this.application.settings.get_int('end-time-interval');
+    this._pomodoro_counts.set_visible(false);
     this.timer_running = false;
     this._title_entry.set_text('');
     this._description_entry.set_text('');
@@ -199,7 +211,7 @@ export default class Timer extends Adw.Bin {
     this._description_entry.editable = true;
     this._stack_timer_controls.visible_child_name = 'init_timer';
     this._timer_label.get_style_context().remove_class('error');
-    this._timer_label.set_text(this.format_timer());
+    this._timer_label.set_text(this._format_timer());
     if (this.data) {
       const array = this.application.data;
       array.push(this.data);

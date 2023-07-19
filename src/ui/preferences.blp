@@ -77,10 +77,10 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         }
       }
       Adw.ActionRow  {
-        title: _("Break time after 4 pomodoris - (minutes)");
+        title: _("End time interval - (minutes)");
         subtitle: "The ideal is to follow the rules of the Pomodoro";
-        SpinButton set_break_time_after_4_pomodoris {
-          value-changed => $_on_break_time_after_4_pomodoris_changed();
+        SpinButton set_end_time_interval {
+          value-changed => $_on_end_time_interval_changed();
           valign: center;
           numeric: true;
           adjustment:
