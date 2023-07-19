@@ -21,7 +21,7 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import Template from './ui/preferences.blp' assert { type: 'uri' };
+import Template from './preferences.blp' assert { type: 'uri' };
 
 export default class Preferences extends Adw.PreferencesWindow {
   static {

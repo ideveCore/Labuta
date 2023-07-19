@@ -23,7 +23,7 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
 import GLib from 'gi://GLib';
-import Template from './ui/timer.blp' assert { type: 'uri' };
+import Template from './timer.blp' assert { type: 'uri' };
 
 export default class Timer extends Adw.Bin {
   static {

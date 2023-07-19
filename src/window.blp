@@ -49,9 +49,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
             use-underline: true;
             icon-name: "profit-symbolic";
             child:
-            Label {
-              label: 'Statistics';
-            };
+              $Gjs_Statistics {};
           }
           Adw.ViewStackPage {
             name: "history";

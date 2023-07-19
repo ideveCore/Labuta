@@ -14,3 +14,12 @@ src/shortcuts.js
 src/ui/timer.blp
 src/timer.js
 src/utils.js
+src/pages/preferences/preferences.blp
+src/pages/preferences/preferences.js
+src/window.blp
+src/pages/shortcuts/shortcuts.blp
+src/pages/shortcuts/shortcuts.js
+src/pages/timer/timer.blp
+src/pages/timer/timer.js
+src/pages/statistics/statistics.js
+src/pages/statistics/statistics.blp

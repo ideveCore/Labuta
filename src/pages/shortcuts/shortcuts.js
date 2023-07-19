@@ -21,7 +21,7 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import Template from './ui/shortcuts.blp' assert { type: 'uri' };
+import Template from './shortcuts.blp' assert { type: 'uri' };
 
 export default class Shortcuts extends Gtk.ShortcutsWindow {
   static {

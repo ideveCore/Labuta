@@ -25,9 +25,10 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import { gettext as _ } from 'gettext';
 import Window from './window.js';
-import Preferences from './preferences.js';
-import Shortcuts from './shortcuts.js';
-import Timer from './timer.js';
+import Preferences from './pages/preferences/preferences.js';
+import Shortcuts from './pages/shortcuts/shortcuts.js';
+import Timer from './pages/timer/timer.js';
+import Statictics from './pages/statistics/statistics.js';
 import './style.css';
 
 export default class Application extends Adw.Application {
@@ -90,6 +91,7 @@ export default class Application extends Adw.Application {
     this.set_theme();
     this.settings.connect("changed::theme", this.set_theme.bind(this));
     this.load_data();
+    console.log(this.data)
   }
   request_quit() {
     this.run_in_background = this.settings.get_boolean('run-in-background');

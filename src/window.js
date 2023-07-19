@@ -21,21 +21,35 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import Template from './ui/window.blp' assert { type: 'uri' };
+import Template from './window.blp' assert { type: 'uri' };
 
 export default class Window extends Adw.ApplicationWindow {
   static {
     GObject.registerClass({
       Template,
-      InternalChildren: [],
+      InternalChildren: [
+        'stack',
+      ],
     }, this);
   }
   constructor(application) {
-    super({application});
+    super({ application });
 
     this.connect('close-request', () => {
       application.request_quit()
       return true
     })
+
+    this._stack.connect('notify::visible-child', () => {
+      if (this._stack.visible_child_name == 'history') {
+        this._stack.visible_child.load_list()
+      } else if (this._stack.visible_child_name == 'statistics') {
+        this._stack.visible_child.load_data()
+      }
+    });
+  }
+
+  navigate(navigate) {
+    this._stack.visible_child_name = navigate;
   }
 }
