@@ -29,6 +29,7 @@ import Preferences from './pages/preferences/preferences.js';
 import Shortcuts from './pages/shortcuts/shortcuts.js';
 import Timer from './pages/timer/timer.js';
 import Statictics from './pages/statistics/statistics.js';
+import History from './pages/history/history.js';
 import './style.css';
 
 export default class Application extends Adw.Application {

@@ -51,7 +51,8 @@ export default class Timer extends Adw.Bin {
     this.timer_running = false;
     this.work_time = this.application.settings.get_int('work-time');
     this.break_time = this.application.settings.get_int('break-time');
-    this.end_time_interval = this.application.settings.get_int('end-time-interval');
+    this.long_break = this.application.settings.get_int('long-break');
+    this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
     this.current_break_time = this.break_time;
     this.is_break_timer = false;
@@ -166,8 +167,9 @@ export default class Timer extends Adw.Bin {
             this._tag_label.set_label(`<span weight="bold" size="9pt">${this.data.counts}</span>`);
             this._pomodoro_counts.set_visible(true);
           }
-          if (this.data.counts === 3) {
-            this.current_break_time = this.end_time_interval;
+          console.log(this.sessions_long_break, this.data.counts)
+          if (this.data.counts === this.sessions_long_break) {
+            this.current_break_time = this.long_break;
           }
           this.application.notify({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
           this._timer_label.get_style_context().remove_class('error');
@@ -184,7 +186,8 @@ export default class Timer extends Adw.Bin {
   _on_reset_timer() {
     this.work_time = this.application.settings.get_int('work-time');
     this.break_time = this.application.settings.get_int('break-time');
-    this.end_time_interval = this.application.settings.get_int('end-time-interval');
+    this.long_break = this.application.settings.get_int('long-break');
+    this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
     this._pomodoro_counts.set_visible(false);
     this.timer_running = false;
     this.current_work_time = this.work_time;
@@ -200,7 +203,8 @@ export default class Timer extends Adw.Bin {
   _on_stop_timer() {
     this.work_time = this.application.settings.get_int('work-time');
     this.break_time = this.application.settings.get_int('break-time');
-    this.end_time_interval = this.application.settings.get_int('end-time-interval');
+    this.long_break = this.application.settings.get_int('long-break');
+    this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
     this._pomodoro_counts.set_visible(false);
     this.timer_running = false;
     this._title_entry.set_text('');

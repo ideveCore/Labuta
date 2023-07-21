@@ -1,0 +1,125 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Gjs_History : Adw.Bin {
+  Gtk.Box {
+    orientation: vertical;
+    Adw.Clamp {
+      halign: center;
+      Gtk.Box {
+        orientation: vertical;
+        Gtk.Box {
+          margin-start: 12;
+          margin-end: 12;
+          Gtk.Box {
+            orientation: vertical;
+            halign: center;
+            Gtk.Label total_work_time {
+              styles ["title-4", "accent"]
+            }
+            Gtk.Label total_break_time {
+              styles ["title-5", "error"]
+            }
+          }
+        }
+        Gtk.Box {
+          hexpand: true;
+          halign: center;
+          margin-start: 10;
+          Gtk.Button delete_button {
+            styles ["error"]
+            valign: center;
+            icon-name: "user-trash-symbolic";
+            sensitive: true;
+            visible: false;
+            margin-end: 10;
+            clicked => $_on_delete();
+          }
+          Gtk.Button {
+            valign: center;
+            icon-name: "check-round-outline-symbolic";
+            margin-end: 10;
+            clicked => $_on_active_selection();
+          }
+          Gtk.MenuButton {
+            menu-model: sorting_menu;
+            always-show-arrow: true;
+            valign: center;
+            child:
+            Adw.ButtonContent sorting_button_content {
+              icon-name: "view-sort-descending-symbolic";
+              label: _("Date");
+            };
+          }
+        }
+      }
+    }
+    Gtk.Separator {
+      margin-bottom: 2;
+    }
+    Gtk.Stack stack {
+      transition-type: crossfade;
+      vexpand: true;
+      Gtk.StackPage {
+        name: "no_history";
+        child:
+        Adw.StatusPage {
+          icon-name: "history-undo-symbolic";
+          Gtk.Button {
+            styles ["suggested-action", "pill"]
+            label: _("Add new pomodoro");
+            use-underline: true;
+            halign: center;
+            clicked => $_on_navigate();
+          }
+        };
+      }
+      Gtk.StackPage {
+        name: "history";
+        child:
+        Gtk.ScrolledWindow {
+          Adw.Clamp {
+            valign: center;
+            halign: center;
+            Gtk.ListBox list_box {
+              styles ["boxed-list"]
+              valign: start;
+              margin-bottom: 12;
+              margin-start: 12;
+              margin-end: 12;
+              selection-mode: none;
+            }
+          }
+        };
+      }
+    }
+  }
+}
+
+menu sorting_menu {
+  section {
+    item {
+      label: _("Name");
+      action: "sort.sort";
+      target: "name";
+    }
+    item {
+      label: _("Date");
+      action: "sort.sort";
+      target: "date";
+    }
+  }
+  section {
+    item {
+      label: _("Ascending");
+      action: "sort.order";
+      target: "ascending";
+    }
+    item {
+      label: _("Descending");
+      action: "sort.order";
+      target: "descending";
+    }
+  }
+}
+

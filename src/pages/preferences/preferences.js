@@ -31,9 +31,10 @@ export default class Preferences extends Adw.PreferencesWindow {
         'select_theme',
         'switch_run_in_background',
         'switch_play_sounds',
-        'set_end_time_interval',
+        'set_long_break',
         'set_break_time',
         'set_work_time',
+        'set_sessions_long_break',
       ],
     }, this);
   }
@@ -52,10 +53,12 @@ export default class Preferences extends Adw.PreferencesWindow {
     this.Application.settings.set_int('break-time', 10);
     this.work_time = this.Application.settings.get_int('work-time');
     this.break_time = this.Application.settings.get_int('break-time');
-    this.end_time_interval = this.Application.settings.get_int('end-time-interval');
+    this.long_break = this.Application.settings.get_int('long-break');
+    this.sessions_long_break = this.Application.settings.get_int('sessions-long-break');
     this._set_work_time.set_value(Math.floor(this.work_time / 60) % 60);
     this._set_break_time.set_value(Math.floor(this.break_time / 60) % 60);
-    this._set_end_time_interval.set_value(Math.floor(this.end_time_interval / 60) % 60);
+    this._set_long_break.set_value(Math.floor(this.long_break / 60) % 60);
+    this._set_sessions_long_break.set_value(this.sessions_long_break);
 
   }
   _change_theme(_item) {
@@ -76,7 +79,10 @@ export default class Preferences extends Adw.PreferencesWindow {
   _on_break_time_changed(_spin_button) {
     this.Application.settings.set_int('break-time', _spin_button.get_value() * 60)
   }
-  _on_end_time_interval_changed(_spin_button) {
-    this.Application.settings.set_int('end-time-interval', _spin_button.get_value() * 60)
+  _on_long_break_changed(_spin_button) {
+    this.Application.settings.set_int('long-break', _spin_button.get_value() * 60)
+  }
+  _on_sessions_long_break_changed(_spin_button) {
+    this.Application.settings.set_int('sessions-long-break', _spin_button.get_value())
   }
 }
