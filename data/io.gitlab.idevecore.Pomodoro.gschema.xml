@@ -22,8 +22,11 @@
     <key type="i" name="break-time">
       <default>300</default>
     </key>
-    <key type="i" name="end-time-interval">
+    <key type="i" name="long-break">
       <default>1800</default>
+    </key>
+    <key type="i" name="sessions-long-break">
+      <default>4</default>
     </key>
   </schema>
 </schemalist>
