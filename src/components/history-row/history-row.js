@@ -50,8 +50,8 @@ export default class HistoryRow extends Adw.ExpanderRow {
     this.history = history;
     this.selected = false;
     this._selection.connect('toggled', (action, value) => {
-      this.selected = this._selection.active
-      this.history.on_selected()
+      this.selected = this._selection.active;
+      this.history._on_selected();
     })
   }
 

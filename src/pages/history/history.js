@@ -161,13 +161,35 @@ export default class History extends Adw.Bin {
     this.load_list();
     this._delete_button.set_sensitive(false)
     this._delete_button.set_icon_name('user-trash-symbolic');
-    this._active_selection();
+    this._on_active_selection();
   }
-  _active_selection() {
-    console.log("selected");
+  _on_selected() {
+    const selecteds = this._list.filter((item) => item.row.selected === true);
+    let value = [];
+    selecteds.forEach((item) => {
+      value.push(item.row.item);
+    })
+    this.load_time(value);
+    if (value.length > 0) {
+      this._delete_button.set_icon_name('user-trash-full-symbolic');
+      this._delete_button.set_sensitive(true);
+    } else {
+      this._delete_button.set_icon_name('user-trash-symbolic');
+      this._delete_button.set_sensitive(false);
+    }
   }
   _on_active_selection() {
-    console.log("selected");
+    this.activated_selection = !this.activated_selection;
+    this._list.forEach((item) => {
+      item.row._toggle_active_selection()
+    });
+    if (!this.activated_selection) {
+      this.load_time(this.application.data);
+      this._delete_button.set_visible(false)
+    } else {
+      this.load_time([])
+      this._delete_button.set_visible(true)
+    }
   }
   _on_navigate() {
     this.application.active_window.navigate('timer')
