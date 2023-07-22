@@ -13,7 +13,7 @@ template $Gjs_History : Adw.Bin {
           margin-end: 12;
           Gtk.Box {
             orientation: vertical;
-            halign: center;
+            halign: start;
             Gtk.Label total_work_time {
               styles ["title-4", "accent"]
             }
@@ -21,35 +21,35 @@ template $Gjs_History : Adw.Bin {
               styles ["title-5", "error"]
             }
           }
-        }
-        Gtk.Box {
-          hexpand: true;
-          halign: center;
-          margin-start: 10;
-          Gtk.Button delete_button {
-            styles ["error"]
-            valign: center;
-            icon-name: "user-trash-symbolic";
-            sensitive: true;
-            visible: false;
-            margin-end: 10;
-            clicked => $_on_delete();
-          }
-          Gtk.Button {
-            valign: center;
-            icon-name: "check-round-outline-symbolic";
-            margin-end: 10;
-            clicked => $_on_active_selection();
-          }
-          Gtk.MenuButton {
-            menu-model: sorting_menu;
-            always-show-arrow: true;
-            valign: center;
-            child:
-            Adw.ButtonContent sorting_button_content {
-              icon-name: "view-sort-descending-symbolic";
-              label: _("Date");
-            };
+          Gtk.Box {
+            hexpand: true;
+            halign: end;
+            margin-start: 10;
+            Gtk.Button delete_button {
+              styles ["error"]
+              valign: center;
+              icon-name: "user-trash-symbolic";
+              sensitive: false;
+              visible: false;
+              margin-end: 10;
+              clicked => $_on_delete();
+            }
+            Gtk.Button {
+              valign: center;
+              icon-name: "check-round-outline-whole-symbolic";
+              margin-end: 10;
+              clicked => $_on_active_selection();
+            }
+            Gtk.MenuButton {
+              menu-model: sorting_menu;
+              always-show-arrow: true;
+              valign: center;
+              child:
+              Adw.ButtonContent sorting_button_content {
+                icon-name: "view-sort-descending-symbolic";
+                label: _("Date");
+              };
+            }
           }
         }
       }
@@ -79,7 +79,7 @@ template $Gjs_History : Adw.Bin {
         child:
         Gtk.ScrolledWindow {
           Adw.Clamp {
-            valign: center;
+            valign: start;
             halign: center;
             Gtk.ListBox list_box {
               styles ["boxed-list"]

@@ -6,6 +6,9 @@ install_data(
     'hourglass-symbolic.svg',
     'profit-symbolic.svg',
     'sound-wave-symbolic.svg',
+    'user-trash-symbolic.svg',
+    'user-trash-full-symbolic.svg',
+    'check-round-outline-whole-symbolic.svg',
   ],
   install_dir: datadir / 'icons/hicolor/scalable/status',
 )
