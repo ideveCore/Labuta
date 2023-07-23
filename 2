@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-/* window.js
- *
- * Copyright 2023 Francisco Jeferson dos Santos Freires
-=======
 /* preferences.js
  *
  * Copyright 2023 francisco
->>>>>>> new-pomodoro
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,55 +19,6 @@
  */
 
 import GObject from 'gi://GObject';
-<<<<<<< HEAD
-import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
-import GLib from 'gi://GLib';
-import { Application, navigation } from './stores.js';
-
-export const PomodoroWindow = GObject.registerClass({
-  GTypeName: 'PomodoroWindow',
-  Template: 'resource:///io/gitlab/idevecore/Pomodoro/window.ui',
-  InternalChildren: ['stack'],
-}, class PomodoroWindow extends Adw.ApplicationWindow {
-  constructor(application) {
-    super({ application });
-
-    let navigation_action = new Gio.SimpleAction({
-      name: 'navigate',
-      parameter_type: new GLib.VariantType('s'),
-    });
-
-    navigation_action.connect('activate', (action, parameter) => {
-      let navigate = parameter.deep_unpack();
-      this.navigate(navigate)
-    });
-
-    application.add_action(navigate);
-    Application.update(() => (application))
-    navigation.$((value) => {
-      if (value === "timer")
-        return this._stack.visible_child_name = "timer"
-    })
-    this.connect('close-request', () => {
-      application.request_quit()
-    })
-    this._stack.connect('notify::visible-child', () => {
-      if (this._stack.visible_child_name == 'History') {
-
-        console.log(this._stack.visible_child.load())
-      }
-      // new Historic().load()
-    })
-
-
-  }
-  navigate_to(page) {
-    // this._stack.visible_child_name = page;
-  }
-});
-
-=======
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Template from './ui/preferences.blp' assert { type: 'uri' };
@@ -135,4 +80,3 @@ export default class Preferences extends Adw.PreferencesWindow {
     this.Application.settings.set_int('end-time-interval', _spin_button.get_value() * 60)
   }
 }
->>>>>>> new-pomodoro

@@ -3,22 +3,13 @@
   "runtime": "org.gnome.Platform",
   "runtime-version": "44",
   "sdk": "org.gnome.Sdk",
-<<<<<<< HEAD
-  "command": "io.gitlab.idevecore.Pomodoro",
-=======
   "command": "pomodoro",
->>>>>>> new-pomodoro
   "finish-args": [
     "--share=network",
     "--share=ipc",
     "--socket=fallback-x11",
     "--device=dri",
-<<<<<<< HEAD
-    "--socket=wayland",
-    "--socket=pulseaudio"
-=======
     "--socket=wayland"
->>>>>>> new-pomodoro
   ],
   "cleanup": [
     "/include",
@@ -33,8 +24,6 @@
   ],
   "modules": [
     {
-<<<<<<< HEAD
-=======
       "name": "blueprint",
       "buildsystem": "meson",
       "cleanup": [
@@ -50,7 +39,6 @@
       ]
     },
     {
->>>>>>> new-pomodoro
       "name": "gsound",
       "buildsystem": "meson",
       "sources": [

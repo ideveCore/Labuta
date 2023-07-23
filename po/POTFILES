@@ -4,8 +4,6 @@ data/io.gitlab.idevecore.Pomodoro.gschema.xml
 src/main.js
 src/window.js
 src/window.ui
-<<<<<<< HEAD
-=======
 
 src/ui/window.blp
 src/application.js
@@ -31,4 +29,3 @@ src/components/history-row/history-row.blp
 src/components/history-row/history-row.js
 src/bd.js
 src/db.js
->>>>>>> new-pomodoro

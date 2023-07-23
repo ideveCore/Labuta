@@ -30,18 +30,7 @@ import Shortcuts from './pages/shortcuts/shortcuts.js';
 import Timer from './pages/timer/timer.js';
 import Statictics from './pages/statistics/statistics.js';
 import History from './pages/history/history.js';
-import Database from './db.js';
 import './style.css';
-
-const database = new Database();
-database.setup();
-
-console.log(database.save({
-  title: 'hello',
-  description: 'hello',
-  workTime: 1231234,
-  breakTime: 346237,
-}))
 
 export default class Application extends Adw.Application {
   static {
