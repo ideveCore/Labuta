@@ -27,3 +27,5 @@ src/pages/history/history.blp
 src/pages/history/history.js
 src/components/history-row/history-row.blp
 src/components/history-row/history-row.js
+src/bd.js
+src/db.js
