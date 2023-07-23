@@ -1,0 +1,127 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Gjs_Timer : Adw.Bin {
+  Adw.Clamp {
+    valign: center;
+    halign: center;
+    ListBox {
+      styles ["boxed-list"]
+      activate-on-single-click: false;
+      selection-mode: none;
+      margin-start: 20;
+      margin-end: 20;
+      margin-top: 20;
+      margin-bottom: 20;
+      ListBoxRow {
+        activatable: false;
+        hexpand: true;
+        Box {
+          styles ["vertical"]
+          hexpand: true;
+          valign: start;
+          spacing: 12;
+          margin-start: 20;
+          margin-end: 20;
+          margin-top: 20;
+          margin-bottom: 20;
+          orientation: vertical;
+          Box {
+            hexpand: true;
+            halign: center;
+            Label timer_label {
+              styles ["accent", "fs-1"]
+              label: "00:25:00";
+            }
+            [suffix]
+              Gtk.Overlay pomodoro_counts {
+                valign: start;
+                visible: false;
+                child: Gtk.DrawingArea tag_area {
+                  height-request: 25;
+                  width-request: 25;
+                  tooltip-text: _("Pomodoros counts");
+                };
+
+                [overlay]
+                Gtk.Label tag_label {
+                  use-markup: true;
+                  tooltip-text: _("Pomodoros counts");
+                }
+              }
+          }
+          ListBox list_box {
+            styles ["boxed-list"]
+            selection-mode: none;
+            Adw.EntryRow title_entry {
+              title: _("Title");
+            }
+            Adw.EntryRow description_entry {
+              title: _("Description");
+            }
+          }
+          Stack stack_timer_controls {
+            transition-type: crossfade;
+            StackPage {
+              name: "init_timer";
+              child:
+                Button {
+                  styles ["suggested-action", "circular", "large-button"]
+                  halign: center;
+                  valign: center;
+                  icon-name: "media-playback-start-symbolic";
+                  tooltip-text: _("Init timer");
+                  clicked => $_on_handler_timer();
+                };
+            }
+            StackPage {
+              name: "running_timer";
+              child:
+                Button {
+                  styles ["circular", "large-button"]
+                  halign: center;
+                  valign: center;
+                  icon-name: "media-playback-pause-symbolic";
+                  tooltip-text: _("Pause timer");
+                  clicked => $_on_handler_timer();
+                };
+            }
+            StackPage {
+              name: "paused_timer";
+              child:
+                Grid {
+                  halign: center;
+                  column-spacing: 18;
+                  column-homogeneous: true;
+                  Button {
+                    styles ["circular", "large-button"]
+                    halign: center;
+                    valign: center;
+                    icon-name: "view-refresh-symbolic";
+                    tooltip-text: _("Reset timer");
+                    clicked => $_on_reset_timer();
+                  }
+                  Button {
+                    styles ["suggested-action", "circular", "large-button"]
+                    halign: center;
+                    valign: center;
+                    icon-name: "media-playback-start-symbolic";
+                    tooltip-text: _("Init timer");
+                    clicked => $_on_handler_timer();
+                  }
+                  Button {
+                    styles ["circular", "large-button"]
+                    halign: center;
+                    valign: center;
+                    icon-name: "media-playback-stop-symbolic";
+                    tooltip-text: _("Stop timer");
+                    clicked => $_on_stop_timer();
+                  }
+                };
+            }
+          }
+        }
+      }
+    }
+  }
+}

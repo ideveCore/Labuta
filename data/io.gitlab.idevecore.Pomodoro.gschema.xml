@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="pomodoro">
+<<<<<<< HEAD
   <schema id="io.gitlab.idevecore.Pomodoro" path="/io/gitlab/idevecore/Pomodoro/">
     <key type="b" name="run-in-background">
       <default>true</default>
     </key>
+=======
+  <schema id="@app_id@" path="/io/gitlab/idevecore/Pomodoro/" gettext-domain="@app_id@">
+    <key type="b" name="run-in-background">
+      <default>true</default>
+    </key>
+    <key type="b" name="play-sounds">
+      <default>true</default>
+    </key>
+>>>>>>> new-pomodoro
     <key type="s" name="theme">
       <default>"default"</default>
     </key>
@@ -13,5 +23,23 @@
     <key type="s" name="order-by">
       <default>"ascending"</default>
     </key>
+<<<<<<< HEAD
   </schema>
 </schemalist>
+=======
+    <key type="i" name="work-time">
+      <default>1500</default>
+    </key>
+    <key type="i" name="break-time">
+      <default>300</default>
+    </key>
+    <key type="i" name="long-break">
+      <default>1800</default>
+    </key>
+    <key type="i" name="sessions-long-break">
+      <default>4</default>
+    </key>
+  </schema>
+</schemalist>
+
+>>>>>>> new-pomodoro

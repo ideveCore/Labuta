@@ -1,0 +1,90 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Gjs_Window : Adw.ApplicationWindow {
+  default-width: 450;
+  default-height: 600;
+  hide-on-close: true;
+  title: _("Pomodoro");
+
+  Adw.Leaflet {
+    orientation: vertical;
+    visible-child: world_leaflet;
+    transition-type: under;
+    can-unfold: false;
+    Adw.Leaflet world_leaflet {
+      can-navigate-back: true;
+      Box {
+        orientation: vertical;
+
+        Adw.HeaderBar {
+          styles ['flat']
+          centering-policy: strict;
+          [title]
+          Adw.ViewSwitcherTitle view_switcher_title {
+            stack: stack;
+            title: bind-property template.title;
+          }
+          [end]
+          MenuButton {
+            menu-model: primary_menu;
+            icon-name: "open-menu-symbolic";
+            tooltip-text: _("Main menu");
+          }
+        }
+        Adw.ViewStack stack {
+          hexpand: true;
+          vexpand: true;
+          Adw.ViewStackPage {
+            name: "timer";
+            title: _("_Timer");
+            use-underline: true;
+            icon-name: "hourglass-symbolic";
+            child:
+              $Gjs_Timer {};
+          }
+          Adw.ViewStackPage {
+            name: "statistics";
+            title: _("_Statistics");
+            use-underline: true;
+            icon-name: "profit-symbolic";
+            child:
+              $Gjs_Statistics {};
+          }
+          Adw.ViewStackPage {
+            name: "history";
+            title: _("_History");
+            use-underline: true;
+            icon-name: "history-undo-symbolic";
+            child:
+              $Gjs_History {};
+          }
+        }
+        Adw.ViewSwitcherBar {
+          stack: stack;
+          reveal: bind-property view_switcher_title.title-visible;
+        }
+      }
+    }
+  }
+}
+
+menu primary_menu {
+  section {
+    item {
+      label: _("_Preferences");
+      action: "app.preferences";
+    }
+
+    item {
+      label: _("_Keyboard Shortcuts");
+      action: "app.shortcuts";
+    }
+
+    item {
+      label: _("_About Pomodoro");
+      action: "app.about";
+    }
+  }
+}
+

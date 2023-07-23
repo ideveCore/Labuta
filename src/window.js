@@ -19,6 +19,7 @@
  */
 
 import GObject from 'gi://GObject';
+<<<<<<< HEAD
 import Adw from 'gi://Adw';
 
 export const PomodoroWindow = GObject.registerClass({
@@ -26,6 +27,21 @@ export const PomodoroWindow = GObject.registerClass({
   Template: 'resource:///io/gitlab/idevecore/Pomodoro/window.ui',
   InternalChildren: ['stack'],
 }, class PomodoroWindow extends Adw.ApplicationWindow {
+=======
+import Gtk from 'gi://Gtk';
+import Adw from 'gi://Adw';
+import Template from './window.blp' assert { type: 'uri' };
+
+export default class Window extends Adw.ApplicationWindow {
+  static {
+    GObject.registerClass({
+      Template,
+      InternalChildren: [
+        'stack',
+      ],
+    }, this);
+  }
+>>>>>>> new-pomodoro
   constructor(application) {
     super({ application });
 
@@ -42,8 +58,16 @@ export const PomodoroWindow = GObject.registerClass({
       }
     });
   }
+<<<<<<< HEAD
   navigate(navigate) {
     this._stack.visible_child_name = navigate;
   }
 });
 
+=======
+
+  navigate(navigate) {
+    this._stack.visible_child_name = navigate;
+  }
+}
+>>>>>>> new-pomodoro

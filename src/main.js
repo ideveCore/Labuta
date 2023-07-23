@@ -18,6 +18,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+<<<<<<< HEAD
 import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
 import Adw from 'gi://Adw?version=1';
@@ -101,8 +102,23 @@ export const PomodoroApplication = GObject.registerClass(
 
 export function main(argv) {
   const application = new PomodoroApplication();
+=======
+import GLib from 'gi://GLib?version=2.0'
+import Application from "./application.js";
+import GSound from 'gi://GSound';
+
+pkg.initGettext();
+GLib.set_application_name('Pomodoro');
+
+export function main(argv) {
+  const application = new Application();
+>>>>>>> new-pomodoro
   const gsound = new GSound.Context();
   gsound.init(null);
   application.gsound = gsound;
   return application.runAsync(argv);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> new-pomodoro

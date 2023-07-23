@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Pomodoro
 =======
 
@@ -35,3 +36,8 @@ Copyright 2023 Ideve Core
 =====
 Pomodoro is released under the terms of the GNU General Public License, either
 version 3.0 or, at your option, any later version.
+=======
+# pomodoro
+
+A description of this project.
+>>>>>>> new-pomodoro

@@ -18,6 +18,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+<<<<<<< HEAD
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import Adw from 'gi://Adw';
@@ -169,6 +170,11 @@ export const set_theme = () => {
 }
 
 export const format_timer = (timer) => {
+=======
+
+
+export const format_time = (timer) => {
+>>>>>>> new-pomodoro
   let hours = Math.floor(timer / 60 / 60)
   let minutes = Math.floor(timer / 60) % 60;
   let seconds = timer % 60;

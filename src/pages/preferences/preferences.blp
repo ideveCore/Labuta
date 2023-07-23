@@ -1,0 +1,113 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Gjs_Preferences : Adw.PreferencesWindow {
+  modal: true;
+  default-height: 450;
+  default-width: 400;
+  Adw.PreferencesPage {
+    title: _("Preferences");
+    Adw.PreferencesGroup {
+      title: _("User interface");
+      Adw.ComboRow select_theme {
+        notify::selected-item => $_change_theme();
+        title: _("Theme");
+        icon-name: 'dark-mode-symbolic';
+        model: StringList list {
+          strings [_("Ligth"), _("Dark"), _("System")]
+        };
+      }
+      Adw.ActionRow  {
+        title: _("Allow execution in the background");
+        subtitle: _("Hides the window instead of leaving if there is pomodoro running");
+        icon-name: "background-app-ghost-symbolic";
+        activatable-widget: switch_run_in_background;
+        [suffix]
+        Switch switch_run_in_background {
+          state-set => $_on_boolean_state_set();
+          name: "run-in-background";
+          valign: center;
+        }
+      }
+      Adw.ActionRow  {
+        title: _("Allow play sounds");
+        subtitle: _("Plays the feedback sounds");
+        icon-name: "sound-wave-symbolic";
+        activatable-widget: switch_play_sounds;
+        [suffix]
+        Switch switch_play_sounds {
+          state-set => $_on_boolean_state_set();
+          name: "play-sounds";
+          valign: center;
+        }
+      }
+    }
+    Adw.PreferencesGroup {
+      title: _("Customize pomodoro");
+      Adw.ActionRow  {
+        title: _("Work time - (minutes)");
+        subtitle: "The ideal is to follow the rules of the Pomodoro";
+        SpinButton set_work_time {
+          value-changed => $_on_work_time_changed();
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 5;
+              upper: 300;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
+      Adw.ActionRow  {
+        title: _("Break time - (minutes)");
+        subtitle: "The ideal is to follow the rules of the Pomodoro";
+        SpinButton set_break_time {
+          value-changed => $_on_break_time_changed();
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 2;
+              upper: 30;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
+      Adw.ActionRow  {
+        title: _("End time interval - (minutes)");
+        subtitle: "The ideal is to follow the rules of the Pomodoro";
+        SpinButton set_long_break {
+          value-changed => $_on_long_break_changed();
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 15;
+              upper: 60;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
+      Adw.ActionRow  {
+        title: _("Sessions until the long break - (minutes)");
+        subtitle: "The ideal is to follow the rules of the Pomodoro";
+        SpinButton set_sessions_long_break {
+          value-changed => $_on_sessions_long_break_changed();
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 1;
+              upper: 10;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
+    }
+  }
+}

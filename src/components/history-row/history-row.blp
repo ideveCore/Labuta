@@ -1,0 +1,47 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Gjs_HistoryRow : Adw.ExpanderRow {
+  [action]
+  Gtk.CheckButton selection {
+    styles ["selection-mode"]
+    visible: false;
+  }
+
+  Adw.ActionRow {
+    title: _("Work time");
+    title-lines: 1;
+    Gtk.Label work_time {
+      styles ["accent", "dim-label"]
+      ellipsize: end;
+      label: "00:00:00";
+    }
+  }
+  Adw.ActionRow {
+    title: _("Break time");
+    title-lines: 1;
+    Gtk.Label break_time {
+      styles ["error", "dim-label"]
+      ellipsize: end;
+      label: "00:00:00";
+    }
+  }
+  Adw.ActionRow description {
+    styles ["property"]
+    title: _("Description");
+    subtitle-selectable: true;
+  }
+  Adw.ActionRow {
+    styles ["dim-label"]
+    title: _("Quantities of pomodoros");
+    title-lines: 1;
+    Gtk.Label counts {
+      ellipsize: end;
+    }
+  }
+  Gtk.Button {
+    styles ["destructive-action"]
+    label: _("Remove");
+    clicked => $_on_remove_item();
+  }
+}
