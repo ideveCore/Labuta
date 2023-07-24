@@ -32,12 +32,14 @@ export default class History extends Adw.Bin {
     GObject.registerClass({
       Template,
       InternalChildren: [
+        'sort_history_dropdown',
+        'sort_first_to_last_button',
+        'sort_last_to_first_button',
+        'history_scroll',
+        'history_headerbox',
         'stack',
         'list_box',
-        'total_work_time',
-        'total_break_time',
         'delete_button',
-        'sorting_button_content',
       ]
     }, this);
   }
@@ -45,27 +47,15 @@ export default class History extends Adw.Bin {
     super();
     this.application = Gtk.Application.get_default();
     this._list = [];
-    this.sort_by = this.application.settings.get_string('sort-by');
-    this.order_by = this.application.settings.get_string('order-by');
-    const load = new Gio.SimpleAction({ name: 'load' });
-    const action_group = new Gio.SimpleActionGroup();
-    action_group.insert(load);
+    this.sort_by = this.application.settings.get_int('sort-by');
+    this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
     this.activated_selection = false;
-    const sort_action_group = new Gio.SimpleActionGroup();
-    this.insert_action_group('sort', sort_action_group);
-    const sort_action = new Gio.SimpleAction({ name: 'sort', parameter_type: new GLib.VariantType('s') });
-    const order_action = new Gio.SimpleAction({ name: 'order', parameter_type: new GLib.VariantType('s') });
-    sort_action_group.add_action(sort_action);
-    sort_action_group.add_action(order_action);
+    this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]))
 
-    const load_sorting_button_content = () => {
-      this._sorting_button_content.set_label(_(this.capitalize(this.sort_by)));
-      this._sorting_button_content.set_icon_name(this.order_by === 'ascending' ? 'view-sort-ascending-symbolic' : 'view-sort-descending-symbolic');
-    }
-
-    load_sorting_button_content()
-
-    sort_action.connect('activate', (action, parameter) => {
+    this.load_list();
+    this._sort_history_dropdown.set_selected(this.sort_by);
+    this._sort_history_dropdown.connect('notify::selected-item', () => {
+      this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected())
       let items = []
       this.application.data.forEach((item, index) => {
         items.push(this._list_box.get_row_at_index(index))
@@ -73,39 +63,50 @@ export default class History extends Adw.Bin {
       items.forEach((item) => {
         this._list_box.remove(item)
       })
-      let sort_by = parameter.deep_unpack();
-      this.application.settings.set_string('sort-by', sort_by);
-      this.sort_by = this.application.settings.get_string('sort-by');
-      load_sorting_button_content()
+      this.sort_by = this.application.settings.get_int('sort-by');
       this._list = []
-      this.load_list()
+      this.load_list();
     });
-
-    order_action.connect('activate', (action, parameter) => {
-      let items = []
-      this.application.data.forEach((item, index) => {
-        items.push(this._list_box.get_row_at_index(index))
-      })
-      items.forEach((item) => {
-        this._list_box.remove(item)
-      })
-      let sort_by = parameter.deep_unpack();
-      this.application.settings.set_string('order-by', sort_by);
-      this.order_by = this.application.settings.get_string('order-by');
-      load_sorting_button_content()
-      this._list = []
-      this.load_list()
+    this._sort_first_to_last_button.connect('clicked', () => {
+      this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
+      this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
+      this._on_order_changed();
+    });
+    this._sort_last_to_first_button.connect('clicked', () => {
+      this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
+      this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
+      this._on_order_changed();
+    });
+    this.history_scroll_adjustment = this._history_scroll.get_vadjustment();
+    this._history_scroll.connect('notify', (sender, e) => {
+      console.log("kdw2")
+      if (this.history_scroll_adjustment.get_value() == 0.0) {
+        this._history_headerbox.get_style_context().remove_class("history-header");
+      }
+      else {
+        this._history_headerbox.get_style_context().add_class("history-header");
+      }
     })
+  }
+  _on_order_changed() {
+    let items = []
+    this.application.data.forEach((item, index) => {
+      items.push(this._list_box.get_row_at_index(index))
+    })
+    items.forEach((item) => {
+      this._list_box.remove(item)
+    })
+    this._list = []
     this.load_list();
   }
   load_list() {
-    if (this.sort_by === 'name') {
-      this.application.dat = this.application.data.sort((a, b) => a.title.localeCompare(b.title))
-    } else if (this.sort_by === 'date') {
+    if (this.sort_by === 0) {
+      this.application.data = this.application.data.sort((a, b) => a.title.localeCompare(b.title))
+    } else {
       this.application.data = this.application.data.sort((a, b) => a.date.day - b.date.day);
     }
 
-    if (this.order_by === 'descending') {
+    if (!this.sort_first_to_last) {
       this.application.data = this.application.data.slice(0).reverse()
     }
 
@@ -147,8 +148,8 @@ export default class History extends Adw.Bin {
   load_time(time) {
     const total_work_timer = time.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const total_break_timer = time.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
-    this._total_work_time.set_text(`${_("Total work")}: ${format_time(total_work_timer)}`)
-    this._total_break_time.set_text(`${_("Total break")}: ${format_time(total_break_timer)}`)
+    // this._total_work_time.set_text(`${_("Total work")}: ${format_time(total_work_timer)}`)
+    // this._total_break_time.set_text(`${_("Total break")}: ${format_time(total_break_timer)}`)
   }
   capitalize(str, lower = false) {
     return (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());

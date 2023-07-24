@@ -10,11 +10,11 @@
     <key type="s" name="theme">
       <default>"default"</default>
     </key>
-    <key type="s" name="sort-by">
-      <default>"name"</default>
+    <key type="i" name="sort-by">
+      <default>1</default>
     </key>
-    <key type="s" name="order-by">
-      <default>"ascending"</default>
+    <key type="b" name="sort-first-to-last">
+      <default>true</default>
     </key>
     <key type="i" name="work-time">
       <default>1500</default>
