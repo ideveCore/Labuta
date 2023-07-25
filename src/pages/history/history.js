@@ -35,6 +35,7 @@ export default class History extends Adw.Bin {
         'sort_history_dropdown',
         'sort_first_to_last_button',
         'sort_last_to_first_button',
+        'toggle_view_work_break_time_button',
         'history_scroll',
         'history_headerbox',
         'stack',
@@ -51,6 +52,7 @@ export default class History extends Adw.Bin {
     this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
     this.activated_selection = false;
     this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]))
+    this.view_work_time = true;
 
     this.load_list();
     this._sort_history_dropdown.set_selected(this.sort_by);
@@ -78,15 +80,19 @@ export default class History extends Adw.Bin {
       this._on_order_changed();
     });
     this.history_scroll_adjustment = this._history_scroll.get_vadjustment();
-    this._history_scroll.connect('notify', (sender, e) => {
-      console.log("kdw2")
+    this.history_scroll_adjustment.connect('notify::value', (sender, e) => {
       if (this.history_scroll_adjustment.get_value() == 0.0) {
         this._history_headerbox.get_style_context().remove_class("history-header");
       }
       else {
         this._history_headerbox.get_style_context().add_class("history-header");
       }
-    })
+    });
+    this._toggle_view_work_break_time_button.connect('clicked', () => {
+      this.view_work_time = this._toggle_view_work_break_time_button.get_active();
+      this.load_time(this.application.data);
+    });
+    this.load_time(this.application.data);
   }
   _on_order_changed() {
     let items = []
@@ -148,6 +154,18 @@ export default class History extends Adw.Bin {
   load_time(time) {
     const total_work_timer = time.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const total_break_timer = time.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+
+    if (this.view_work_time) {
+      this._toggle_view_work_break_time_button.get_style_context().remove_class('error');
+      this._toggle_view_work_break_time_button.get_style_context().add_class('accent');
+      this._toggle_view_work_break_time_button.set_tooltip_text(_('Work time'));
+      this._toggle_view_work_break_time_button.set_label(format_time(total_work_timer));
+    } else {
+      this._toggle_view_work_break_time_button.get_style_context().remove_class('accent');
+      this._toggle_view_work_break_time_button.get_style_context().add_class('error');
+      this._toggle_view_work_break_time_button.set_tooltip_text(_('Break time'));
+      this._toggle_view_work_break_time_button.set_label(format_time(total_break_timer));
+    }
     // this._total_work_time.set_text(`${_("Total work")}: ${format_time(total_work_timer)}`)
     // this._total_break_time.set_text(`${_("Total break")}: ${format_time(total_break_timer)}`)
   }
