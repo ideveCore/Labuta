@@ -36,20 +36,20 @@ export default class Window extends Adw.ApplicationWindow {
     super({ application });
 
     this.connect('close-request', () => {
-      application.request_quit()
+      application._request_quit()
       return true
     })
 
     this._stack.connect('notify::visible-child', () => {
       if (this._stack.visible_child_name == 'history') {
-        this._stack.visible_child.load_list()
+        this._stack.visible_child._load_history_list();
       } else if (this._stack.visible_child_name == 'statistics') {
-        this._stack.visible_child.load_data()
+        this._stack.visible_child._load_statistics_data();
       }
     });
   }
 
-  navigate(navigate) {
+  _navigate(navigate) {
     this._stack.visible_child_name = navigate;
   }
 }

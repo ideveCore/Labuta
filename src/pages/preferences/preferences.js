@@ -49,8 +49,6 @@ export default class Preferences extends Adw.PreferencesWindow {
     this._switch_run_in_background.set_active(this.Application.settings.get_boolean('run-in-background'));
     this._switch_play_sounds.set_active(this.Application.settings.get_boolean('play-sounds'));
 
-    this.Application.settings.set_int('work-time', 10);
-    this.Application.settings.set_int('break-time', 10);
     this.work_time = this.Application.settings.get_int('work-time');
     this.break_time = this.Application.settings.get_int('break-time');
     this.long_break = this.Application.settings.get_int('long-break');

@@ -25,7 +25,7 @@ import GSound from 'gi://GSound';
 pkg.initGettext();
 GLib.set_application_name('Pomodoro');
 
-export function main(argv) {
+export const main = (argv) => {
   const application = new Application();
   const gsound = new GSound.Context();
   gsound.init(null);

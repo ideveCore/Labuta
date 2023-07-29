@@ -51,23 +51,23 @@ export default class History extends Adw.Bin {
     this.sort_by = this.application.settings.get_int('sort-by');
     this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
     this.activated_selection = false;
-    this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]))
+    this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]));
     this.view_work_time = true;
 
-    this.load_list();
+    this._load_history_list();
     this._sort_history_dropdown.set_selected(this.sort_by);
     this._sort_history_dropdown.connect('notify::selected-item', () => {
-      this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected())
+      this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected());
       let items = []
       this.application.data.forEach((item, index) => {
-        items.push(this._list_box.get_row_at_index(index))
+        items.push(this._list_box.get_row_at_index(index));
       })
       items.forEach((item) => {
-        this._list_box.remove(item)
+        this._list_box.remove(item);
       })
       this.sort_by = this.application.settings.get_int('sort-by');
-      this._list = []
-      this.load_list();
+      this._list = [];
+      this._load_history_list();
     });
     this._sort_first_to_last_button.connect('clicked', () => {
       this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
@@ -90,33 +90,33 @@ export default class History extends Adw.Bin {
     });
     this._toggle_view_work_break_time_button.connect('clicked', () => {
       this.view_work_time = this._toggle_view_work_break_time_button.get_active();
-      this.load_time(this.application.data);
+      this._load_display_total_time(this.application.data);
     });
-    this.load_time(this.application.data);
+    this._load_display_total_time(this.application.data);
   }
   _on_order_changed() {
     let items = []
     this.application.data.forEach((item, index) => {
-      items.push(this._list_box.get_row_at_index(index))
+      items.push(this._list_box.get_row_at_index(index));
     })
     items.forEach((item) => {
-      this._list_box.remove(item)
+      this._list_box.remove(item);
     })
-    this._list = []
-    this.load_list();
+    this._list = [];
+    this._load_history_list();
   }
-  load_list() {
+  _load_history_list() {
     if (this.sort_by === 0) {
-      this.application.data = this.application.data.sort((a, b) => a.title.localeCompare(b.title))
+      this.application.data = this.application.data.sort((a, b) => a.title.localeCompare(b.title));
     } else {
       this.application.data = this.application.data.sort((a, b) => a.date.day - b.date.day);
     }
 
     if (!this.sort_first_to_last) {
-      this.application.data = this.application.data.slice(0).reverse()
+      this.application.data = this.application.data.slice(0).reverse();
     }
 
-    this.load_time(this.application.data);
+    this._load_display_total_time(this.application.data);
     if (this.application.data.length === 0)
       return this._stack.visible_child_name = "no_history";
 
@@ -128,7 +128,7 @@ export default class History extends Adw.Bin {
         this._list.push({
           title: item.title,
           row: row,
-        })
+        });
       });
       return
     }
@@ -142,16 +142,16 @@ export default class History extends Adw.Bin {
       this._list.push({
         title: item.title,
         row: row,
-      })
+      });
     })
     if (remove_items.length > 0) {
       remove_items.forEach((item) => {
-        this._list_box.remove(item.row)
-        this._list = this._list.filter((array_item) => array_item !== item)
+        this._list_box.remove(item.row);
+        this._list = this._list.filter((array_item) => array_item !== item);
       })
     }
   }
-  load_time(time) {
+  _load_display_total_time(time) {
     const total_work_timer = time.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const total_break_timer = time.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
 
@@ -166,19 +166,14 @@ export default class History extends Adw.Bin {
       this._toggle_view_work_break_time_button.set_tooltip_text(_('Break time'));
       this._toggle_view_work_break_time_button.set_label(format_time(total_break_timer));
     }
-    // this._total_work_time.set_text(`${_("Total work")}: ${format_time(total_work_timer)}`)
-    // this._total_break_time.set_text(`${_("Total break")}: ${format_time(total_break_timer)}`)
-  }
-  capitalize(str, lower = false) {
-    return (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());
   }
   _on_delete() {
     const selecteds = this._list.filter((item) => item.row.selected === true);
     const new_data = this.application.data.filter((item) => !(selecteds.find((selected_item) => selected_item.row.item === item) ? true : false));
     this.application.data = new_data;
     this.application.save_data();
-    this.load_list();
-    this._delete_button.set_sensitive(false)
+    this._load_history_list();
+    this._delete_button.set_sensitive(false);
     this._delete_button.set_icon_name('user-trash-symbolic');
     this._on_active_selection();
   }
@@ -188,7 +183,7 @@ export default class History extends Adw.Bin {
     selecteds.forEach((item) => {
       value.push(item.row.item);
     })
-    this.load_time(value);
+    this._load_display_total_time(value);
     if (value.length > 0) {
       this._delete_button.set_icon_name('user-trash-full-symbolic');
       this._delete_button.set_sensitive(true);
@@ -200,17 +195,17 @@ export default class History extends Adw.Bin {
   _on_active_selection() {
     this.activated_selection = !this.activated_selection;
     this._list.forEach((item) => {
-      item.row._toggle_active_selection()
+      item.row._toggle_active_selection();
     });
     if (!this.activated_selection) {
-      this.load_time(this.application.data);
-      this._delete_button.set_visible(false)
+      this._load_display_total_time(this.application.data);
+      this._delete_button.set_visible(false);
     } else {
-      this.load_time([])
-      this._delete_button.set_visible(true)
+      this._load_display_total_time([]);
+      this._delete_button.set_visible(true);
     }
   }
   _on_navigate() {
-    this.application.active_window.navigate('timer')
+    this.application.active_window._navigate('timer');
   }
 }

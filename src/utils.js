@@ -19,7 +19,6 @@
  */
 
 
-
 export const format_time = (timer) => {
   let hours = Math.floor(timer / 60 / 60)
   let minutes = Math.floor(timer / 60) % 60;

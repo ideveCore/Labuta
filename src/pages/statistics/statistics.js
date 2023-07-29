@@ -46,28 +46,28 @@ export default class Statistics extends Adw.Bin {
     super();
     this.application = Gtk.Application.get_default();
     this._current_date = GLib.DateTime.new_now_local();
-    this.load_data();
+    this._load_statistics_data();
   }
-  load_data() {
-    this.load_work_timer()
-    this.load_break_timer()
+  _load_statistics_data() {
+    this._load_work_time();
+    this._load_break_time();
   }
-  get_day() {
+  _get_day() {
     return this._current_date.get_day_of_year();
   }
-  get_week() {
+  _get_week() {
     return this._current_date.get_week_of_year();
   }
-  get_month() {
+  _get_month() {
     return this._current_date.get_month();
   }
-  load_work_timer() {
-    const today = this.application.data.filter((item) => item.date.day === this.get_day())
-    const yesterday = this.application.data.filter((item) => item.date.day === this.get_day() - 1);
-    const week = this.application.data.filter((item) => item.date.week === this.get_week());
-    const last_week = this.application.data.filter((item) => item.date.week === this.get_week() - 1);
-    const month = this.application.data.filter((item) => item.date.month === this.get_month());
-    const last_month = this.application.data.filter((item) => item.date.month === this.get_month() - 1);
+  _load_work_time() {
+    const today = this.application.data.filter((item) => item.date.day === this._get_day())
+    const yesterday = this.application.data.filter((item) => item.date.day === this._get_day() - 1);
+    const week = this.application.data.filter((item) => item.date.week === this._get_week());
+    const last_week = this.application.data.filter((item) => item.date.week === this._get_week() - 1);
+    const month = this.application.data.filter((item) => item.date.month === this._get_month());
+    const last_month = this.application.data.filter((item) => item.date.month === this._get_month() - 1);
     const work_time_today = today.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const work_timer_yesterday = yesterday.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const work_time_week = week.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
@@ -110,10 +110,10 @@ export default class Statistics extends Adw.Bin {
     this._work_time_month_label.set_text(format_time(work_time_month));
     this._work_time_month.set_subtitle(percentage_work_time_month_last_month())
   }
-  load_break_timer() {
-    const today = this.application.data.filter((item) => item.date.day === this.get_day())
-    const week = this.application.data.filter((item) => item.date.week === this.get_week());
-    const month = this.application.data.filter((item) => item.date.month === this.get_month());
+  _load_break_time() {
+    const today = this.application.data.filter((item) => item.date.day === this._get_day())
+    const week = this.application.data.filter((item) => item.date.week === this._get_week());
+    const month = this.application.data.filter((item) => item.date.month === this._get_month());
 
     const break_time_today = today.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     const break_time_week = week.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);

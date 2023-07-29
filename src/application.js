@@ -53,9 +53,9 @@ export default class Application extends Adw.Application {
 
     quit_action.connect('activate', () => {
       if (this.active_window.visible) {
-        this.request_quit()
+        this._request_quit()
       } else {
-        this.close_request()
+        this._open_close_option_dialog()
       }
     });
     preferences_action.connect('activate', () => {
@@ -89,14 +89,14 @@ export default class Application extends Adw.Application {
     this.set_accels_for_action('app.quit', ['<primary>q']);
     this.add_action(show_about_action);
     this.add_action(active_action);
-    this.set_theme();
-    this.settings.connect("changed::theme", this.set_theme.bind(this));
-    this.load_data();
+    this._load_application_theme();
+    this.settings.connect("changed::theme", this._load_application_theme.bind(this));
+    // this._load_data();
   }
-  request_quit() {
+  _request_quit() {
     this.run_in_background = this.settings.get_boolean('run-in-background');
     if (!this.run_in_background) {
-      this.close_request()
+      this._open_close_option_dialog()
       return
     }
     if (this.timer_state === 'stopped') {
@@ -107,7 +107,7 @@ export default class Application extends Adw.Application {
     if (!this.active_window)
       return
   }
-  close_request() {
+  _open_close_option_dialog() {
     let dialog = new Adw.MessageDialog();
     dialog.set_heading(_('Stop timer?'));
     dialog.set_transient_for(this.active_window);
@@ -129,7 +129,7 @@ export default class Application extends Adw.Application {
     }
     this.quit()
   }
-  set_theme() {
+  _load_application_theme() {
     const style_manager = Adw.StyleManager.get_default()
     if (this.settings.get_string('theme') === 'default') {
       style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
@@ -139,7 +139,7 @@ export default class Application extends Adw.Application {
       style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
     }
   }
-  notify({ title, body }) {
+  _send_notification({ title, body }) {
     const notification = new Gio.Notification();
     notification.set_title(title);
     notification.set_body(body);
@@ -147,7 +147,7 @@ export default class Application extends Adw.Application {
     notification.set_default_action("app.open");
     this.send_notification("lunch-is-ready", notification);
   }
-  sound({ name, cancellable }) {
+  _play_sound({ name, cancellable }) {
     if (!this.settings.get_boolean('play-sounds')) return
     return new Promise((resolve, reject) => {
       this.gsound.play_full(
@@ -163,7 +163,7 @@ export default class Application extends Adw.Application {
       );
     });
   }
-  set_background_status(message) {
+  _load_background_portal_status(message) {
     const connection = Gio.DBus.session;
     const messageVariant = new GLib.Variant('(a{sv})', [{
       'message': new GLib.Variant('s', message)
@@ -190,14 +190,14 @@ export default class Application extends Adw.Application {
       }
     );
   }
-  save_data() {
+  _save_data() {
     const data_dir = GLib.get_user_config_dir();
     const destination = GLib.build_filenamev([data_dir, 'data.json'])
     const destination_file = Gio.File.new_for_path(destination)
 
     destination_file.replace_contents(JSON.stringify(this.data), null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
   }
-  load_data() {
+  _load_data() {
     const data_dir = GLib.get_user_config_dir();
     const destination = GLib.build_filenamev([data_dir, 'data.json'])
     const destination_file = Gio.File.new_for_path(destination)
