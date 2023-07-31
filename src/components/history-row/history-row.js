@@ -36,29 +36,29 @@ export default class HistoryRow extends Adw.ExpanderRow {
       ],
     }, this);
   }
-  constructor(item) {
+  constructor(history, item) {
     super();
-    console.log(item.title)
+    console.log(history)
     this.item = item;
     this.application = Gtk.Application.get_default();
     // this.item = item;
     // this.index = index;
     this.set_title(this.item.title);
     this.set_subtitle(this.item.subtitle);
-    // this._work_time.set_text(this._format_time(this.item.work_time).toString());
-    // this._break_time.set_text(this._format_time(this.item.break_time).toString());
-    // this._description.set_subtitle(this.item.description.toString());
-    // this._counts.set_text(this.item.counts.toString());
-    // this.history = history;
+    this._work_time.set_text(this.item.work_time);
+    this._break_time.set_text(this.item.break_time);
+    this._description.set_subtitle(this.item.description);
+    this._counts.set_text(this.item.counts);
+    this.history = history;
     // this.selected = false;
     // this._selection.connect('toggled', (action, value) => {
     //   this.selected = this._selection.active;
     //   this.history._on_selected();
     // })
-    this._work_time.set_text('djod');
-    this._break_time.set_text('wedhw');
-    this._description.set_subtitle('kwne');
-    this._counts.set_text('ekjdwo');
+    // this._work_time.set_text('djod');
+    // this._break_time.set_text('wedhw');
+    // this._description.set_subtitle('kwne');
+    // this._counts.set_text('ekjdwo');
     // this.history = history;
     this.selected = false;
     this._selection.connect('toggled', (action, value) => {
@@ -67,29 +67,15 @@ export default class HistoryRow extends Adw.ExpanderRow {
     })
 
   }
-
-  _format_time(timer) {
-    let hours = Math.floor(timer / 60 / 60)
-    let minutes = Math.floor(timer / 60) % 60;
-    let seconds = timer % 60;
-
-    if (hours.toString().split('').length < 2) {
-      hours = `0${hours}`
-    }
-    if (minutes.toString().split('').length < 2) {
-      minutes = `0${minutes}`
-    }
-    if (seconds.toString().split('').length < 2) {
-      seconds = `0${seconds}`
-    }
-    return `${hours}:${minutes}:${seconds}`
-  }
   _on_remove_item() {
-    this.application.data = this.application.data.filter((item) => item !== this.item);
-    this.application.save_data();
-    this.history.load_list();
+    this.application.data = this.application.data.filter((item) => item.id !== this.item.id);
+    this.history._load_history_list();
+    this.application._save_data();
   }
-  _toggle_active_selection() {
+  test(mode) {
+    console.log(mode)
+  }
+  _on_active_selection() {
     this._selection.set_visible(this.history.activated_selection)
   }
 }

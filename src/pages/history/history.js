@@ -53,6 +53,7 @@ export default class History extends Adw.Bin {
     this.activated_selection = false;
     this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]));
     this.view_work_time = true;
+    this.set_selection = [];
 
     this._load_history_list();
     this._sort_history_dropdown.set_selected(this.sort_by);
@@ -122,7 +123,9 @@ export default class History extends Adw.Bin {
 
   }
   _create_history_row(item) {
-    return new HistoryRow(item);
+    const row = new HistoryRow(this, item);
+    this.set_selection.push(row._on_active_selection.bind(row));
+    return row
   }
   _load_history_list() {
     const history_model = new History_list_model();
@@ -134,8 +137,7 @@ export default class History extends Adw.Bin {
     const sorter = new Gtk.CustomSorter(this._sort_history);
     const sorted_model = Gtk.SortListModel.new(model, sorter)
     const filter_model = Gtk.FilterListModel.new(sorted_model, filter)
-    console.log(`${filter_model}`)
-    this._list_box.bind_model(filter_model, this._create_history_row)
+    this._list_box.bind_model(filter_model, this._create_history_row.bind(this))
 
     // if (this.sort_by === 0) {
     //   this.application.data = this.application.data.sort((a, b) => a.title.localeCompare(b.title));
@@ -225,16 +227,22 @@ export default class History extends Adw.Bin {
   }
   _on_active_selection() {
     this.activated_selection = !this.activated_selection;
-    this._list.forEach((item) => {
-      item.row._toggle_active_selection();
-    });
-    if (!this.activated_selection) {
-      this._load_display_total_time(this.application.data);
-      this._delete_button.set_visible(false);
-    } else {
-      this._load_display_total_time([]);
-      this._delete_button.set_visible(true);
-    }
+    this.set_selection.forEach((item) => {
+      item()
+    })
+    // this._list_box.forEach((item) => {
+    //   console.log(item)
+    // })
+    // this._list.forEach((item) => {
+    //   item.row._toggle_active_selection();
+    // });
+    // if (!this.activated_selection) {
+    //   this._load_display_total_time(this.application.data);
+    //   this._delete_button.set_visible(false);
+    // } else {
+    //   this._load_display_total_time([]);
+    //   this._delete_button.set_visible(true);
+    // }
   }
   _on_navigate() {
     this.application.active_window._navigate('timer');

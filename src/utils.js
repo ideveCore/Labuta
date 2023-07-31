@@ -54,6 +54,42 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         "",
       ),
+      work_time: GObject.ParamSpec.string(
+        "work_time",
+        null,
+        null,
+        GObject.ParamFlags.READWRITE,
+        "",
+      ),
+      break_time: GObject.ParamSpec.string(
+        "break_time",
+        null,
+        null,
+        GObject.ParamFlags.READWRITE,
+        "",
+      ),
+      description: GObject.ParamSpec.string(
+        "description",
+        null,
+        null,
+        GObject.ParamFlags.READWRITE,
+        "",
+      ),
+      counts: GObject.ParamSpec.string(
+        "counts",
+        null,
+        null,
+        GObject.ParamFlags.READWRITE,
+        "",
+      ),
+      id: GObject.ParamSpec.string(
+        "id",
+        null,
+        null,
+        GObject.ParamFlags.READWRITE,
+        "",
+      ),
+
     },
   },
   class History_list_object extends GObject.Object { },
@@ -86,7 +122,15 @@ export const History_list_model = GObject.registerClass(
 
     _append_history_item(list) {
       list.forEach((item) => {
-        this.history_list.push(new History_list_object({ title: item.title.toString(), subtitle: item.date.display_date.toString() }));
+        this.history_list.push(new History_list_object({
+          title: item.title.toString(),
+          subtitle: item.date.display_date.toString(),
+          work_time: format_time(item.work_time).toString(),
+          break_time: format_time(item.break_time).toString(),
+          description: item.description.toString(),
+          counts: item.counts.toString(),
+          id: item.id.toString(),
+        }));
       })
     }
   })
