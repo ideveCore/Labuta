@@ -36,23 +36,36 @@ export default class HistoryRow extends Adw.ExpanderRow {
       ],
     }, this);
   }
-  constructor(history, item, index) {
+  constructor(item) {
     super();
-    this.application = Gtk.Application.get_default();
+    console.log(item.title)
     this.item = item;
-    this.index = index;
-    this.set_title(this.item.title.toString());
-    this.set_subtitle(this.item.date.display_date.toString());
-    this._work_time.set_text(this._format_time(this.item.work_time).toString());
-    this._break_time.set_text(this._format_time(this.item.break_time).toString());
-    this._description.set_subtitle(this.item.description.toString());
-    this._counts.set_text(this.item.counts.toString());
-    this.history = history;
+    this.application = Gtk.Application.get_default();
+    // this.item = item;
+    // this.index = index;
+    this.set_title(this.item.title);
+    this.set_subtitle(this.item.subtitle);
+    // this._work_time.set_text(this._format_time(this.item.work_time).toString());
+    // this._break_time.set_text(this._format_time(this.item.break_time).toString());
+    // this._description.set_subtitle(this.item.description.toString());
+    // this._counts.set_text(this.item.counts.toString());
+    // this.history = history;
+    // this.selected = false;
+    // this._selection.connect('toggled', (action, value) => {
+    //   this.selected = this._selection.active;
+    //   this.history._on_selected();
+    // })
+    this._work_time.set_text('djod');
+    this._break_time.set_text('wedhw');
+    this._description.set_subtitle('kwne');
+    this._counts.set_text('ekjdwo');
+    // this.history = history;
     this.selected = false;
     this._selection.connect('toggled', (action, value) => {
       this.selected = this._selection.active;
       this.history._on_selected();
     })
+
   }
 
   _format_time(timer) {

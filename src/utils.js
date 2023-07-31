@@ -18,6 +18,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
 
 export const format_time = (timer) => {
   let hours = Math.floor(timer / 60 / 60)
@@ -34,3 +36,87 @@ export const format_time = (timer) => {
   }
   return `${hours}:${minutes}:${seconds}`
 }
+
+const History_list_object = GObject.registerClass(
+  {
+    Properties: {
+      title: GObject.ParamSpec.string(
+        "title",
+        null,
+        null,
+        GObject.ParamFlags.READWRITE,
+        "",
+      ),
+      subtitle: GObject.ParamSpec.string(
+        "subtitle",
+        null,
+        null,
+        GObject.ParamFlags.READWRITE,
+        "",
+      ),
+    },
+  },
+  class History_list_object extends GObject.Object { },
+);
+// export const History_list_model = GObject.Object {
+//   class History_list_model extends Gio.ListModel {}
+// }
+//
+export const History_list_model = GObject.registerClass(
+  {
+    Implements: [Gio.ListModel]
+  },
+  class History_list_model extends GObject.Object {
+    constructor() {
+      super();
+      this.history_list = [];
+    }
+
+    vfunc_get_item_type() {
+      return this.history_list;
+    }
+
+    vfunc_get_n_items() {
+      return this.history_list.length;
+    }
+
+    vfunc_get_item(_pos) {
+      return this.history_list[_pos];
+    }
+
+    _append_history_item(list) {
+      list.forEach((item) => {
+        this.history_list.push(new History_list_object({ title: item.title.toString(), subtitle: item.date.display_date.toString() }));
+      })
+    }
+  })
+//   export class History_list_model extends Gio.ListModel {
+//   static [GObject.interfaces] = [GObject.Object];
+//   static {
+//     GObject.registerClass(this);
+//   }
+
+//   constructor() {
+//     super();
+//     this.history_list = [];
+//   }
+
+//   vfunc_get_item_type() {
+//     return this.history_list;
+//   }
+
+//   vfunc_get_n_items() {
+//     return 1;
+//   }
+
+//   vfunc_get_item(_pos) {
+//     return this.history_list;
+//   }
+
+//   _append_history_item(list) {
+//     list.forEach((item) => {
+//       console.log(new History_list_object({ title: item.title.toString(), subtitle: item.date.display_date.toString() }));
+//       this.history_list.push(new History_list_object({ title: item.title.toString(), subtitle: item.date.display_date.toString() }));
+//     })
+//   }
+// }

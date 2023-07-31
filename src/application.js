@@ -91,7 +91,7 @@ export default class Application extends Adw.Application {
     this.add_action(active_action);
     this._load_application_theme();
     this.settings.connect("changed::theme", this._load_application_theme.bind(this));
-    // this._load_data();
+    this._load_data();
   }
   _request_quit() {
     this.run_in_background = this.settings.get_boolean('run-in-background');
