@@ -122,6 +122,11 @@ export default class History extends Adw.Bin {
       row.selected = checkButton.get_active();
       this._on_select_row(row);
     })
+    row._remove_item_button.connect('clicked', () => {
+      this.application.data = this.application.data.filter((item) => item.id !== row.id);
+      this._list_box.remove(row);
+      this.application._save_data();
+    })
     return row
   }
   _load_history_list() {

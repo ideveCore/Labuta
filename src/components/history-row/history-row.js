@@ -34,6 +34,7 @@ export default class HistoryRow extends Adw.ExpanderRow {
         'description',
         'counts',
         'selection',
+        'remove_item_button',
       ],
     }, this);
   }
@@ -45,35 +46,13 @@ export default class HistoryRow extends Adw.ExpanderRow {
     this.application = Gtk.Application.get_default();
     this.id = this.item.id;
     this.month = this.item.month;
-    // this.date = {
-
-    // }
-    // this.day = item.day;
-    // this.item = item;
-    // this.index = index;
     this.set_title(this.item.title);
     this.set_subtitle(this.item.subtitle);
     this._work_time.set_text(format_time(item.work_time).toString());
     this._break_time.set_text(format_time(item.break_time).toString());
     this._description.set_subtitle(this.item.description);
     this._counts.set_text(this.item.counts);
-    // this.history = history;
-    // this.selected = false;
-    // this._selection.connect('toggled', (action, value) => {
-    //   this.selected = this._selection.active;
-    //   this.history._on_selected();
-    // })
-    // this._work_time.set_text('djod');
-    // this._break_time.set_text('wedhw');
-    // this._description.set_subtitle('kwne');
-    // this._counts.set_text('ekjdwo');
-    // this.history = history;
     this.selected = false;
-  }
-  _on_remove_item() {
-    this.application.data = this.application.data.filter((item) => item.id !== this.item.id);
-    this.history._load_history_list();
-    this.application._save_data();
   }
   _on_active_selection(mode) {
     this._selection.set_visible(mode)

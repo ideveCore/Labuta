@@ -39,9 +39,8 @@ template $Gjs_HistoryRow : Adw.ExpanderRow {
       ellipsize: end;
     }
   }
-  Gtk.Button {
+  Gtk.Button remove_item_button {
     styles ["destructive-action"]
     label: _("Remove");
-    clicked => $_on_remove_item();
   }
 }
