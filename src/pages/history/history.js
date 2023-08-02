@@ -48,12 +48,13 @@ export default class History extends Adw.Bin {
     super();
     this.application = Gtk.Application.get_default();
     this._list = [];
+    this.list = [];
+    this.selected_rows = [];
     this.sort_by = this.application.settings.get_int('sort-by');
     this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
     this.activated_selection = false;
     this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]));
     this.view_work_time = true;
-    this.set_selection = [];
 
     this._load_history_list();
     this._sort_history_dropdown.set_selected(this.sort_by);
@@ -109,22 +110,21 @@ export default class History extends Adw.Bin {
   _filter_history(item) {
     const search = '';
     const regex = new RegExp(search, 'i');
-
-    // Use the RegExp.test() method to check if the pattern is found in the string
     const result = regex.test(item.name);
-
-    // 'result' will be a boolean indicating whether the pattern was found or not
     return result;
   }
   _sort_history(history_a, history_b, _data) {
     const a = history_a.title
     const b = history_b.title
     return (a > b) - (a < b)
-
   }
   _create_history_row(item) {
-    const row = new HistoryRow(this, item);
-    this.set_selection.push(row._on_active_selection.bind(row));
+    const row = new HistoryRow(item);
+    row._selection.connect('toggled', (checkButton) => {
+      row.selected = checkButton.get_active();
+      console.log(row.selected)
+      this._on_select_row(row);
+    })
     return row
   }
   _load_history_list() {
@@ -137,7 +137,9 @@ export default class History extends Adw.Bin {
     const sorter = new Gtk.CustomSorter(this._sort_history);
     const sorted_model = Gtk.SortListModel.new(model, sorter)
     const filter_model = Gtk.FilterListModel.new(sorted_model, filter)
+    this.list = [];
     this._list_box.bind_model(filter_model, this._create_history_row.bind(this))
+    this.selected_rows = [];
 
     // if (this.sort_by === 0) {
     //   this.application.data = this.application.data.sort((a, b) => a.title.localeCompare(b.title));
@@ -184,9 +186,16 @@ export default class History extends Adw.Bin {
     //   })
     // }
   }
-  _load_display_total_time(time) {
-    const total_work_timer = time.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
-    const total_break_timer = time.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+  _load_display_total_time() {
+    let total_work_timer = 0;
+    let total_break_timer = 0;
+    if (this.selected_rows.length > 0 && this.activated_selection) {
+      total_work_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
+      total_break_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+    } else {
+      total_work_timer = this.application.data.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
+      total_break_timer = this.application.data.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+    }
 
     if (this.view_work_time) {
       this._toggle_view_work_break_time_button.get_style_context().remove_class('error');
@@ -201,23 +210,25 @@ export default class History extends Adw.Bin {
     }
   }
   _on_delete() {
-    const selecteds = this._list.filter((item) => item.row.selected === true);
-    const new_data = this.application.data.filter((item) => !(selecteds.find((selected_item) => selected_item.row.item === item) ? true : false));
-    this.application.data = new_data;
-    this.application.save_data();
-    this._load_history_list();
+    this.selected_rows.forEach((item) => {
+      this.selected_rows = this.selected_rows.filter((row) => row.id !== item.id);
+      this._list_box.remove(item)
+      this.application.data = this.application.data.filter((row) => row.id !== item.id);
+    });
+    this._load_display_total_time();
+    this.application._save_data();
     this._delete_button.set_sensitive(false);
     this._delete_button.set_icon_name('user-trash-symbolic');
     this._on_active_selection();
   }
-  _on_selected() {
-    const selecteds = this._list.filter((item) => item.row.selected === true);
-    let value = [];
-    selecteds.forEach((item) => {
-      value.push(item.row.item);
-    })
-    this._load_display_total_time(value);
-    if (value.length > 0) {
+  _on_select_row(row) {
+    if (row.selected) {
+      this.selected_rows.push(row)
+    } else {
+      this.selected_rows = this.selected_rows.filter((item) => item.id !== row.id);
+    }
+    this._load_display_total_time();
+    if (this.selected_rows.length > 0) {
       this._delete_button.set_icon_name('user-trash-full-symbolic');
       this._delete_button.set_sensitive(true);
     } else {
@@ -226,23 +237,20 @@ export default class History extends Adw.Bin {
     }
   }
   _on_active_selection() {
+    this._load_display_total_time();
     this.activated_selection = !this.activated_selection;
-    this.set_selection.forEach((item) => {
-      item()
-    })
-    // this._list_box.forEach((item) => {
-    //   console.log(item)
-    // })
-    // this._list.forEach((item) => {
-    //   item.row._toggle_active_selection();
-    // });
-    // if (!this.activated_selection) {
-    //   this._load_display_total_time(this.application.data);
-    //   this._delete_button.set_visible(false);
-    // } else {
-    //   this._load_display_total_time([]);
-    //   this._delete_button.set_visible(true);
-    // }
+    if (this.activated_selection) {
+      for (let index = 0; index <= this.application.data.length - 1; index++) {
+        this._list_box.get_row_at_index(index)._on_active_selection(this.activated_selection);
+      }
+    }
+    if (!this.activated_selection) {
+      this._load_display_total_time(this.application.data);
+      this._delete_button.set_visible(false);
+    } else {
+      this._load_display_total_time([]);
+      this._delete_button.set_visible(true);
+    }
   }
   _on_navigate() {
     this.application.active_window._navigate('timer');

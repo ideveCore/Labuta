@@ -54,19 +54,19 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         "",
       ),
-      work_time: GObject.ParamSpec.string(
+      work_time: GObject.ParamSpec.int(
         "work_time",
-        null,
-        null,
+        '',
+        '',
         GObject.ParamFlags.READWRITE,
-        "",
+        0, 172800, 0,
       ),
-      break_time: GObject.ParamSpec.string(
+      break_time: GObject.ParamSpec.int(
         "break_time",
-        null,
-        null,
+        '',
+        '',
         GObject.ParamFlags.READWRITE,
-        "",
+        0, 172800, 0,
       ),
       description: GObject.ParamSpec.string(
         "description",
@@ -125,8 +125,8 @@ export const History_list_model = GObject.registerClass(
         this.history_list.push(new History_list_object({
           title: item.title.toString(),
           subtitle: item.date.display_date.toString(),
-          work_time: format_time(item.work_time).toString(),
-          break_time: format_time(item.break_time).toString(),
+          work_time: Number(item.work_time),
+          break_time: Number(item.break_time),
           description: item.description.toString(),
           counts: item.counts.toString(),
           id: item.id.toString(),

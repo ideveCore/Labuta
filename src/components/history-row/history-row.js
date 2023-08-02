@@ -22,6 +22,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Template from './history-row.blp' assert { type: 'uri' };
+import { format_time } from '../../utils.js';
 
 export default class HistoryRow extends Adw.ExpanderRow {
   static {
@@ -36,20 +37,22 @@ export default class HistoryRow extends Adw.ExpanderRow {
       ],
     }, this);
   }
-  constructor(history, item) {
+  constructor(item) {
     super();
-    console.log(history)
     this.item = item;
+    this.work_time = this.item.work_time;
+    this.break_time = this.item.break_time;
     this.application = Gtk.Application.get_default();
+    this.id = this.item.id
     // this.item = item;
     // this.index = index;
     this.set_title(this.item.title);
     this.set_subtitle(this.item.subtitle);
-    this._work_time.set_text(this.item.work_time);
-    this._break_time.set_text(this.item.break_time);
+    this._work_time.set_text(format_time(item.work_time).toString());
+    this._break_time.set_text(format_time(item.break_time).toString());
     this._description.set_subtitle(this.item.description);
     this._counts.set_text(this.item.counts);
-    this.history = history;
+    // this.history = history;
     // this.selected = false;
     // this._selection.connect('toggled', (action, value) => {
     //   this.selected = this._selection.active;
@@ -63,7 +66,11 @@ export default class HistoryRow extends Adw.ExpanderRow {
     this.selected = false;
     this._selection.connect('toggled', (action, value) => {
       this.selected = this._selection.active;
-      this.history._on_selected();
+      // console.log(this.child)
+      // this.list_box.select_row(this)
+      // this.set_activatable(true);
+      // console.log(this.is_selected());
+      // this._on_select_row(this.get_index(), this._selection.active);
     })
 
   }
@@ -72,10 +79,7 @@ export default class HistoryRow extends Adw.ExpanderRow {
     this.history._load_history_list();
     this.application._save_data();
   }
-  test(mode) {
-    console.log(mode)
-  }
-  _on_active_selection() {
-    this._selection.set_visible(this.history.activated_selection)
+  _on_active_selection(mode) {
+    this._selection.set_visible(mode)
   }
 }
