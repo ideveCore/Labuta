@@ -89,7 +89,13 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         "",
       ),
-
+      month: GObject.ParamSpec.int(
+        "month",
+        '',
+        '',
+        GObject.ParamFlags.READWRITE,
+        0, 12, 0,
+      ),
     },
   },
   class History_list_object extends GObject.Object { },
@@ -127,9 +133,10 @@ export const History_list_model = GObject.registerClass(
           subtitle: item.date.display_date.toString(),
           work_time: Number(item.work_time),
           break_time: Number(item.break_time),
+          id: item.id,
           description: item.description.toString(),
           counts: item.counts.toString(),
-          id: item.id.toString(),
+          month: item.date.month,
         }));
       })
     }

@@ -43,7 +43,12 @@ export default class HistoryRow extends Adw.ExpanderRow {
     this.work_time = this.item.work_time;
     this.break_time = this.item.break_time;
     this.application = Gtk.Application.get_default();
-    this.id = this.item.id
+    this.id = this.item.id;
+    this.month = this.item.month;
+    // this.date = {
+
+    // }
+    // this.day = item.day;
     // this.item = item;
     // this.index = index;
     this.set_title(this.item.title);
@@ -64,15 +69,6 @@ export default class HistoryRow extends Adw.ExpanderRow {
     // this._counts.set_text('ekjdwo');
     // this.history = history;
     this.selected = false;
-    this._selection.connect('toggled', (action, value) => {
-      this.selected = this._selection.active;
-      // console.log(this.child)
-      // this.list_box.select_row(this)
-      // this.set_activatable(true);
-      // console.log(this.is_selected());
-      // this._on_select_row(this.get_index(), this._selection.active);
-    })
-
   }
   _on_remove_item() {
     this.application.data = this.application.data.filter((item) => item.id !== this.item.id);

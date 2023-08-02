@@ -60,11 +60,10 @@ template $Gjs_History : Adw.Bin {
                       margin-end: 10;
                       clicked => $_on_delete();
                     }
-                    Gtk.Button {
+                    Gtk.Button active_selection_button {
                       valign: center;
                       icon-name: "check-round-outline-whole-symbolic";
                       margin-end: 10;
-                      clicked => $_on_active_selection();
                     }
                     Gtk.Box {
                       Gtk.ToggleButton sort_first_to_last_button {

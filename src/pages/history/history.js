@@ -41,6 +41,7 @@ export default class History extends Adw.Bin {
         'stack',
         'list_box',
         'delete_button',
+        'active_selection_button',
       ]
     }, this);
   }
@@ -59,27 +60,19 @@ export default class History extends Adw.Bin {
     this._load_history_list();
     this._sort_history_dropdown.set_selected(this.sort_by);
     this._sort_history_dropdown.connect('notify::selected-item', () => {
-      // this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected());
-      // let items = []
-      // this.application.data.forEach((item, index) => {
-      //   items.push(this._list_box.get_row_at_index(index));
-      // })
-      // items.forEach((item) => {
-      //   this._list_box.remove(item);
-      // })
-      // this.sort_by = this.application.settings.get_int('sort-by');
-      // this._list = [];
-      // this._load_history_list();
+      this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected());
+      this.sort_by = this.application.settings.get_int('sort-by');
+      this._load_history_list();
     });
     this._sort_first_to_last_button.connect('clicked', () => {
       this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
       this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-      this._on_order_changed();
+      this._load_history_list()
     });
     this._sort_last_to_first_button.connect('clicked', () => {
       this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
       this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-      this._on_order_changed();
+      this._load_history_list();
     });
     this.history_scroll_adjustment = this._history_scroll.get_vadjustment();
     this.history_scroll_adjustment.connect('notify::value', (sender, e) => {
@@ -94,18 +87,11 @@ export default class History extends Adw.Bin {
       this.view_work_time = this._toggle_view_work_break_time_button.get_active();
       this._load_display_total_time(this.application.data);
     });
+    this._active_selection_button.connect('clicked', () => {
+      this.activated_selection = !this.activated_selection;
+      this._on_active_selection();
+    })
     this._load_display_total_time(this.application.data);
-  }
-  _on_order_changed() {
-    // let items = []
-    // this.application.data.forEach((item, index) => {
-    //   items.push(this._list_box.get_row_at_index(index));
-    // })
-    // items.forEach((item) => {
-    //   this._list_box.remove(item);
-    // })
-    // this._list = [];
-    // this._load_history_list();
   }
   _filter_history(item) {
     const search = '';
@@ -114,15 +100,26 @@ export default class History extends Adw.Bin {
     return result;
   }
   _sort_history(history_a, history_b, _data) {
-    const a = history_a.title
-    const b = history_b.title
-    return (a > b) - (a < b)
+    const a = history_a
+    const b = history_b
+    if (this.sort_by === 0) {
+      return !this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+    }
+    const regex = /(\d{1,2})\s+of\s+(\w+)\s+of\s+(\d{4})/;
+    const match_a = a.subtitle.match(regex);
+    const match_b = b.subtitle.match(regex);
+    const day_of_month_a = match_a ? parseInt(match_a[1]) : null;
+    const day_of_month_b = match_b ? parseInt(match_b[1]) : null;
+    const year_a = match_a ? parseInt(match_a[3]) : null;
+    const year_b = match_b ? parseInt(match_b[3]) : null;
+    const date_a = new Date(`${year_a}-${a.month}-${day_of_month_a}`)
+    const date_b = new Date(`${year_b}-${b.month}-${day_of_month_b}`)
+    return !this.sort_first_to_last ? date_a - date_b : date_b - date_a;
   }
   _create_history_row(item) {
     const row = new HistoryRow(item);
     row._selection.connect('toggled', (checkButton) => {
       row.selected = checkButton.get_active();
-      console.log(row.selected)
       this._on_select_row(row);
     })
     return row
@@ -134,57 +131,15 @@ export default class History extends Adw.Bin {
     const model = history_model;
     const filter = new Gtk.CustomFilter();
     filter.set_filter_func(this._filter_history);
-    const sorter = new Gtk.CustomSorter(this._sort_history);
+    const sorter = Gtk.CustomSorter.new(this._sort_history.bind(this));
     const sorted_model = Gtk.SortListModel.new(model, sorter)
     const filter_model = Gtk.FilterListModel.new(sorted_model, filter)
-    this.list = [];
-    this._list_box.bind_model(filter_model, this._create_history_row.bind(this))
+    this._list_box.bind_model(filter_model, this._create_history_row.bind(this));
+    this.activated_selection = false;
     this.selected_rows = [];
-
-    // if (this.sort_by === 0) {
-    //   this.application.data = this.application.data.sort((a, b) => a.title.localeCompare(b.title));
-    // } else {
-    //   this.application.data = this.application.data.sort((a, b) => a.date.day - b.date.day);
-    // }
-
-    // if (!this.sort_first_to_last) {
-    //   this.application.data = this.application.data.slice(0).reverse();
-    // }
-
-    // this._load_display_total_time(this.application.data);
-    // if (this.application.data.length === 0)
-    //   return this._stack.visible_child_name = "no_history";
-
+    this._on_active_selection();
+    this._load_display_total_time();
     this._stack.visible_child_name = "history";
-    // if (this._list.length === 0) {
-    //   this.application.data.forEach((item, index) => {
-    //     const row = new HistoryRow(this, item, index);
-    //     this._list_box.append(row);
-    //     this._list.push({
-    //       title: item.title,
-    //       row: row,
-    //     });
-    //   });
-    //   return
-    // }
-    // const remove_items = this._list.filter(element => this.application.data.findIndex(array_item => array_item.id === element.row.item.id) < 0);
-    // this.application.data.forEach((item, index) => {
-    //   const finded = this._list.find(array_item => array_item.row.item.id === item.id);
-    //   if (finded)
-    //     return
-    //   const row = new HistoryRow(this, item, index);
-    //   this._list_box.append(row);
-    //   this._list.push({
-    //     title: item.title,
-    //     row: row,
-    //   });
-    // })
-    // if (remove_items.length > 0) {
-    //   remove_items.forEach((item) => {
-    //     this._list_box.remove(item.row);
-    //     this._list = this._list.filter((array_item) => array_item !== item);
-    //   })
-    // }
   }
   _load_display_total_time() {
     let total_work_timer = 0;
@@ -237,18 +192,13 @@ export default class History extends Adw.Bin {
     }
   }
   _on_active_selection() {
-    this._load_display_total_time();
-    this.activated_selection = !this.activated_selection;
-    if (this.activated_selection) {
-      for (let index = 0; index <= this.application.data.length - 1; index++) {
-        this._list_box.get_row_at_index(index)._on_active_selection(this.activated_selection);
-      }
+    for (let index = 0; index <= this.application.data.length - 1; index++) {
+      this._list_box.get_row_at_index(index)._on_active_selection(this.activated_selection);
     }
+    this._load_display_total_time();
     if (!this.activated_selection) {
-      this._load_display_total_time(this.application.data);
       this._delete_button.set_visible(false);
     } else {
-      this._load_display_total_time([]);
       this._delete_button.set_visible(true);
     }
   }
