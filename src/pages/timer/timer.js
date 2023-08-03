@@ -57,7 +57,30 @@ export default class Timer extends Adw.Bin {
     this.current_break_time = this.break_time;
     this.is_break_timer = false;
     this.timer_state = null;
-    this._timer_label.set_text(this._format_timer())
+    this._timer_label.set_text(this._format_timer());
+    this.application.settings.connect("changed::work-time", () => {
+      if (this.application.timer_state === 'stopped') {
+        this.work_time = this.application.settings.get_int('work-time');
+        this.current_work_time = this.work_time;
+        this._timer_label.set_text(this._format_timer());
+      }
+    });
+    this.application.settings.connect("changed::break-time", () => {
+      if (this.application.timer_state === 'stopped') {
+        this.work_time = this.application.settings.get_int('break-time');
+        this.current_break_time = this.break_time;
+      }
+    });
+    this.application.settings.connect("changed::long-break", () => {
+      if (this.application.timer_state === 'stopped') {
+        this.long_break = this.application.settings.get_int('long-break');
+      }
+    });
+    this.application.settings.connect("changed::sessions-long-break", () => {
+      if (this.application.timer_state === 'stopped') {
+        this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
+      }
+    });
   }
   _get_date() {
     const current_date = GLib.DateTime.new_now_local();
