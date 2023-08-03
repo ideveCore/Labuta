@@ -42,17 +42,17 @@ const History_list_object = GObject.registerClass(
     Properties: {
       title: GObject.ParamSpec.string(
         "title",
-        null,
-        null,
+        '',
+        '',
         GObject.ParamFlags.READWRITE,
-        "",
+        '',
       ),
       subtitle: GObject.ParamSpec.string(
         "subtitle",
-        null,
-        null,
+        '',
+        '',
         GObject.ParamFlags.READWRITE,
-        "",
+        '',
       ),
       work_time: GObject.ParamSpec.int(
         "work_time",
@@ -70,24 +70,24 @@ const History_list_object = GObject.registerClass(
       ),
       description: GObject.ParamSpec.string(
         "description",
-        null,
-        null,
+        '',
+        '',
         GObject.ParamFlags.READWRITE,
-        "",
+        '',
       ),
       counts: GObject.ParamSpec.string(
         "counts",
-        null,
-        null,
+        '',
+        '',
         GObject.ParamFlags.READWRITE,
-        "",
+        '',
       ),
       id: GObject.ParamSpec.string(
         "id",
-        null,
-        null,
+        '',
+        '',
         GObject.ParamFlags.READWRITE,
-        "",
+        '',
       ),
       month: GObject.ParamSpec.int(
         "month",
@@ -100,10 +100,7 @@ const History_list_object = GObject.registerClass(
   },
   class History_list_object extends GObject.Object { },
 );
-// export const History_list_model = GObject.Object {
-//   class History_list_model extends Gio.ListModel {}
-// }
-//
+
 export const History_list_model = GObject.registerClass(
   {
     Implements: [Gio.ListModel]
@@ -128,46 +125,17 @@ export const History_list_model = GObject.registerClass(
 
     _append_history_item(list) {
       list.forEach((item) => {
-        this.history_list.push(new History_list_object({
+        const list_object = new History_list_object({
           title: item.title.toString(),
           subtitle: item.date.display_date.toString(),
-          work_time: Number(item.work_time),
-          break_time: Number(item.break_time),
+          work_time: item.work_time,
+          break_time: item.break_time,
           id: item.id,
           description: item.description.toString(),
           counts: item.counts.toString(),
           month: item.date.month,
-        }));
+        });
+        this.history_list.push(list_object);
       })
     }
   })
-//   export class History_list_model extends Gio.ListModel {
-//   static [GObject.interfaces] = [GObject.Object];
-//   static {
-//     GObject.registerClass(this);
-//   }
-
-//   constructor() {
-//     super();
-//     this.history_list = [];
-//   }
-
-//   vfunc_get_item_type() {
-//     return this.history_list;
-//   }
-
-//   vfunc_get_n_items() {
-//     return 1;
-//   }
-
-//   vfunc_get_item(_pos) {
-//     return this.history_list;
-//   }
-
-//   _append_history_item(list) {
-//     list.forEach((item) => {
-//       console.log(new History_list_object({ title: item.title.toString(), subtitle: item.date.display_date.toString() }));
-//       this.history_list.push(new History_list_object({ title: item.title.toString(), subtitle: item.date.display_date.toString() }));
-//     })
-//   }
-// }

@@ -48,16 +48,13 @@ export default class History extends Adw.Bin {
   constructor() {
     super();
     this.application = Gtk.Application.get_default();
-    this._list = [];
-    this.list = [];
     this.selected_rows = [];
     this.sort_by = this.application.settings.get_int('sort-by');
     this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
     this.activated_selection = false;
     this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]));
+    this._sort_first_to_last_button.set_active(this.sort_first_to_last);
     this.view_work_time = true;
-
-    this._load_history_list();
     this._sort_history_dropdown.set_selected(this.sort_by);
     this._sort_history_dropdown.connect('notify::selected-item', () => {
       this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected());
@@ -90,20 +87,20 @@ export default class History extends Adw.Bin {
     this._active_selection_button.connect('clicked', () => {
       this.activated_selection = !this.activated_selection;
       this._on_active_selection();
-    })
-    this._load_display_total_time(this.application.data);
+    });
+    this._load_history_list();
   }
   _filter_history(item) {
     const search = '';
     const regex = new RegExp(search, 'i');
-    const result = regex.test(item.name);
+    const result = regex.test(item.title);
     return result;
   }
   _sort_history(history_a, history_b, _data) {
     const a = history_a
     const b = history_b
     if (this.sort_by === 0) {
-      return !this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+      return this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
     const regex = /(\d{1,2})\s+of\s+(\w+)\s+of\s+(\d{4})/;
     const match_a = a.subtitle.match(regex);
@@ -114,7 +111,7 @@ export default class History extends Adw.Bin {
     const year_b = match_b ? parseInt(match_b[3]) : null;
     const date_a = new Date(`${year_a}-${a.month}-${day_of_month_a}`)
     const date_b = new Date(`${year_b}-${b.month}-${day_of_month_b}`)
-    return !this.sort_first_to_last ? date_a - date_b : date_b - date_a;
+    return this.sort_first_to_last ? date_a - date_b : date_b - date_a;
   }
   _create_history_row(item) {
     const row = new HistoryRow(item);
@@ -130,9 +127,10 @@ export default class History extends Adw.Bin {
     return row
   }
   _load_history_list() {
+    if (this.application.data.length === 0) return;
+    this._stack.visible_child_name = "history";
     const history_model = new History_list_model();
     history_model._append_history_item(this.application.data);
-
     const model = history_model;
     const filter = new Gtk.CustomFilter();
     filter.set_filter_func(this._filter_history);
@@ -144,7 +142,6 @@ export default class History extends Adw.Bin {
     this.selected_rows = [];
     this._on_active_selection();
     this._load_display_total_time();
-    this._stack.visible_child_name = "history";
   }
   _load_display_total_time() {
     let total_work_timer = 0;
