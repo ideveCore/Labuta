@@ -40,13 +40,13 @@ template $Gjs_Timer : Adw.Bin {
                 child: Gtk.DrawingArea tag_area {
                   height-request: 25;
                   width-request: 25;
-                  tooltip-text: _("Pomodoros counts");
+                  tooltip-text: _("Pomodoro sessions");
                 };
 
                 [overlay]
                 Gtk.Label tag_label {
                   use-markup: true;
-                  tooltip-text: _("Pomodoros counts");
+                  tooltip-text: _("Pomodoro sessions");
                 }
               }
           }

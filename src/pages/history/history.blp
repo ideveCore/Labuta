@@ -102,31 +102,3 @@ template $Gjs_History : Adw.Bin {
     }
   }
 }
-
-menu sorting_menu {
-  section {
-    item {
-      label: _("Name");
-      action: "sort.sort";
-      target: "name";
-    }
-    item {
-      label: _("Date");
-      action: "sort.sort";
-      target: "date";
-    }
-  }
-  section {
-    item {
-      label: _("Ascending");
-      action: "sort.order";
-      target: "ascending";
-    }
-    item {
-      label: _("Descending");
-      action: "sort.order";
-      target: "descending";
-    }
-  }
-}
-

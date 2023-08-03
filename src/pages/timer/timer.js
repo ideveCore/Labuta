@@ -151,7 +151,7 @@ export default class Timer extends Adw.Bin {
           }
           if (this.application.timer_state === 'paused') {
             if (!this.application.active_window.visible)
-              this.application._load_background_portal_status(`Paused timer`)
+              this.application._load_background_portal_status(`${_('Paused timer')}`)
             return GLib.SOURCE_CONTINUE
           }
 
