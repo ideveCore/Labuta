@@ -1,1 +1,1 @@
-i18n.gettext('pomodoro', preset: 'glib')
+i18n.gettext(application_id, preset: 'glib')

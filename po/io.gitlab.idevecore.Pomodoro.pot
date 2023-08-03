@@ -37,9 +37,9 @@ msgctxt "shortcut window"
 msgid "General"
 msgstr ""
 
-#: src/pages/shortcuts/shortcuts.blp:12
+#: src/pages/shortcuts/shortcuts.blp:14
 msgctxt "shortcut window"
-msgid "Keyboard Shortcuts"
+msgid "Keyboard shortcuts"
 msgstr ""
 
 #: src/pages/shortcuts/shortcuts.blp:18
