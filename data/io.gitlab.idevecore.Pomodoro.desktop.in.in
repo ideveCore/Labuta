@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Pomodoro
-GenericName=Timer
+GenericName=StopWatch
 TryExec=pomodoro
 Exec=pomodoro
 Icon=@app_id@
