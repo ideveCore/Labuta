@@ -52,7 +52,7 @@ export default class History extends Adw.Bin {
     this.sort_by = this.application.settings.get_int('sort-by');
     this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
     this.activated_selection = false;
-    this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort By Name"), _("Sort By Date")]));
+    this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort by name"), _("Sort by date")]));
     this._sort_first_to_last_button.set_active(this.sort_first_to_last);
     this.view_work_time = true;
     this._sort_history_dropdown.set_selected(this.sort_by);

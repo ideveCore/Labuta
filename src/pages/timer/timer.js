@@ -151,7 +151,7 @@ export default class Timer extends Adw.Bin {
           }
           if (this.application.timer_state === 'paused') {
             if (!this.application.active_window.visible)
-              this.application._load_background_portal_status(`${_('Paused timer')}`)
+              this.application._load_background_portal_status(`${_('Pomodoro paused')}`)
             return GLib.SOURCE_CONTINUE
           }
 
@@ -159,21 +159,21 @@ export default class Timer extends Adw.Bin {
 
           if (this.current_work_time === this.work_time - 1) {
             this._timer_label.get_style_context().remove_class('error');
-            this.application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
+            this.application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
           } else if (this.current_work_time === 0) {
             this._timer_label.get_style_context().add_class('error');
-            this.application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
+            this.application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
             this.application._play_sound({ name: 'complete', cancellable: null })
           }
 
           if (this.current_work_time > 0) {
             this.data.work_time = this.data.work_time + 1
             if (!this.application.active_window.visible)
-              this.application._load_background_portal_status(`Work time: ${this._format_timer()}`)
+              this.application._load_background_portal_status(`${_('Work time')}: ${this._format_timer()}`)
           } else {
             this.data.break_time = this.data.break_time + 1
             if (!this.application.active_window.visible)
-              this.application._load_background_portal_status(`Break time: ${this._format_timer()}`)
+              this.application._load_background_portal_status(`${_('Break time')}: ${this._format_timer()}`)
           }
 
           this._timer_label.set_text(this._format_timer())
@@ -190,11 +190,10 @@ export default class Timer extends Adw.Bin {
             this._tag_label.set_label(`<span weight="bold" size="9pt">${this.data.counts}</span>`);
             this._pomodoro_counts.set_visible(true);
           }
-          console.log(this.sessions_long_break, this.data.counts)
           if (this.data.counts === this.sessions_long_break) {
             this.current_break_time = this.long_break;
           }
-          this.application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created date")}: ${this.data.date.display_date}` })
+          this.application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
           this._timer_label.get_style_context().remove_class('error');
           this.application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null })
           this._timer_label.set_text(this._format_timer());
