@@ -172,3 +172,16 @@ export const History_list_model = GObject.registerClass(
       })
     }
   })
+
+export function getFlatpakInfo() {
+  const keyFile = new GLib.KeyFile();
+  try {
+    keyFile.load_from_file("/.flatpak-info", GLib.KeyFileFlags.NONE);
+  } catch (err) {
+    if (err.code !== GLib.FileError.NOENT) {
+      logError(err);
+    }
+    return null;
+  }
+  return keyFile;
+}

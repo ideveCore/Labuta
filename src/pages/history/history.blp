@@ -69,7 +69,7 @@ template $Gjs_History : Adw.Bin {
                       Gtk.ToggleButton sort_first_to_last_button {
                         icon-name: "view-sort-descending-symbolic";
                         tooltip-text: _("Sort From First To Last");
-                        active: bind-property sort_last_to_first_button.active inverted bidirectional;
+                        active: bind sort_last_to_first_button.active inverted bidirectional;
                       }
                       
                       Gtk.ToggleButton sort_last_to_first_button {

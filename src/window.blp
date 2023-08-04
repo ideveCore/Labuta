@@ -23,7 +23,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
           [title]
           Adw.ViewSwitcherTitle view_switcher_title {
             stack: stack;
-            title: bind-property template.title;
+            title: bind template.title;
           }
           [end]
           MenuButton {
@@ -62,7 +62,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
         }
         Adw.ViewSwitcherBar {
           stack: stack;
-          reveal: bind-property view_switcher_title.title-visible;
+          reveal: bind view_switcher_title.title-visible;
         }
       }
     }

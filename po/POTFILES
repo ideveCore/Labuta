@@ -15,3 +15,5 @@ src/pages/history/history.blp
 src/pages/history/history.js
 src/application.js
 src/main.js
+
+troll/src/util.js

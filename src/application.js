@@ -27,6 +27,12 @@ import { gettext as _ } from 'gettext';
 import Window from './window.js';
 import Preferences from './pages/preferences/preferences.js';
 import Shortcuts from './pages/shortcuts/shortcuts.js';
+import {
+  getGIRepositoryVersion,
+  getGjsVersion,
+  getGLibVersion,
+} from "../troll/src/util.js";
+import { getFlatpakInfo } from './utils.js';
 import Timer from './pages/timer/timer.js';
 import Statictics from './pages/statistics/statistics.js';
 import History from './pages/history/history.js';
@@ -44,6 +50,7 @@ export default class Application extends Adw.Application {
     const shortcuts_action = new Gio.SimpleAction({ name: 'shortcuts' });
     const show_about_action = new Gio.SimpleAction({ name: 'about' });
     const active_action = new Gio.SimpleAction({ name: 'open' });
+    const flatpak_info = getFlatpakInfo();
     this.settings = new Gio.Settings({
       schema_id: pkg.name,
       path: '/io/gitlab/idevecore/Pomodoro/',
@@ -64,6 +71,16 @@ export default class Application extends Adw.Application {
     shortcuts_action.connect('activate', () => {
       new Shortcuts(this).present();
     })
+    const debug_info = `
+${pkg.name} ${pkg.version}
+${GLib.get_os_info("ID")} ${GLib.get_os_info("VERSION_ID")}
+GJS ${getGjsVersion()}
+Adw ${getGIRepositoryVersion(Adw)}
+GTK ${getGIRepositoryVersion(Gtk)}
+GLib ${getGLibVersion()}
+Flatpak ${flatpak_info.get_string("Instance", "flatpak-version")}
+Blueprint 0.10.0
+    `.trim();
     show_about_action.connect('activate', () => {
       let aboutParams = {
         transient_for: this.active_window,
@@ -74,6 +91,8 @@ export default class Application extends Adw.Application {
         developers: [
           'Ideve Core'
         ],
+        issue_url: 'https://gitlab.com/idevecore/pomodoro/-/issues',
+        debug_info,
         copyright: '© 2023 Ideve Core',
       };
       const aboutWindow = new Adw.AboutWindow(aboutParams);
