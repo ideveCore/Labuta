@@ -102,15 +102,9 @@ export default class History extends Adw.Bin {
     if (this.sort_by === 0) {
       return this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
-    const regex = /(\d{1,2})\s+of\s+(\w+)\s+of\s+(\d{4})/;
-    const match_a = a.subtitle.match(regex);
-    const match_b = b.subtitle.match(regex);
-    const day_of_month_a = match_a ? parseInt(match_a[1]) : null;
-    const day_of_month_b = match_b ? parseInt(match_b[1]) : null;
-    const year_a = match_a ? parseInt(match_a[3]) : null;
-    const year_b = match_b ? parseInt(match_b[3]) : null;
-    const date_a = new Date(`${year_a}-${a.month}-${day_of_month_a}`)
-    const date_b = new Date(`${year_b}-${b.month}-${day_of_month_b}`)
+
+    const date_a = new Date(`${a.year}-${a.month}-${a.day_of_month}`)
+    const date_b = new Date(`${b.year}-${b.month}-${b.day_of_month}`)
     return this.sort_first_to_last ? date_a - date_b : date_b - date_a;
   }
   _create_history_row(item) {

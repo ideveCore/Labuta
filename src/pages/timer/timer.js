@@ -130,6 +130,8 @@ export default class Timer extends Adw.Bin {
           break_time: 0,
           date: {
             day: current_date.get_day_of_year(),
+            day_of_month: current_date.get_day_of_month(),
+            year: current_date.get_year(),
             week: current_date.get_week_of_year(),
             month: current_date.get_month(),
             display_date: this._get_date(),

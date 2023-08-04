@@ -19,6 +19,8 @@
  */
 
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import Gtk from 'gi://Gtk';
 import GObject from 'gi://GObject';
 
 export const format_time = (timer) => {
@@ -96,6 +98,20 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         0, 12, 0,
       ),
+      day_of_month: GObject.ParamSpec.int(
+        "day_of_month",
+        '',
+        '',
+        GObject.ParamFlags.READWRITE,
+        0, 12, 0,
+      ),
+      year: GObject.ParamSpec.int(
+        "year",
+        '',
+        '',
+        GObject.ParamFlags.READWRITE,
+        0, 50000, 0,
+      ),
     },
   },
   class History_list_object extends GObject.Object { },
@@ -124,7 +140,13 @@ export const History_list_model = GObject.registerClass(
     }
 
     _append_history_item(list) {
-      list.forEach((item) => {
+      const current_date = GLib.DateTime.new_now_local()
+      const application = Gtk.Application.get_default();
+
+      list.forEach((item, index) => {
+        if (!application.data[index].date.year) application.data[index].date.year = current_date.get_year();
+        if (!application.data[index].date.day_of_month) application.data[index].date.day_of_month = 1;
+        application._save_data();
         const list_object = new History_list_object({
           title: item.title.toString(),
           subtitle: item.date.display_date.toString(),
@@ -134,6 +156,8 @@ export const History_list_model = GObject.registerClass(
           description: item.description.toString(),
           counts: item.counts.toString(),
           month: item.date.month,
+          day_of_month: item.date.day_of_month || 1,
+          year: item.date.year || current_date.get_year(),
         });
         this.history_list.push(list_object);
       })
