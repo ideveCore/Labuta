@@ -49,10 +49,8 @@ export default class Timer extends Adw.Bin {
 
     this.application = Gtk.Application.get_default();
     this.timer_running = false;
-    // this.work_time = this.application.settings.get_int('work-time');
-    // this.break_time = this.application.settings.get_int('break-time');
-    this.work_time = 10
-    this.break_time = 10
+    this.work_time = this.application.settings.get_int('work-time');
+    this.break_time = this.application.settings.get_int('break-time');
     this.long_break = this.application.settings.get_int('long-break');
     this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
