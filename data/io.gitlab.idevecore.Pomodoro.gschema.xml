@@ -23,7 +23,7 @@
       <default>300</default>
     </key>
     <key type="i" name="long-break">
-      <default>1800</default>
+      <default>900</default>
     </key>
     <key type="i" name="sessions-long-break">
       <default>4</default>

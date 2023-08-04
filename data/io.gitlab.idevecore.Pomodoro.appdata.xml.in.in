@@ -15,13 +15,14 @@
   <url type="donation">https://ko-fi.com/idevecore</url>
 
   <releases>
-    <release version="1.2.0" date="2023-08-03">
+    <release version="1.2.0" date="2023-08-04">
       <description>
         <p>In this version some modifications were added to the page of preferences such as:</p>
         <ul>
           <li>Activate/disable the sound of the application (active by default).</li>
           <li>Customization of Pomodoro now can you change working time, sections ...</li>
         </ul>
+        <p>The title and description now is not required</p>
         <p>Changed the application icon.</p>
         <p>Now, on the Timer page, you can view the counts of Pomodoro sessions</p>
         <p>Changes in the layout of the History page.</p>
