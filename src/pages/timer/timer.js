@@ -49,8 +49,10 @@ export default class Timer extends Adw.Bin {
 
     this.application = Gtk.Application.get_default();
     this.timer_running = false;
-    this.work_time = this.application.settings.get_int('work-time');
-    this.break_time = this.application.settings.get_int('break-time');
+    // this.work_time = this.application.settings.get_int('work-time');
+    // this.break_time = this.application.settings.get_int('break-time');
+    this.work_time = 10
+    this.break_time = 10
     this.long_break = this.application.settings.get_int('long-break');
     this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
@@ -157,9 +159,8 @@ export default class Timer extends Adw.Bin {
             return GLib.SOURCE_CONTINUE
           }
 
-          this.current_work_time--
 
-          if (this.current_work_time === this.work_time - 1) {
+          if (this.current_work_time === this.work_time) {
             this._timer_label.get_style_context().remove_class('error');
             this.application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
           } else if (this.current_work_time === 0) {
@@ -167,6 +168,7 @@ export default class Timer extends Adw.Bin {
             this.application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
             this.application._play_sound({ name: 'complete', cancellable: null })
           }
+
 
           if (this.current_work_time > 0) {
             this.data.work_time = this.data.work_time + 1
@@ -177,6 +179,8 @@ export default class Timer extends Adw.Bin {
             if (!this.application.active_window.visible)
               this.application._load_background_portal_status(`${_('Break time')}: ${this._format_timer()}`)
           }
+
+          this.current_work_time--
 
           this._timer_label.set_text(this._format_timer())
 
