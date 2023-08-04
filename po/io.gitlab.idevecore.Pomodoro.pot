@@ -33,7 +33,7 @@ msgid "Pomodoro is a timer utility with rules, ideal for better productivity."
 msgstr ""
 
 #. application
-#: src/application.js:112 src/pages/timer/timer.blp:117
+#: src/application.js:112
 msgid "Stop timer?"
 msgstr ""
 
@@ -199,12 +199,17 @@ msgstr ""
 msgid "Pause timer"
 msgstr ""
 
+
+#: src/pages/timer/timer.js:91
+msgid "of"
+msgstr ""
+
 #: src/pages/timer/timer.blp:101
 msgid "Reset timer"
 msgstr ""
 
-#: src/pages/timer/timer.js:91
-msgid "of"
+#: src/pages/timer/timer.blp:117
+msgid "Stop timer"
 msgstr ""
 
 #: src/pages/timer/timer.js:127

@@ -32,7 +32,7 @@ msgstr ""
 "produtividade."
 
 #. application
-#: src/application.js:112 src/pages/timer/timer.blp:117
+#: src/application.js:112
 msgid "Stop timer?"
 msgstr "Parar temporizador"
 
@@ -198,13 +198,17 @@ msgstr "Iniciar temporizador"
 msgid "Pause timer"
 msgstr "Pausar temporizador"
 
+#: src/pages/timer/timer.js:91
+msgid "of"
+msgstr "de"
+
 #: src/pages/timer/timer.blp:101
 msgid "Reset timer"
 msgstr "Reiniciar temporizador"
 
-#: src/pages/timer/timer.js:91
-msgid "of"
-msgstr "de"
+#: src/pages/timer/timer.blp:117
+msgid "Stop timer"
+msgstr "Parar temporizador"
 
 #: src/pages/timer/timer.js:127
 msgid "Started at"
