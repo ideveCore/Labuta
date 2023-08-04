@@ -103,9 +103,7 @@ export default class History extends Adw.Bin {
       return this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
 
-    const date_a = new Date(`${a.year}-${a.month}-${a.day_of_month}`)
-    const date_b = new Date(`${b.year}-${b.month}-${b.day_of_month}`)
-    return this.sort_first_to_last ? date_a - date_b : date_b - date_a;
+    return this.sort_first_to_last ? a.day - b.day : b.day - a.day;
   }
   _create_history_row(item) {
     const row = new HistoryRow(item);

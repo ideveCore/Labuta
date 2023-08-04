@@ -112,6 +112,14 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         0, 50000, 0,
       ),
+      day: GObject.ParamSpec.int(
+        "day",
+        '',
+        '',
+        GObject.ParamFlags.READWRITE,
+        0, 400, 0,
+      ),
+
     },
   },
   class History_list_object extends GObject.Object { },
@@ -158,6 +166,7 @@ export const History_list_model = GObject.registerClass(
           month: item.date.month,
           day_of_month: item.date.day_of_month || 1,
           year: item.date.year || current_date.get_year(),
+          day: item.date.day,
         });
         this.history_list.push(list_object);
       })
