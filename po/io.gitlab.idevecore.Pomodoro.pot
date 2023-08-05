@@ -1,0 +1,315 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Pomodoro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Ideve Core <ideve.core@gmail.com>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pomodoro master\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/idevecore/pomodoro/-/issues\n"
+"POT-Creation-Date: 2023-05-22 12:53+0000\n"
+"PO-Revision-Date: 2023-08-04 10:51-0300\n"
+"Last-Translator: Ideve Core <ideve.core@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <ideve.core@gmail.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 42.0\n"
+"X-Project-Style: gnome\n"
+
+#: data/io.gitlab.idevecore.Pomodoro.in.in:3
+msgid "StopWatch"
+msgstr ""
+
+#: data/io.gitlab.idevecore.Pomodoro.in.in:9
+msgid "Timer;Clock;StopWatch;"
+msgstr ""
+
+#: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:11
+msgid "Pomodoro is a timer utility with rules, ideal for better productivity."
+msgstr ""
+
+#. application
+#: src/application.js:112
+msgid "Stop timer?"
+msgstr ""
+
+#: src/application.js:114
+msgid "There is a running timer, wants to stop and exit the application?"
+msgstr ""
+
+#: src/application.js:115
+msgid "Continue"
+msgstr ""
+
+#: src/application.js:116
+msgid "Exit"
+msgstr ""
+
+#. window page
+#: src/window.blp:32
+msgid "Main menu"
+msgstr ""
+
+#: src/window.blp:40
+msgid "_Timer"
+msgstr ""
+
+#: src/window.blp:48
+msgid "_Statistics"
+msgstr ""
+
+#: src/window.blp:56
+msgid "_History"
+msgstr ""
+
+#: src/window.blp:75
+msgid "_Preferences"
+msgstr ""
+
+#: src/window.blp:80
+msgid "_Keyboard shortcuts"
+msgstr ""
+
+#: src/window.blp:85
+msgid "_About Pomodoro"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:14
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:18
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr ""
+
+#. preferences page
+#: src/pages/preferences/preferences.blp:9
+msgid "Preferences"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:11
+msgid "User interface"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:15
+msgid "Theme"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:17
+msgid "Light"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:17
+msgid "Dark"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:17
+msgid "System"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:21
+msgid "Allow execution in the background"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:22
+msgid "Hides the window instead of leaving if there is pomodoro running"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:33
+msgid "Allow sounds"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:34
+msgid "Plays the feedback sounds"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:46
+msgid "Customize pomodoro"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:48
+msgid "Work time - (minutes)"
+msgstr ""
+
+#. preferences dupliucated lines 
+#: src/pages/preferences/preferences.blp:49
+#: src/pages/preferences/preferences.blp:65
+#: src/pages/preferences/preferences.blp:81
+#: src/pages/preferences/preferences.blp:97
+msgid "The ideal is to follow the rules of the Pomodoro"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:64
+msgid "Break time - (minutes)"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:80
+msgid "Long break time - (minutes)"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:96
+msgid "Sessions until the long break - (minutes)"
+msgstr ""
+
+#. keyboard shortcut page
+#: src/pages/shortcuts/shortcuts.blp:9
+msgid "General"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:13
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:17
+msgid "Quit"
+msgstr ""
+
+#. timer page
+#.  timer dupliucated lines 
+#: src/pages/timer/timer.blp:43 src/pages/timer/timer.blp:49
+#: src/components/history-row/history-row.blp:36
+msgid "Pomodoro sessions"
+msgstr ""
+
+#: src/pages/timer/timer.blp:57
+msgid "Title (optional)"
+msgstr ""
+
+#: src/pages/timer/timer.blp:60
+msgid "Description (optional)"
+msgstr ""
+
+#. timer dupliucated lines
+#: src/pages/timer/timer.blp:73 src/pages/timer/timer.blp:109
+msgid "Init timer"
+msgstr ""
+
+#: src/pages/timer/timer.blp:85
+msgid "Pause timer"
+msgstr ""
+
+
+#: src/pages/timer/timer.js:91
+msgid "of"
+msgstr ""
+
+#: src/pages/timer/timer.blp:101
+msgid "Reset timer"
+msgstr ""
+
+#: src/pages/timer/timer.blp:117
+msgid "Stop timer"
+msgstr ""
+
+#: src/pages/timer/timer.js:127
+msgid "Started at"
+msgstr ""
+
+#: src/pages/timer/timer.js:154
+msgid "Pomodoro paused"
+msgstr ""
+
+#: src/pages/timer/timer.js:162
+msgid "Pomodoro started"
+msgstr ""
+
+#. timer dupliucated lines
+#: src/pages/timer/timer.js:162 src/pages/timer/timer.js:197
+msgid "Description"
+msgstr ""
+
+#. timer dupliucated lines
+#: src/pages/timer/timer.js:162 src/pages/timer/timer.js:197
+msgid "Created at"
+msgstr ""
+
+#: src/pages/timer/timer.js:165
+msgid "Pomodoro break time"
+msgstr ""
+
+#. statistics dupliucated lines
+#: src/pages/timer/timer.js:172 src/pages/statistics/statistics.blp:36
+#: src/pages/statistics/statistics.blp:61
+#: src/pages/statistics/statistics.blp:85 src/pages/history/history.blp:43
+msgid "Work time"
+msgstr ""
+
+#. statistics dupliucated lines
+#: src/pages/timer/timer.js:176 src/pages/statistics/statistics.blp:44
+#: src/pages/statistics/statistics.blp:69
+#: src/pages/statistics/statistics.blp:93
+msgid "Break time"
+msgstr ""
+
+#: src/pages/timer/timer.js:197
+msgid "Pomodoro finished"
+msgstr ""
+
+#. statistics page
+#: src/pages/statistics/statistics.blp:32
+msgid "Today"
+msgstr ""
+
+#: src/pages/statistics/statistics.blp:54
+msgid "This week"
+msgstr ""
+
+#: src/pages/statistics/statistics.blp:78
+msgid "This month"
+msgstr ""
+
+#. statistics dupliucated lines
+#: src/pages/statistics/statistics.js:82 src/pages/statistics/statistics.js:92
+#: src/pages/statistics/statistics.js:101
+msgid "more"
+msgstr ""
+
+#. statistics dupliucated lines
+#: src/pages/statistics/statistics.js:84 src/pages/statistics/statistics.js:94
+#: src/pages/statistics/statistics.js:103
+msgid "less"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:85
+msgid "than yesterday"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:95
+msgid "than last week"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:104
+msgid "than last month"
+msgstr ""
+
+#. history page
+#: src/pages/history/history.blp:17
+msgid "Add new pomodoro"
+msgstr ""
+
+#: src/pages/history/history.blp:71
+msgid "Sort From First To Last"
+msgstr ""
+
+#: src/pages/history/history.blp:77
+msgid "Sort From Last To First"
+msgstr ""
+
+#: src/pages/history/history.js:55
+msgid "Sort by name"
+msgstr ""
+
+#: src/pages/history/history.js:55
+msgid "Sort by date"
+msgstr ""

@@ -1,17 +1,14 @@
-# Brazilian Portuguese translation for Pomodoro.
-# Copyright (C) 2023 Pomodoro's COPYRIGHT HOLDER
-# This file is distributed under the same license as the Pomodoro package.
+#
 # Ideve Core <ideve.core@gmail.com>, 2023.
 #
-
 msgid ""
 msgstr ""
 "Project-Id-Version: Pomodoro master\n"
 "Report-Msgid-Bugs-To: https://gitlab.com/idevecore/pomodoro/-/issues\n"
 "POT-Creation-Date: 2023-05-22 12:53+0000\n"
-"PO-Revision-Date: 2022-05-22 14:09-0300\n"
+"PO-Revision-Date: 2023-08-04 10:40-0300\n"
 "Last-Translator: Ideve Core <ideve.core@gmail.com>\n"
-"Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
+"Language-Team: Brazilian Portuguese <ideve.core@gmail.com>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,228 +17,297 @@ msgstr ""
 "X-Generator: Gtranslator 42.0\n"
 "X-Project-Style: gnome\n"
 
-#: data/io.gitlab.idevecore.Pomodoro.in:4
-msgid "Timer"
+#: data/io.gitlab.idevecore.Pomodoro.in.in:3
+msgid "StopWatch"
 msgstr "Temporizador"
 
-#: data/io.gitlab.idevecore.Pomodoro.in:12
-msgid "timer;clocks;stopwatch;"
-msgstr "tempo;relógio;temporizador"
+#: data/io.gitlab.idevecore.Pomodoro.in.in:9
+msgid "Timer;Clock;StopWatch;"
+msgstr "Tempo;Relógio;Temporizador;"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:9
-msgid ""
-"Pomodoro is a timer utility with rules, ideal for better productivity."
+#: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:11
+msgid "Pomodoro is a timer utility with rules, ideal for better productivity."
 msgstr ""
-"Pomodoro é um utilitário de temporizador com regras, ideal para melhor a produtividade."
+"Pomodoro é um utilitário de temporizador com regras, ideal para melhor a "
+"produtividade."
 
-#: src/gtk/help-overlay.ui:11
+#. application
+#: src/application.js:112
+msgid "Stop timer?"
+msgstr "Parar temporizador"
+
+#: src/application.js:114
+msgid "There is a running timer, wants to stop and exit the application?"
+msgstr "Existe um temporizador em execução, quer parar e sair do aplicativo?"
+
+#: src/application.js:115
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/application.js:116
+msgid "Exit"
+msgstr "Sair"
+
+#. window page
+#: src/window.blp:32
+msgid "Main menu"
+msgstr "Menu principal"
+
+#: src/window.blp:40
+msgid "_Timer"
+msgstr "_Temporizador"
+
+#: src/window.blp:48
+msgid "_Statistics"
+msgstr "_Estatisticas"
+
+#: src/window.blp:56
+msgid "_History"
+msgstr "_Histórico"
+
+#: src/window.blp:75
+msgid "_Preferences"
+msgstr "_Preferências"
+
+#: src/window.blp:80
+msgid "_Keyboard shortcuts"
+msgstr "_Atalhos de teclado"
+
+#: src/window.blp:85
+msgid "_About Pomodoro"
+msgstr "_Sobre o Pomodoro"
+
+#: src/pages/shortcuts/shortcuts.blp:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Geral"
 
-#: src/gtk/help-overlay.ui:14
+#: src/pages/shortcuts/shortcuts.blp:14
 msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr "Mostra a ajuda"
+msgid "Keyboard shortcuts"
+msgstr "Atalhos de teclado"
 
-#: src/gtk/help-overlay.ui:20
+#: src/pages/shortcuts/shortcuts.blp:18
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Sair"
 
-#: src/window.ui:37
-msgid "Main menu"
-msgstr "Menu principal"
+#. preferences page
+#: src/pages/preferences/preferences.blp:9
+msgid "Preferences"
+msgstr "Preferências"
 
-#: src/window.ui:52
-msgid "_Timer"
-msgstr "_Temporizador"
-
-#: src/window.ui:65
-msgid "_Statistics"
-msgstr "_Estatísticas"
-
-#: src/window.ui:78
-msgid "_History"
-msgstr "_Histórico"
-
-#: src/window.ui:107 src/preferences.ui:10
-msgid "_Preferences"
-msgstr "_Preferências"
-
-#: src/window.ui:111
-msgid "_Keyboard Shortcuts"
-msgstr "Atalhos de teclado"
-
-#: src/window.ui:115
-msgid "_About Pomodoro"
-msgstr "_Sobre o Pomodoro"
-
-#: src/window.ui:56
-msgid "Title"
-msgstr "Título"
-
-#: src/window.ui:56 src/historic_row.js:48 src/timer.js:90 src/timer.js:92 src/timer.js:114
-msgid "Description"
-msgstr "Descrição"
-
-#: src/timer.ui:80 src/timer.ui:139
-msgid "Init timer"
-msgstr "Iniciar temporizador"
-
-#: src/timer.ui:101
-msgid "Paused timer"
-msgstr "Pausar temporizador"
-
-#: src/timer.ui:126
-msgid "Reset timer"
-msgstr "Reiniciar temporizador"
-
-#: src/timer.ui:153
-msgid "Stop timer"
-msgstr "Parar temporizador"
-
-#: src/timer.js:29
-msgid "invalid"
-msgstr "inválido"
-
-#: src/timer.js:89
-msgid "Pomodoro started"
-msgstr "Pomodoro começou"
-
-#: src/timer.js:89 src/timer.js:91 src/timer.js:113
-msgid "Created date"
-msgstr "Data de criação"
-
-#: src/timer.js:91
-msgid "Pomodoro break time"
-msgstr "pomodoro interrupção"
-
-#: src/timer.js:113
-msgid "Pomodoro finished"
-msgstr "pomodoro terminou"
-
-#: src/timer.js:163
-msgid "of"
-msgstr "de"
-
-#: src/statistics.js:42 src/statistics.js:100 src/statistics.js:145
-msgid "Today"
-msgstr "Hoje"
-
-#: src/statistics.js:42 src/statistics.js:116 src/statistics.js:161 src/historic_row.ui:16
-msgid "Work time"
-msgstr "Tempo de trabalho"
-
-#: src/statistics.js:60 src/statistics.js:70 src/statistics.js:79
-msgid "more"
-msgstr "a mais que"
-
-#: src/statistics.js:62 src/statistics.js:72 src/statistics.js:81
-msgid "less"
-msgstr "a menos que"
-
-#: src/statistics.js:63
-msgid "than yesterday"
-msgstr "ontem"
-
-#: src/statistics.js:63
-msgid "than last week"
-msgstr "semana passada"
-
-
-#: src/statistics.js:63
-msgid "than last month"
-msgstr "mês passado"
-
-
-#: src/statistics.js:68 src/historic_row.js:32
-msgid "Break time"
-msgstr "Intervalo"
-
-#: src/statistics.js:89
-msgid "This week"
-msgstr "Essa semana"
-
-#: src/statistics.js:134
-msgid "This month"
-msgstr "Esse mês"
-
-#: src/historic.js:60 src/history.ui:154
-msgid "Name"
-msgstr "Nome"
-
-#: src/historic.js:60 src/history.ui:159
-msgid "Date"
-msgstr "Data"
-
-#: src/historic.js:60 src/history.ui:171
-msgid "Total work"
-msgstr "Trabalho total"
-
-#: src/historic.js:60 src/history.ui:172
-msgid "Total break"
-msgstr "Intervalo total"
-
-#: src/history.ui:166
-msgid "Ascending"
-msgstr "Crescente"
-
-#: src/history.ui:171
-msgid "Descending"
-msgstr "Decrescente"
-
-#: src/historic_row.ui:56
-msgid "Quantities of pomodoros"
-msgstr "Quantidate de Pomodoros"
-
-#: src/historic_row.js:72
-msgid "Remove"
-msgstr "Remover"
-
-#: src/historic_row.js:14
-msgid "Stop timer?"
-msgstr "Parar temporizador?"
-
-#: src/historic_row.js:16
-msgid "There is a running timer, wants to stop and exit the application?"
-msgstr "Existe um temporizador em execução, quer parar e sair do aplicativo?"
-
-#: src/historic_row.js:17
-msgid "Continue"
-msgstr "Continuar"
-
-#: src/historic_row.js:18
-msgid "Exit"
-msgstr "Sair"
-#: src/historic_row.js:16
-msgid "Add new pomodoro"
-msgstr "Adicionar novo pomodoro"
-
-#: src/preferences.ui:10
+#: src/pages/preferences/preferences.blp:11
 msgid "User interface"
 msgstr "Interface de usuário"
 
-#: src/preferences.ui:17
+#: src/pages/preferences/preferences.blp:15
 msgid "Theme"
 msgstr "Tema"
 
-#: src/preferences.ui:21
+#: src/pages/preferences/preferences.blp:17
 msgid "Light"
 msgstr "Claro"
 
-#: src/preferences.ui:17
+#: src/pages/preferences/preferences.blp:17
 msgid "Dark"
 msgstr "Escuro"
 
-#: src/preferences.ui:17
+#: src/pages/preferences/preferences.blp:17
 msgid "System"
 msgstr "Sistema"
 
-#: src/preferences.ui:31
+#: src/pages/preferences/preferences.blp:21
 msgid "Allow execution in the background"
 msgstr "Permitir execução em segundo plano"
 
-#: src/preferences.ui:32
+#: src/pages/preferences/preferences.blp:22
 msgid "Hides the window instead of leaving if there is pomodoro running"
 msgstr "Oculta a janela em vez de sair se houver pomodoro em execução"
+
+#: src/pages/preferences/preferences.blp:33
+msgid "Allow sounds"
+msgstr "Permitir sons"
+
+#: src/pages/preferences/preferences.blp:34
+msgid "Plays the feedback sounds"
+msgstr "Toca os sons de feedback"
+
+#: src/pages/preferences/preferences.blp:46
+msgid "Customize pomodoro"
+msgstr "Customizar pomodoro"
+
+#: src/pages/preferences/preferences.blp:48
+msgid "Work time - (minutes)"
+msgstr "Tempo de trabalho - (minutos)"
+
+#. preferences dupliucated lines 
+#: src/pages/preferences/preferences.blp:49
+#: src/pages/preferences/preferences.blp:65
+#: src/pages/preferences/preferences.blp:81
+#: src/pages/preferences/preferences.blp:97
+msgid "The ideal is to follow the rules of the Pomodoro"
+msgstr "O ideal é seguir as regras do Pomodoro"
+
+#: src/pages/preferences/preferences.blp:64
+msgid "Break time - (minutes)"
+msgstr "Tempo de interrupção - (minutos)"
+
+#: src/pages/preferences/preferences.blp:80
+msgid "Long break time - (minutes)"
+msgstr "Tempo de interrupção longa - (minutos)"
+
+#: src/pages/preferences/preferences.blp:96
+msgid "Sessions until the long break - (minutes)"
+msgstr "Sessões até o longo intervalo - (minutos)"
+
+#. keyboard shortcut page
+#: src/pages/shortcuts/shortcuts.blp:9
+msgid "General"
+msgstr "Geral"
+
+#: src/pages/shortcuts/shortcuts.blp:13
+msgid "Keyboard shortcuts"
+msgstr "Atalhos de teclado"
+
+#: src/pages/shortcuts/shortcuts.blp:17
+msgid "Quit"
+msgstr "Sair"
+
+#. timer page
+#.  timer dupliucated lines 
+#: src/pages/timer/timer.blp:43 src/pages/timer/timer.blp:49
+#: src/components/history-row/history-row.blp:36
+msgid "Pomodoro sessions"
+msgstr "Sessões do Pomodoro"
+
+#: src/pages/timer/timer.blp:57
+msgid "Title (optional)"
+msgstr "Título (opcional)"
+
+#: src/pages/timer/timer.blp:60
+msgid "Description (optional)"
+msgstr "Descrição (opcional)"
+
+#. timer dupliucated lines
+#: src/pages/timer/timer.blp:73 src/pages/timer/timer.blp:109
+msgid "Init timer"
+msgstr "Iniciar temporizador"
+
+#: src/pages/timer/timer.blp:85
+msgid "Pause timer"
+msgstr "Pausar temporizador"
+
+#: src/pages/timer/timer.js:91
+msgid "of"
+msgstr "de"
+
+#: src/pages/timer/timer.blp:101
+msgid "Reset timer"
+msgstr "Reiniciar temporizador"
+
+#: src/pages/timer/timer.blp:117
+msgid "Stop timer"
+msgstr "Parar temporizador"
+
+#: src/pages/timer/timer.js:127
+msgid "Started at"
+msgstr "Iniciado as"
+
+#: src/pages/timer/timer.js:154
+msgid "Pomodoro paused"
+msgstr "Temporizador pausado"
+
+#: src/pages/timer/timer.js:162
+msgid "Pomodoro started"
+msgstr "Pomodoro iniciado"
+
+#. timer dupliucated lines
+#: src/pages/timer/timer.js:162 src/pages/timer/timer.js:197
+msgid "Description"
+msgstr "Descrição"
+
+#. timer dupliucated lines
+#: src/pages/timer/timer.js:162 src/pages/timer/timer.js:197
+msgid "Created at"
+msgstr "Criado as"
+
+#: src/pages/timer/timer.js:165
+msgid "Pomodoro break time"
+msgstr "Pomodoro tempo de pausa"
+
+#. statistics dupliucated lines
+#: src/pages/timer/timer.js:172 src/pages/statistics/statistics.blp:36
+#: src/pages/statistics/statistics.blp:61
+#: src/pages/statistics/statistics.blp:85 src/pages/history/history.blp:43
+msgid "Work time"
+msgstr "Tempo de trabalho"
+
+#. statistics dupliucated lines
+#: src/pages/timer/timer.js:176 src/pages/statistics/statistics.blp:44
+#: src/pages/statistics/statistics.blp:69
+#: src/pages/statistics/statistics.blp:93
+msgid "Break time"
+msgstr "Tempo de pausa"
+
+#: src/pages/timer/timer.js:197
+msgid "Pomodoro finished"
+msgstr "Pomodoro finalizado"
+
+#. statistics page
+#: src/pages/statistics/statistics.blp:32
+msgid "Today"
+msgstr "Hoje"
+
+#: src/pages/statistics/statistics.blp:54
+msgid "This week"
+msgstr "Esta semana"
+
+#: src/pages/statistics/statistics.blp:78
+msgid "This month"
+msgstr "Este mês"
+
+#. statistics dupliucated lines
+#: src/pages/statistics/statistics.js:82 src/pages/statistics/statistics.js:92
+#: src/pages/statistics/statistics.js:101
+msgid "more"
+msgstr "a mais"
+
+#. statistics dupliucated lines
+#: src/pages/statistics/statistics.js:84 src/pages/statistics/statistics.js:94
+#: src/pages/statistics/statistics.js:103
+msgid "less"
+msgstr "a menos"
+
+#: src/pages/statistics/statistics.js:85
+msgid "than yesterday"
+msgstr "do que ontem"
+
+#: src/pages/statistics/statistics.js:95
+msgid "than last week"
+msgstr "do que semana passada"
+
+#: src/pages/statistics/statistics.js:104
+msgid "than last month"
+msgstr "do que mês passado"
+
+#. history page
+#: src/pages/history/history.blp:17
+msgid "Add new pomodoro"
+msgstr "Adicionar novo pomodoro"
+
+#: src/pages/history/history.blp:71
+msgid "Sort From First To Last"
+msgstr "Classificar de primeiro para o último"
+
+#: src/pages/history/history.blp:77
+msgid "Sort From Last To First"
+msgstr "Classificar de último para o primeiro"
+
+#: src/pages/history/history.js:55
+msgid "Sort by name"
+msgstr "Classificar por nome"
+
+#: src/pages/history/history.js:55
+msgid "Sort by date"
+msgstr "Classificar por data"

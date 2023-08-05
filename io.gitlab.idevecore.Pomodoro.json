@@ -3,14 +3,13 @@
   "runtime": "org.gnome.Platform",
   "runtime-version": "44",
   "sdk": "org.gnome.Sdk",
-  "command": "io.gitlab.idevecore.Pomodoro",
+  "command": "pomodoro",
   "finish-args": [
     "--share=network",
     "--share=ipc",
     "--socket=fallback-x11",
     "--device=dri",
-    "--socket=wayland",
-    "--socket=pulseaudio"
+    "--socket=wayland"
   ],
   "cleanup": [
     "/include",
@@ -24,6 +23,21 @@
     "*.a"
   ],
   "modules": [
+    {
+      "name": "blueprint",
+      "buildsystem": "meson",
+      "cleanup": [
+        "*"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
+          "tag": "v0.8.1",
+          "commit": "aa7679618e864748f4f4d8f15283906e712752fe"
+        }
+      ]
+    },
     {
       "name": "gsound",
       "buildsystem": "meson",
