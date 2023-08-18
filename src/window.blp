@@ -26,7 +26,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
             title: bind template.title;
           }
           [end]
-          MenuButton {
+          MenuButton menu_button {
             menu-model: primary_menu;
             icon-name: "open-menu-symbolic";
             tooltip-text: _("Main menu");
@@ -70,6 +70,11 @@ template $Gjs_Window : Adw.ApplicationWindow {
 }
 
 menu primary_menu {
+  section {
+    item {
+      custom: "theme";
+    }
+  }
   section {
     item {
       label: _("_Preferences");

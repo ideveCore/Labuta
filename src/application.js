@@ -108,7 +108,7 @@ Blueprint 0.10.0
     this.set_accels_for_action('app.quit', ['<primary>q']);
     this.add_action(show_about_action);
     this.add_action(active_action);
-    this._load_application_theme();
+    // this._load_application_theme();
     this.settings.connect("changed::theme", this._load_application_theme.bind(this));
     this._load_data();
   }

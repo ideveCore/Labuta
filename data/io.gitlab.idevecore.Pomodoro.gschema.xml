@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="pomodoro">
   <schema id="@app_id@" path="/io/gitlab/idevecore/Pomodoro/" gettext-domain="@app_id@">
+    <key type="s" name="color-scheme">
+      <choices>
+        <choice value="auto" />
+        <choice value="light" />
+        <choice value="dark" />
+      </choices>
+      <default>"auto"</default>
+    </key>
     <key type="b" name="run-in-background">
       <default>true</default>
     </key>

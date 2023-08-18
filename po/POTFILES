@@ -17,3 +17,9 @@ src/application.js
 src/main.js
 
 troll/src/util.js
+src/tray.js
+troll/src/widgets/ThemeSelector.blp
+troll/src/widgets/ThemeSelector.js
+src/settings.js
+src/components/theme-selector/theme-selector.blp
+src/components/theme-selector/theme-selector.js

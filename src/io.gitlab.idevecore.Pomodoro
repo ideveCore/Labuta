@@ -20,6 +20,7 @@ const resource = Gio.resource_load(
 
 Gio.resources_register(resource);
 
+
 const { main } = await import("resource://io/gitlab/idevecore/Pomodoro@profile@/main.js");
 const exit_code = await main([programInvocationName, ...programArgs]);
 exit(exit_code);

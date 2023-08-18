@@ -22,6 +22,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Template from './window.blp' assert { type: 'uri' };
+import ThemeSelector from './components/theme-selector/theme-selector.js';
 
 export default class Window extends Adw.ApplicationWindow {
   static {
@@ -29,11 +30,18 @@ export default class Window extends Adw.ApplicationWindow {
       Template,
       InternalChildren: [
         'stack',
+        'menu_button'
       ],
     }, this);
   }
   constructor(application) {
     super({ application });
+
+
+    // Add theme selector from troll into primary menu
+    const theme_selector = new ThemeSelector()
+    // console.log(theme_selector)
+    this._menu_button.get_popover().add_child(theme_selector, 'theme');
 
     this.connect('close-request', () => {
       application._request_quit()

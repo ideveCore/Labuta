@@ -9,14 +9,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
     title: _("Preferences");
     Adw.PreferencesGroup {
       title: _("User interface");
-      Adw.ComboRow select_theme {
-        notify::selected-item => $_change_theme();
-        title: _("Theme");
-        icon-name: 'dark-mode-symbolic';
-        model: StringList list {
-          strings [_("Light"), _("Dark"), _("System")]
-        };
-      }
       Adw.ActionRow  {
         title: _("Allow execution in the background");
         subtitle: _("Hides the window instead of leaving if there is pomodoro running");

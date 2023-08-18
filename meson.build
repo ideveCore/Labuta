@@ -32,7 +32,6 @@ subdir('data')
 subdir('src')
 subdir('po')
 
-
 install_symlink(
   meson.project_name(),
   pointing_to: pkgdatadir / application_id,

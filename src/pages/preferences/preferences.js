@@ -28,7 +28,6 @@ export default class Preferences extends Adw.PreferencesWindow {
     GObject.registerClass({
       Template,
       InternalChildren: [
-        'select_theme',
         'switch_run_in_background',
         'switch_play_sounds',
         'set_long_break',
@@ -42,10 +41,6 @@ export default class Preferences extends Adw.PreferencesWindow {
     super();
     this.Application = application;
     this.transient_for = this.Application.active_window;
-    this.Application.settings.get_string('theme') === 'default' ?
-      this._select_theme.set_selected(2) :
-      this.Application.settings.get_string('theme') === 'dark' ?
-        this._select_theme.set_selected(1) : this._select_theme.set_selected(0);
     this._switch_run_in_background.set_active(this.Application.settings.get_boolean('run-in-background'));
     this._switch_play_sounds.set_active(this.Application.settings.get_boolean('play-sounds'));
 
@@ -58,14 +53,6 @@ export default class Preferences extends Adw.PreferencesWindow {
     this._set_long_break.set_value(Math.floor(this.long_break / 60) % 60);
     this._set_sessions_long_break.set_value(this.sessions_long_break);
 
-  }
-  _change_theme(_item) {
-    const index = _item.get_selected();
-    if (index === 0 || index === 1) {
-      this.Application.settings.set_string('theme', index === 0 ? 'light' : 'dark');
-    } else {
-      this.Application.settings.set_string('theme', 'default');
-    }
   }
   _on_boolean_state_set(widget, state) {
     const setting = widget.get_name()
