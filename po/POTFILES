@@ -23,3 +23,4 @@ troll/src/widgets/ThemeSelector.js
 src/settings.js
 src/components/theme-selector/theme-selector.blp
 src/components/theme-selector/theme-selector.js
+src/db.js
