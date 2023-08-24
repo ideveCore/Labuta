@@ -23,39 +23,39 @@ import Application from "./application.js";
 import GSound from 'gi://GSound';
 import { Db_item, Query_builder, Database } from './db.js';
 
-const db = new Database()
-db.setup()
+// const db = new Database()
+// db.setup()
 
-const new_db_item = new Db_item({
-  id: 6,
-  title: 'ola1',
-  description: 'ola des',
-  work_time: 1500,
-  break_time: 300,
-  day: 260,
-  day_of_month: 22,
-  year: 2023,
-  week: 4,
-  month: 8,
-  display_date: 'display date',
-  sessions: 1
-});
+// const new_db_item = new Db_item({
+//   id: null,
+//   title: 'ola1',
+//   description: 'ola des',
+//   work_time: 1500,
+//   break_time: 300,
+//   day: 260,
+//   day_of_month: 22,
+//   year: 2023,
+//   week: 4,
+//   month: 8,
+//   display_date: 'display date',
+//   sessions: 1
+// });
 
 // db.save(new_db_item);
-// db.delete(1);
-// db.delete(2);
-// db.delete(3);
-// db.delete(4);
-// db.delete(5);
-// db.update(new_db_item);
+// // db.delete(1);
+// // db.delete(2);
+// // db.delete(3);
+// // db.delete(4);
+// // db.delete(5);
+// // db.update(new_db_item);
 
-const query = new Query_builder()
-query.get_all()
-const listitem = db.query(query.build())
-console.log(listitem)
-// // const query_builder = new Query_builder()
+// const query = new Query_builder()
+// query.get_all()
+// const listitem = db.query(query.build())
+// console.log(listitem)
+// // // const query_builder = new Query_builder()
 
-// console.log(db_item)
+// // console.log(db_item)
 
 pkg.initGettext();
 GLib.set_application_name('Pomodoro');

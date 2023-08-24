@@ -24,6 +24,7 @@ import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
 import GLib from 'gi://GLib';
 import Template from './timer.blp' assert { type: 'uri' };
+import { Db_item } from '../../db.js';
 
 export default class Timer extends Adw.Bin {
   static {
@@ -54,7 +55,7 @@ export default class Timer extends Adw.Bin {
     this.long_break = this.application.settings.get_int('long-break');
     this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
-    this.current_break_time = this.break_time;
+    this.current_break_time = this.work_time;
     this.is_break_timer = false;
     this.timer_state = null;
     this._timer_label.set_text(this._format_timer());
@@ -123,47 +124,54 @@ export default class Timer extends Adw.Bin {
     if (this.application.timer_state === 'running') {
       if (!this.timer_running) {
         const current_date = GLib.DateTime.new_now_local()
-        this.data = {
+        const db_item = new Db_item({
+          id: null,
           title: title ? title : `${_('Started at')} ${this._get_schedule()}`,
           description,
           work_time: 0,
           break_time: 0,
-          date: {
-            day: current_date.get_day_of_year(),
-            day_of_month: current_date.get_day_of_month(),
-            year: current_date.get_year(),
-            week: current_date.get_week_of_year(),
-            month: current_date.get_month(),
-            display_date: this._get_date(),
-          },
-          id: GLib.uuid_string_random(),
-          counts: 0,
-        }
+          day: current_date.get_day_of_year(),
+          day_of_month: current_date.get_day_of_month(),
+          year: current_date.get_year(),
+          week: current_date.get_week_of_year(),
+          month: current_date.get_month(),
+          display_date: this._get_date(),
+          sessions: 0,
+        })
+        this.data = this.application.data.save(db_item);
         this.timer_running = true;
         GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => {
           if (this.application.timer_state === 'stopped') {
-            if (!this.data)
-              return
-            const array = this.application.data;
-            array.push(this.data);
-            this.application.data = array;
-            this.application._save_data();
+            this.work_time = this.application.settings.get_int('work-time');
+            this.break_time = this.application.settings.get_int('break-time');
+            this.long_break = this.application.settings.get_int('long-break');
+            this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
+            this._pomodoro_counts.set_visible(false);
+            this.timer_running = false;
+            this._title_entry.set_text('');
+            this._description_entry.set_text('');
+            this.current_work_time = this.work_time;
+            this.current_break_time = this.break_time;
+            this._title_entry.editable = true;
+            this._description_entry.editable = true;
+            this._stack_timer_controls.visible_child_name = 'init_timer';
+            this._timer_label.get_style_context().remove_class('error');
+            this._timer_label.set_text(this._format_timer());
+            this.application.data.update(this.data)
             this.data = null;
             return GLib.SOURCE_REMOVE
           }
           if (this.application.timer_state === 'paused') {
-            if (!this.application.active_window.visible)
-              this.application._load_background_portal_status(`${_('Pomodoro paused')}`)
             return GLib.SOURCE_CONTINUE
           }
 
 
           if (this.current_work_time === this.work_time) {
             this._timer_label.get_style_context().remove_class('error');
-            this.application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
+            this.application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
           } else if (this.current_work_time === 0) {
             this._timer_label.get_style_context().add_class('error');
-            this.application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
+            this.application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
             this.application._play_sound({ name: 'complete', cancellable: null })
           }
 
@@ -179,6 +187,7 @@ export default class Timer extends Adw.Bin {
           }
 
           this.current_work_time--
+          this.data = this.application.data.update(this.data)
 
           this._timer_label.set_text(this._format_timer())
 
@@ -189,15 +198,15 @@ export default class Timer extends Adw.Bin {
           this.application.timer_state = 'paused';
           this._stack_timer_controls.visible_child_name = 'paused_timer';
           this.current_work_time = this.work_time;
-          this.data.counts = this.data.counts + 1;
-          if (this.data.counts > 0) {
-            this._tag_label.set_label(`<span weight="bold" size="9pt">${this.data.counts}</span>`);
+          this.data.sessions = this.data.sessions + 1;
+          if (this.data.sessions > 0) {
+            this._tag_label.set_label(`<span weight="bold" size="9pt">${this.data.sessions}</span>`);
             this._pomodoro_counts.set_visible(true);
           }
-          if (this.data.counts === this.sessions_long_break) {
+          if (this.data.sessions === this.sessions_long_break) {
             this.current_break_time = this.long_break;
           }
-          this.application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.date.display_date}` })
+          this.application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
           this._timer_label.get_style_context().remove_class('error');
           this.application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null })
           this._timer_label.set_text(this._format_timer());
@@ -221,34 +230,12 @@ export default class Timer extends Adw.Bin {
     this._title_entry.editable = true;
     this._description_entry.editable = true;
     this._stack_timer_controls.visible_child_name = 'init_timer';
-    this.data = null;
+    this.data = this.application.data.delete(this.data.id);
     this._timer_label.get_style_context().remove_class('error');
     this._timer_label.set_text(this._format_timer());
     this.application.timer_state = 'stopped'
   }
   _on_stop_timer() {
-    this.work_time = this.application.settings.get_int('work-time');
-    this.break_time = this.application.settings.get_int('break-time');
-    this.long_break = this.application.settings.get_int('long-break');
-    this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
-    this._pomodoro_counts.set_visible(false);
-    this.timer_running = false;
-    this._title_entry.set_text('');
-    this._description_entry.set_text('');
-    this.current_work_time = this.work_time;
-    this.current_break_time = this.break_time;
-    this._title_entry.editable = true;
-    this._description_entry.editable = true;
-    this._stack_timer_controls.visible_child_name = 'init_timer';
-    this._timer_label.get_style_context().remove_class('error');
-    this._timer_label.set_text(this._format_timer());
-    if (this.data) {
-      const array = this.application.data;
-      array.push(this.data);
-      this.application.data = array;
-      this.application._save_data();
-    }
-    this.data = null;
     this.application.timer_state = 'stopped';
   }
   _DrawTag(area, cr, width, height) {

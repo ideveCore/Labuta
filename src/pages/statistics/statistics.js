@@ -62,12 +62,12 @@ export default class Statistics extends Adw.Bin {
     return this._current_date.get_month();
   }
   _load_work_time() {
-    const today = this.application.data.filter((item) => item.date.day === this._get_day())
-    const yesterday = this.application.data.filter((item) => item.date.day === this._get_day() - 1);
-    const week = this.application.data.filter((item) => item.date.week === this._get_week());
-    const last_week = this.application.data.filter((item) => item.date.week === this._get_week() - 1);
-    const month = this.application.data.filter((item) => item.date.month === this._get_month());
-    const last_month = this.application.data.filter((item) => item.date.month === this._get_month() - 1);
+    const today = this.application.data.get().filter((item) => item.day === this._get_day())
+    const yesterday = this.application.data.get().filter((item) => item.day === this._get_day() - 1);
+    const week = this.application.data.get().filter((item) => item.week === this._get_week());
+    const last_week = this.application.data.get().filter((item) => item.week === this._get_week() - 1);
+    const month = this.application.data.get().filter((item) => item.month === this._get_month());
+    const last_month = this.application.data.get().filter((item) => item.month === this._get_month() - 1);
     const work_time_today = today.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const work_timer_yesterday = yesterday.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const work_time_week = week.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
@@ -111,9 +111,9 @@ export default class Statistics extends Adw.Bin {
     this._work_time_month.set_subtitle(percentage_work_time_month_last_month())
   }
   _load_break_time() {
-    const today = this.application.data.filter((item) => item.date.day === this._get_day())
-    const week = this.application.data.filter((item) => item.date.week === this._get_week());
-    const month = this.application.data.filter((item) => item.date.month === this._get_month());
+    const today = this.application.data.get().filter((item) => item.day === this._get_day())
+    const week = this.application.data.get().filter((item) => item.week === this._get_week());
+    const month = this.application.data.get().filter((item) => item.month === this._get_month());
 
     const break_time_today = today.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     const break_time_week = week.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);

@@ -36,7 +36,9 @@ import { getFlatpakInfo } from './utils.js';
 import Timer from './pages/timer/timer.js';
 import Statictics from './pages/statistics/statistics.js';
 import History from './pages/history/history.js';
+import { Database, Db_item, Query_builder, } from './db.js';
 import './style.css';
+import Application_data from './application_data.js';
 
 export default class Application extends Adw.Application {
   static {
@@ -56,7 +58,8 @@ export default class Application extends Adw.Application {
       path: '/io/gitlab/idevecore/Pomodoro/',
     });
     this.timer_state = 'stopped';
-    this.data = [];
+
+    this.data = new Application_data().setup();
 
     quit_action.connect('activate', () => {
       if (this.active_window.visible) {
@@ -110,7 +113,8 @@ Blueprint 0.10.0
     this.add_action(active_action);
     // this._load_application_theme();
     this.settings.connect("changed::theme", this._load_application_theme.bind(this));
-    this._load_data();
+    // this._load_data();
+    // this._setup_db();
   }
   _request_quit() {
     this.run_in_background = this.settings.get_boolean('run-in-background');
@@ -208,6 +212,46 @@ Blueprint 0.10.0
         }
       }
     );
+  }
+  _setup_db() {
+    const db = new Database();
+    db.setup();
+    const query = new Query_builder();
+    query.get_all();
+    let list_item = db.query(query.build());
+    console.log(list_item);
+
+    const data_dir = GLib.get_user_config_dir();
+    const destination = GLib.build_filenamev([data_dir, 'data.json'])
+    const destination_file = Gio.File.new_for_path(destination)
+
+    try {
+      const [, contents] = destination_file.load_contents(null);
+      const decoder = new TextDecoder('utf-8');
+      const data = JSON.parse(decoder.decode(contents));
+      data.forEach((item) => {
+        const db_item = new Db_item({
+          id: null,
+          title: item.title,
+          description: item.description,
+          work_time: item.work_time,
+          break_time: item.break_time,
+          day: item.date.day,
+          day_of_month: item.date.day_of_month,
+          week: item.date.week,
+          year: item.date.year,
+          month: item.date.month,
+          display_date: item.date.display_date,
+          sessions: item.counts,
+        });
+        db.save(db_item)
+      })
+      destination_file.delete(null);
+      list_item = db.query(query.build());
+      console.log(list_item)
+    } catch (error) {
+      this.data = list_item
+    }
   }
   _save_data() {
     const data_dir = GLib.get_user_config_dir();

@@ -224,7 +224,7 @@ export class Database {
     if (!id) return null;
 
     const item = new Db_item({
-      id: db_item.id,
+      id: id,
       title: db_item.title,
       description: db_item.description,
       work_time: db_item.work_time,
@@ -264,8 +264,6 @@ export class Database {
    */
   update(db_item) {
     if (!this._connection.is_opened()) return;
-
-    logger('ola')
 
     const builder = Gda.SqlBuilder.new(Gda.SqlStatementType.UPDATE);
 

@@ -84,12 +84,12 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         '',
       ),
-      id: GObject.ParamSpec.string(
+      id: GObject.ParamSpec.int(
         "id",
         '',
         '',
         GObject.ParamFlags.READWRITE,
-        '',
+        0, 10000000000, 0,
       ),
       month: GObject.ParamSpec.int(
         "month",
@@ -103,7 +103,7 @@ const History_list_object = GObject.registerClass(
         '',
         '',
         GObject.ParamFlags.READWRITE,
-        0, 12, 0,
+        0, 32, 0,
       ),
       year: GObject.ParamSpec.int(
         "year",
@@ -149,24 +149,20 @@ export const History_list_model = GObject.registerClass(
 
     _append_history_item(list) {
       const current_date = GLib.DateTime.new_now_local()
-      const application = Gtk.Application.get_default();
 
       list.forEach((item, index) => {
-        if (!application.data[index].date.year) application.data[index].date.year = current_date.get_year();
-        if (!application.data[index].date.day_of_month) application.data[index].date.day_of_month = 1;
-        application._save_data();
         const list_object = new History_list_object({
           title: item.title.toString(),
-          subtitle: item.date.display_date.toString(),
+          subtitle: item.display_date.toString(),
           work_time: item.work_time,
           break_time: item.break_time,
           id: item.id,
           description: item.description.toString(),
-          counts: item.counts.toString(),
-          month: item.date.month,
-          day_of_month: item.date.day_of_month || 1,
-          year: item.date.year || current_date.get_year(),
-          day: item.date.day,
+          counts: item.sessions.toString(),
+          month: item.month,
+          day_of_month: item.day_of_month || 1,
+          year: item.year || current_date.get_year(),
+          day: item.day,
         });
         this.history_list.push(list_object);
       })

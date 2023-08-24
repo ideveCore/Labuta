@@ -112,9 +112,8 @@ export default class History extends Adw.Bin {
       this._on_select_row(row);
     })
     row._remove_item_button.connect('clicked', () => {
-      this.application.data = this.application.data.filter((item) => item.id !== row.id);
+      this.application.data.delete(row.id);
       this._list_box.remove(row);
-      this.application._save_data();
     })
     return row
   }
@@ -122,7 +121,7 @@ export default class History extends Adw.Bin {
     if (this.application.data.length === 0) return;
     this._stack.visible_child_name = "history";
     const history_model = new History_list_model();
-    history_model._append_history_item(this.application.data);
+    history_model._append_history_item(this.application.data.get());
     const model = history_model;
     const filter = new Gtk.CustomFilter();
     filter.set_filter_func(this._filter_history);
@@ -142,8 +141,8 @@ export default class History extends Adw.Bin {
       total_work_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
       total_break_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     } else {
-      total_work_timer = this.application.data.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
-      total_break_timer = this.application.data.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+      total_work_timer = this.application.data.get().reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
+      total_break_timer = this.application.data.get().reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     }
 
     if (this.view_work_time) {
@@ -160,9 +159,8 @@ export default class History extends Adw.Bin {
   }
   _on_delete() {
     this.selected_rows.forEach((item) => {
-      this.selected_rows = this.selected_rows.filter((row) => row.id !== item.id);
-      this._list_box.remove(item)
-      this.application.data = this.application.data.filter((row) => row.id !== item.id);
+      this.application.data.delete(item.id);
+      this._list_box.remove(item);
     });
     this._load_display_total_time();
     this.application._save_data();
@@ -186,7 +184,7 @@ export default class History extends Adw.Bin {
     }
   }
   _on_active_selection() {
-    for (let index = 0; index <= this.application.data.length - 1; index++) {
+    for (let index = 0; index <= this.application.data.get().length - 1; index++) {
       this._list_box.get_row_at_index(index)._on_active_selection(this.activated_selection);
     }
     this._load_display_total_time();
