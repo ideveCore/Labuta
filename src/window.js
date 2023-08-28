@@ -21,6 +21,8 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import Template from './window.blp' assert { type: 'uri' };
 import ThemeSelector from './components/theme-selector/theme-selector.js';
 
@@ -28,6 +30,7 @@ export default class Window extends Adw.ApplicationWindow {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: 'Window',
       InternalChildren: [
         'stack',
         'menu_button'
@@ -36,7 +39,6 @@ export default class Window extends Adw.ApplicationWindow {
   }
   constructor(application) {
     super({ application });
-
 
     // Add theme selector from troll into primary menu
     const theme_selector = new ThemeSelector()
@@ -49,15 +51,27 @@ export default class Window extends Adw.ApplicationWindow {
     })
 
     this._stack.connect('notify::visible-child', () => {
-      if (this._stack.visible_child_name == 'history') {
-        this._stack.visible_child._load_history_list();
-      } else if (this._stack.visible_child_name == 'statistics') {
+      if (this._stack.visible_child_name == 'statistics') {
         this._stack.visible_child._load_statistics_data();
       }
     });
+    this._setup_actions()
   }
-
-  _navigate(navigate) {
+  _setup_actions() {
+    const navigate_action = new Gio.SimpleAction({ name: 'navigate', parameter_type: new GLib.Variant('s', '').get_type() })
+    navigate_action.connect('activate', (simple_action, parameter) => {
+      const value = parameter.get_string();
+      this.navigate_to(value[0]);
+    })
+    this.add_action(navigate_action)
+  }
+  /**
+   *
+   * Navigate for page
+   * @param {string} navigate
+   *
+   */
+  navigate_to(navigate) {
     this._stack.visible_child_name = navigate;
   }
 }

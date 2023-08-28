@@ -22,3 +22,7 @@
   border-bottom-width: 1px;
   border-bottom-color: @borders;
 }
+
+.select-button {
+  border-radius: 50%;
+}

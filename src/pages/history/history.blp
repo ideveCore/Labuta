@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $Gjs_History : Adw.Bin {
+template $History : Adw.Bin {
   Gtk.Box {
     orientation: vertical;
     Gtk.Stack stack {
@@ -17,7 +17,8 @@ template $Gjs_History : Adw.Bin {
             label: _("Add new pomodoro");
             use-underline: true;
             halign: center;
-            clicked => $_on_navigate();
+            action-name: 'win.navigate';
+            action-target: "'timer'";
           }
         };
       }
@@ -56,14 +57,8 @@ template $Gjs_History : Adw.Bin {
                       valign: center;
                       icon-name: "user-trash-symbolic";
                       sensitive: false;
-                      visible: false;
                       margin-end: 10;
                       clicked => $_on_delete();
-                    }
-                    Gtk.Button active_selection_button {
-                      valign: center;
-                      icon-name: "check-round-outline-whole-symbolic";
-                      margin-end: 10;
                     }
                     Gtk.Box {
                       Gtk.ToggleButton sort_first_to_last_button {

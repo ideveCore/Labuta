@@ -25,3 +25,6 @@ src/components/theme-selector/theme-selector.blp
 src/components/theme-selector/theme-selector.js
 src/db.js
 src/application_data.js
+src/components/history-dialog/history-dialog.blp
+src/components/history-dialog/history-dialog.js
+src/overrides.js

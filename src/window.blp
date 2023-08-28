@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $Gjs_Window : Adw.ApplicationWindow {
+template $Window : Adw.ApplicationWindow {
   default-width: 450;
   default-height: 600;
   hide-on-close: true;
@@ -57,7 +57,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
             use-underline: true;
             icon-name: "history-undo-symbolic";
             child:
-              $Gjs_History {};
+              $History {};
           }
         }
         Adw.ViewSwitcherBar {

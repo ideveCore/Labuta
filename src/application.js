@@ -33,10 +33,9 @@ import {
   getGLibVersion,
 } from "../troll/src/util.js";
 import { getFlatpakInfo } from './utils.js';
-import Timer from './pages/timer/timer.js';
-import Statictics from './pages/statistics/statistics.js';
-import History from './pages/history/history.js';
-import { Database, Db_item, Query_builder, } from './db.js';
+import './pages/timer/timer.js';
+import './pages/statistics/statistics.js';
+import './pages/history/history.js';
 import './style.css';
 import Application_data from './application_data.js';
 
@@ -46,20 +45,20 @@ export default class Application extends Adw.Application {
   }
   constructor() {
     super({ application_id: pkg.name, flags: Gio.ApplicationFlags.DEFAULT_FLAGS });
-
-    const quit_action = new Gio.SimpleAction({ name: 'quit' });
-    const preferences_action = new Gio.SimpleAction({ name: 'preferences' });
-    const shortcuts_action = new Gio.SimpleAction({ name: 'shortcuts' });
-    const show_about_action = new Gio.SimpleAction({ name: 'about' });
-    const active_action = new Gio.SimpleAction({ name: 'open' });
-    const flatpak_info = getFlatpakInfo();
     this.settings = new Gio.Settings({
       schema_id: pkg.name,
       path: '/io/gitlab/idevecore/Pomodoro/',
     });
     this.timer_state = 'stopped';
-
     this.data = new Application_data().setup();
+    this._setup_actions();
+  }
+  _setup_actions() {
+    const quit_action = new Gio.SimpleAction({ name: 'quit' });
+    const preferences_action = new Gio.SimpleAction({ name: 'preferences' });
+    const shortcuts_action = new Gio.SimpleAction({ name: 'shortcuts' });
+    const show_about_action = new Gio.SimpleAction({ name: 'about' });
+    const active_action = new Gio.SimpleAction({ name: 'open' });
 
     quit_action.connect('activate', () => {
       if (this.active_window.visible) {
@@ -74,6 +73,22 @@ export default class Application extends Adw.Application {
     shortcuts_action.connect('activate', () => {
       new Shortcuts(this).present();
     })
+    show_about_action.connect('activate', () => {
+      const aboutWindow = this._create_about_dialog();
+      aboutWindow.present();
+    });
+    active_action.connect("activate", () => {
+      this.active_window.show();
+    })
+    this.add_action(quit_action);
+    this.add_action(preferences_action);
+    this.add_action(shortcuts_action);
+    this.set_accels_for_action('app.quit', ['<primary>q']);
+    this.add_action(show_about_action);
+    this.add_action(active_action);
+  }
+  _create_about_dialog() {
+    const flatpak_info = getFlatpakInfo();
     const debug_info = `
 ${pkg.name} ${pkg.version}
 ${GLib.get_os_info("ID")} ${GLib.get_os_info("VERSION_ID")}
@@ -84,37 +99,20 @@ GLib ${getGLibVersion()}
 Flatpak ${flatpak_info.get_string("Instance", "flatpak-version")}
 Blueprint 0.10.0
     `.trim();
-    show_about_action.connect('activate', () => {
-      let aboutParams = {
-        transient_for: this.active_window,
-        application_name: 'Pomodoro',
-        application_icon: pkg.name,
-        developer_name: 'Ideve Core',
-        version: pkg.version,
-        developers: [
-          'Ideve Core'
-        ],
-        issue_url: 'https://gitlab.com/idevecore/pomodoro/-/issues',
-        debug_info,
-        copyright: '© 2023 Ideve Core',
-      };
-      const aboutWindow = new Adw.AboutWindow(aboutParams);
-      aboutWindow.present();
-    });
-    active_action.connect("activate", () => {
-      this.active_window.show();
-    })
-
-    this.add_action(quit_action);
-    this.add_action(preferences_action);
-    this.add_action(shortcuts_action);
-    this.set_accels_for_action('app.quit', ['<primary>q']);
-    this.add_action(show_about_action);
-    this.add_action(active_action);
-    // this._load_application_theme();
-    this.settings.connect("changed::theme", this._load_application_theme.bind(this));
-    // this._load_data();
-    // this._setup_db();
+    let aboutParams = {
+      transient_for: this.active_window,
+      application_name: 'Pomodoro',
+      application_icon: pkg.name,
+      developer_name: 'Ideve Core',
+      version: pkg.version,
+      developers: [
+        'Ideve Core'
+      ],
+      issue_url: 'https://gitlab.com/idevecore/pomodoro/-/issues',
+      debug_info,
+      copyright: '© 2023 Ideve Core',
+    };
+    return new Adw.AboutWindow(aboutParams);
   }
   _request_quit() {
     this.run_in_background = this.settings.get_boolean('run-in-background');
@@ -151,16 +149,6 @@ Blueprint 0.10.0
       return dialog.present()
     }
     this.quit()
-  }
-  _load_application_theme() {
-    const style_manager = Adw.StyleManager.get_default()
-    if (this.settings.get_string('theme') === 'default') {
-      style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
-    } else if (this.settings.get_string('theme') === 'dark') {
-      style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
-    } else {
-      style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
-    }
   }
   _send_notification({ title, body }) {
     const notification = new Gio.Notification();
@@ -212,70 +200,6 @@ Blueprint 0.10.0
         }
       }
     );
-  }
-  _setup_db() {
-    const db = new Database();
-    db.setup();
-    const query = new Query_builder();
-    query.get_all();
-    let list_item = db.query(query.build());
-    console.log(list_item);
-
-    const data_dir = GLib.get_user_config_dir();
-    const destination = GLib.build_filenamev([data_dir, 'data.json'])
-    const destination_file = Gio.File.new_for_path(destination)
-
-    try {
-      const [, contents] = destination_file.load_contents(null);
-      const decoder = new TextDecoder('utf-8');
-      const data = JSON.parse(decoder.decode(contents));
-      data.forEach((item) => {
-        const db_item = new Db_item({
-          id: null,
-          title: item.title,
-          description: item.description,
-          work_time: item.work_time,
-          break_time: item.break_time,
-          day: item.date.day,
-          day_of_month: item.date.day_of_month,
-          week: item.date.week,
-          year: item.date.year,
-          month: item.date.month,
-          display_date: item.date.display_date,
-          sessions: item.counts,
-        });
-        db.save(db_item)
-      })
-      destination_file.delete(null);
-      list_item = db.query(query.build());
-      console.log(list_item)
-    } catch (error) {
-      this.data = list_item
-    }
-  }
-  _save_data() {
-    const data_dir = GLib.get_user_config_dir();
-    const destination = GLib.build_filenamev([data_dir, 'data.json'])
-    const destination_file = Gio.File.new_for_path(destination)
-
-    destination_file.replace_contents(JSON.stringify(this.data), null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-  }
-  _load_data() {
-    const data_dir = GLib.get_user_config_dir();
-    const destination = GLib.build_filenamev([data_dir, 'data.json'])
-    const destination_file = Gio.File.new_for_path(destination)
-
-    try {
-      const [, contents] = destination_file.load_contents(null);
-      const decoder = new TextDecoder('utf-8');
-      this.data = JSON.parse(decoder.decode(contents));
-    } catch (error) {
-      destination_file.create(Gio.FileCreateFlags.NONE, null);
-      destination_file.replace_contents(JSON.stringify([]), null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-      const [, contents] = destination_file.load_contents(null);
-      const decoder = new TextDecoder('utf-8');
-      this.data = JSON.parse(decoder.decode(contents));
-    }
   }
   vfunc_activate() {
     let { active_window } = this;

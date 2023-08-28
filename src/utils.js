@@ -23,6 +23,45 @@ import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
 import GObject from 'gi://GObject';
 
+export const activate_action = (action, parameter, timestamp) => {
+  let wrapped_param = [];
+  if (parameter)
+    wrapped_param = [parameter];
+
+  Gio.DBus.session.call(pkg.name,
+    '/io/gitlab/idevecore/Pomodoro',
+    'org.freedesktop.Application',
+    'ActivateAction',
+    new GLib.Variant('(sava{sv})', [action, wrapped_param,
+      get_platform_data(timestamp)]),
+    null,
+    Gio.DBusCallFlags.NONE,
+    -1, null, (connection, result) => {
+      try {
+        connection.call_finish(result)
+      } catch (e) {
+        log('Failed to launch application: ' + e);
+      }
+    });
+}
+const current_date = GLib.DateTime.new_now_local();
+/**
+ *
+ * Create Sort day for pomodoro timer
+ * @param {null|number} item_day
+ * @param {null|number} item_year
+ * @returns {number} return sum of current date hour, minutes, microseconds, year and day.
+ *
+ */
+export const create_sort_date = (item_day, item_year) => {
+  let day = current_date.get_day_of_year();
+  let year = current_date.get_year();
+  if (item_day) day = item_day;
+  if (item_year) year = item_year;
+
+  return day + year + current_date.get_hour() + current_date.get_minute() + current_date.get_month() + current_date.get_microsecond();
+};
+
 export const format_time = (timer) => {
   let hours = Math.floor(timer / 60 / 60)
   let minutes = Math.floor(timer / 60) % 60;
@@ -49,41 +88,6 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         '',
       ),
-      subtitle: GObject.ParamSpec.string(
-        "subtitle",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        '',
-      ),
-      work_time: GObject.ParamSpec.int(
-        "work_time",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        0, 172800, 0,
-      ),
-      break_time: GObject.ParamSpec.int(
-        "break_time",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        0, 172800, 0,
-      ),
-      description: GObject.ParamSpec.string(
-        "description",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        '',
-      ),
-      counts: GObject.ParamSpec.string(
-        "counts",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        '',
-      ),
       id: GObject.ParamSpec.int(
         "id",
         '',
@@ -91,35 +95,6 @@ const History_list_object = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         0, 10000000000, 0,
       ),
-      month: GObject.ParamSpec.int(
-        "month",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        0, 12, 0,
-      ),
-      day_of_month: GObject.ParamSpec.int(
-        "day_of_month",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        0, 32, 0,
-      ),
-      year: GObject.ParamSpec.int(
-        "year",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        0, 50000, 0,
-      ),
-      day: GObject.ParamSpec.int(
-        "day",
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        0, 400, 0,
-      ),
-
     },
   },
   class History_list_object extends GObject.Object { },
@@ -148,21 +123,10 @@ export const History_list_model = GObject.registerClass(
     }
 
     _append_history_item(list) {
-      const current_date = GLib.DateTime.new_now_local()
-
-      list.forEach((item, index) => {
+      list.forEach((item) => {
         const list_object = new History_list_object({
           title: item.title.toString(),
-          subtitle: item.display_date.toString(),
-          work_time: item.work_time,
-          break_time: item.break_time,
           id: item.id,
-          description: item.description.toString(),
-          counts: item.sessions.toString(),
-          month: item.month,
-          day_of_month: item.day_of_month || 1,
-          year: item.year || current_date.get_year(),
-          day: item.day,
         });
         this.history_list.push(list_object);
       })

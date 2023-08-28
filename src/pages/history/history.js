@@ -23,7 +23,7 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import HistoryRow from '../../components/history-row/history-row.js';
+import { HistoryRow } from '../../components/history-row/history-row.js';
 import Template from './history.blp' assert { type: 'uri' };
 import { format_time, History_list_model } from '../../utils.js';
 
@@ -31,6 +31,7 @@ export default class History extends Adw.Bin {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: 'History',
       InternalChildren: [
         'sort_history_dropdown',
         'sort_first_to_last_button',
@@ -41,7 +42,6 @@ export default class History extends Adw.Bin {
         'stack',
         'list_box',
         'delete_button',
-        'active_selection_button',
       ]
     }, this);
   }
@@ -51,7 +51,6 @@ export default class History extends Adw.Bin {
     this.selected_rows = [];
     this.sort_by = this.application.settings.get_int('sort-by');
     this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-    this.activated_selection = false;
     this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort by name"), _("Sort by date")]));
     this._sort_first_to_last_button.set_active(this.sort_first_to_last);
     this.view_work_time = true;
@@ -59,17 +58,17 @@ export default class History extends Adw.Bin {
     this._sort_history_dropdown.connect('notify::selected-item', () => {
       this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected());
       this.sort_by = this.application.settings.get_int('sort-by');
-      this._load_history_list();
+      this._list_box.set_sort_func(this._sort_history.bind(this))
     });
     this._sort_first_to_last_button.connect('clicked', () => {
       this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
       this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-      this._load_history_list()
+      this._list_box.set_sort_func(this._sort_history.bind(this))
     });
     this._sort_last_to_first_button.connect('clicked', () => {
       this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
       this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-      this._load_history_list();
+      this._list_box.set_sort_func(this._sort_history.bind(this))
     });
     this.history_scroll_adjustment = this._history_scroll.get_vadjustment();
     this.history_scroll_adjustment.connect('notify::value', (sender, e) => {
@@ -84,17 +83,10 @@ export default class History extends Adw.Bin {
       this.view_work_time = this._toggle_view_work_break_time_button.get_active();
       this._load_display_total_time(this.application.data);
     });
-    this._active_selection_button.connect('clicked', () => {
-      this.activated_selection = !this.activated_selection;
-      this._on_active_selection();
-    });
     this._load_history_list();
-  }
-  _filter_history(item) {
-    const search = '';
-    const regex = new RegExp(search, 'i');
-    const result = regex.test(item.title);
-    return result;
+    this.application.history = {
+      create_row: this.create_row.bind(this),
+    };
   }
   _sort_history(history_a, history_b, _data) {
     const a = history_a
@@ -102,42 +94,36 @@ export default class History extends Adw.Bin {
     if (this.sort_by === 0) {
       return this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
-
-    return this.sort_first_to_last ? a.day - b.day : b.day - a.day;
+    return this.sort_first_to_last ? a.sort_date - b.sort_date : b.sort_date - a.sort_date;
   }
-  _create_history_row(item) {
-    const row = new HistoryRow(item);
-    row._selection.connect('toggled', (checkButton) => {
-      row.selected = checkButton.get_active();
-      this._on_select_row(row);
+  create_row(item) {
+    const row = new HistoryRow({
+      id: item.id,
+      title: item.title,
+      parent: this._list_box,
+      sessions: item.sessions,
+      subtitle: item.display_date,
+      work_time: item.work_time,
+      break_time: item.break_time,
+      description: item.description,
+      sort_date: item.sort_date,
+      on_select_row: this._on_select_row.bind(this),
     })
-    row._remove_item_button.connect('clicked', () => {
-      this.application.data.delete(row.id);
-      this._list_box.remove(row);
-    })
-    return row
+    this._list_box.append(row);
   }
   _load_history_list() {
     if (this.application.data.length === 0) return;
     this._stack.visible_child_name = "history";
-    const history_model = new History_list_model();
-    history_model._append_history_item(this.application.data.get());
-    const model = history_model;
-    const filter = new Gtk.CustomFilter();
-    filter.set_filter_func(this._filter_history);
-    const sorter = Gtk.CustomSorter.new(this._sort_history.bind(this));
-    const sorted_model = Gtk.SortListModel.new(model, sorter)
-    const filter_model = Gtk.FilterListModel.new(sorted_model, filter)
-    this._list_box.bind_model(filter_model, this._create_history_row.bind(this));
-    this.activated_selection = false;
+    this.application.data.get().forEach((item) => {
+      this.create_row(item);
+    })
     this.selected_rows = [];
-    this._on_active_selection();
     this._load_display_total_time();
   }
   _load_display_total_time() {
     let total_work_timer = 0;
     let total_break_timer = 0;
-    if (this.selected_rows.length > 0 && this.activated_selection) {
+    if (this.selected_rows.length > 0) {
       total_work_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
       total_break_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     } else {
@@ -162,11 +148,10 @@ export default class History extends Adw.Bin {
       this.application.data.delete(item.id);
       this._list_box.remove(item);
     });
+    this.selected_rows = [];
     this._load_display_total_time();
-    this.application._save_data();
     this._delete_button.set_sensitive(false);
     this._delete_button.set_icon_name('user-trash-symbolic');
-    this._on_active_selection();
   }
   _on_select_row(row) {
     if (row.selected) {
@@ -181,17 +166,6 @@ export default class History extends Adw.Bin {
     } else {
       this._delete_button.set_icon_name('user-trash-symbolic');
       this._delete_button.set_sensitive(false);
-    }
-  }
-  _on_active_selection() {
-    for (let index = 0; index <= this.application.data.get().length - 1; index++) {
-      this._list_box.get_row_at_index(index)._on_active_selection(this.activated_selection);
-    }
-    this._load_display_total_time();
-    if (!this.activated_selection) {
-      this._delete_button.set_visible(false);
-    } else {
-      this._delete_button.set_visible(true);
     }
   }
   _on_navigate() {
