@@ -44,10 +44,11 @@ export class Db_item {
    * @param {number} item.week
    * @param {number} item.month
    * @param {string} item.display_date
-   * @param {number} item.sort_date
+   * @param {number} item.sorted_date
    * @param {number} item.sessions
+   *
    */
-  constructor({ id, title, description, work_time, break_time, day, day_of_month, year, week, month, display_date, sort_date, sessions }) {
+  constructor({ id, title, description, work_time, break_time, day, day_of_month, year, week, month, display_date, sorted_date, sessions }) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -59,7 +60,7 @@ export class Db_item {
     this.week = week;
     this.month = month;
     this.display_date = display_date;
-    this.sort_date = sort_date;
+    this.sorted_date = sorted_date;
     this.sessions = sessions;
   }
 }
@@ -112,7 +113,7 @@ export class Query_builder {
     this._builder.select_add_field('week', 'history', 'week')
     this._builder.select_add_field('month', 'history', 'month')
     this._builder.select_add_field('display_date', 'history', 'display_date')
-    this._builder.select_add_field('sort_date', 'history', 'sort_date')
+    this._builder.select_add_field('sorted_date', 'history', 'sorted_date')
     this._builder.select_add_field('sessions', 'history', 'sessions')
 
     this._builder.select_add_target('history', null)
@@ -189,7 +190,7 @@ export class Database {
           week          integer not null,
           month         integer not null,
           display_date  text not null,
-          sort_date     integer not null,
+          sorted_date   integer not null,
           sessions      integer not null
       );
     `);
@@ -221,7 +222,7 @@ export class Database {
     builder.add_field_value_as_gvalue('week', db_item.week);
     builder.add_field_value_as_gvalue('month', db_item.month);
     builder.add_field_value_as_gvalue('display_date', db_item.display_date);
-    builder.add_field_value_as_gvalue('sort_date', db_item.sort_date);
+    builder.add_field_value_as_gvalue('sorted_date', db_item.sorted_date);
     builder.add_field_value_as_gvalue('sessions', db_item.sessions);
     const [_, row] = this._connection.statement_execute_non_select(builder.get_statement(), null);
     const id = row.get_nth_holder(0).get_value();
@@ -240,7 +241,7 @@ export class Database {
       month: db_item.month,
       week: db_item.week,
       display_date: db_item.display_date,
-      sort_date: db_item.sort_date,
+      sorted_date: db_item.sorted_date,
       sessions: db_item.sessions,
     });
     return item;
@@ -284,7 +285,7 @@ export class Database {
     builder.add_field_value_as_gvalue('week', db_item.week);
     builder.add_field_value_as_gvalue('month', db_item.month);
     builder.add_field_value_as_gvalue('display_date', db_item.display_date);
-    builder.add_field_value_as_gvalue('sort_date', db_item.sort_date);
+    builder.add_field_value_as_gvalue('sorted_date', db_item.sorted_date);
     builder.add_field_value_as_gvalue('sessions', db_item.sessions);
 
     builder.set_where(
@@ -327,7 +328,7 @@ export class Database {
       const week = iter.get_value_for_field('week');
       const month = iter.get_value_for_field('month');
       const display_date = iter.get_value_for_field('display_date');
-      const sort_date = iter.get_value_for_field('sort_date');
+      const sorted_date = iter.get_value_for_field('sorted_date');
       const sessions = iter.get_value_for_field('sessions');
 
       item_list.push(new Db_item({
@@ -342,7 +343,7 @@ export class Database {
         week,
         month,
         display_date,
-        sort_date,
+        sorted_date,
         sessions,
       }));
     }

@@ -59,6 +59,8 @@ export const create_sort_date = (item_year, item_month, item_day) => {
   if (item_year && item_month && item_day) {
     time = new Date(`${item_year < 10 ? '0' + item_year : item_year}-${item_month < 10 ? '0' + item_month : item_month}-${item_day < 10 ? '0' + item_day : item_day}T${current_time}`);
   }
+  console.log(time.getTime())
+
   return time.getTime();
 };
 

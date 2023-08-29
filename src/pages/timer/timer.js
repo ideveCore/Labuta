@@ -217,7 +217,7 @@ export default class Timer extends Adw.Bin {
           week: current_date.get_week_of_year(),
           month: current_date.get_month(),
           display_date: this._get_date(),
-          sort_date: create_sort_date(null, null),
+          sorted_date: Math.floor(create_sort_date(null, null, null) / 1000),
           sessions: 0,
         })
         this.data = this.application.data.save(db_item);
@@ -236,7 +236,7 @@ export default class Timer extends Adw.Bin {
       } else {
         const current_date = GLib.DateTime.new_now_local();
         this.data = timer;
-        this.data.sort_date = create_sort_date(null, null);
+        this.data.sorted_date = Math.floor(create_sort_date(null, null, null) / 1000);
         this.data.day = current_date.get_day_of_year();
         this.data.day_of_month = current_date.get_day_of_month();
         this.data.year = current_date.get_year();

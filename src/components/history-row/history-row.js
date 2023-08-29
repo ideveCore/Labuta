@@ -55,18 +55,18 @@ export class HistoryRow extends Adw.ExpanderRow {
    * @param {number} history_data.day
    * @param {number} history_data.year
    * @param {string} history_data.description 
-   * @param {number} history_data.sort_date
+   * @param {number} history_data.sorted_date
    * @param {number} history_data.sessions
    *
    */
-  constructor({ parent, on_select_row, id, title, subtitle, work_time, break_time, description, sort_date, sessions }) {
+  constructor({ parent, on_select_row, id, title, subtitle, work_time, break_time, description, sorted_date, sessions }) {
     super();
     this._application = Gtk.Application.get_default();
     this.id = id;
     this._parent = parent
     this._on_select_row = on_select_row;
     this.title = title;
-    this.sort_date = sort_date;
+    this.sorted_date = sorted_date * 1000;
     this.work_time = work_time;
     this.break_time = break_time;
     this.set_title(title);

@@ -51,6 +51,7 @@ export default class Application_data {
       const decoder = new TextDecoder('utf-8');
       const data = JSON.parse(decoder.decode(contents));
       data.forEach((item) => {
+        // create_sort_date(item.date.year, item.date.month, item.date.day_of_month)
         const db_item = new Db_item({
           id: null,
           title: item.title,
@@ -63,13 +64,14 @@ export default class Application_data {
           year: item.date.year,
           month: item.date.month,
           display_date: item.date.display_date,
-          sort_date: create_sort_date(item.day, item.year),
+          sorted_date: Math.floor(create_sort_date(item.date.year, item.date.month, item.date.day_of_month) / 1000),
           sessions: item.counts,
         });
         this.save(db_item)
       })
       destination_file.delete(null);
     } catch (error) {
+      console.log(error)
       console.log('Error migrating the JSON file to the database or the data has already been migrated')
     }
     return this

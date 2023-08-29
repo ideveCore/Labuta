@@ -94,7 +94,7 @@ export default class History extends Adw.Bin {
     if (this.sort_by === 0) {
       return this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
-    return this.sort_first_to_last ? a.sort_date - b.sort_date : b.sort_date - a.sort_date;
+    return this.sort_first_to_last ? a.sorted_date - b.sorted_date : b.sorted_date - a.sorted_date;
   }
   create_row(item) {
     const row = new HistoryRow({
@@ -106,7 +106,7 @@ export default class History extends Adw.Bin {
       work_time: item.work_time,
       break_time: item.break_time,
       description: item.description,
-      sort_date: item.sort_date,
+      sorted_date: item.sorted_date,
       on_select_row: this._on_select_row.bind(this),
     })
     this._list_box.append(row);
@@ -114,6 +114,7 @@ export default class History extends Adw.Bin {
   _load_history_list() {
     if (this.application.data.length === 0) return;
     this._stack.visible_child_name = "history";
+    this._list_box.set_sort_func(this._sort_history.bind(this));
     this.application.data.get().forEach((item) => {
       this.create_row(item);
     })
