@@ -28,3 +28,8 @@ src/application_data.js
 src/components/history-dialog/history-dialog.blp
 src/components/history-dialog/history-dialog.js
 src/overrides.js
+src/components/small-window/small-window.blp
+src/components/small-window/small-window.js
+src/Timer.js
+src/components/history-details/history-details.blp
+src/components/history-details/history-details.js

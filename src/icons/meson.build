@@ -9,6 +9,9 @@ install_data(
     'user-trash-symbolic.svg',
     'user-trash-full-symbolic.svg',
     'check-round-outline-whole-symbolic.svg',
+    'pip-in-symbolic.svg',
+    'pip-out-symbolic.svg',
+    'left-symbolic.svg',
   ],
   install_dir: datadir / 'icons/hicolor/scalable/status',
 )

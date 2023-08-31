@@ -1,0 +1,140 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $SmallWindow : Adw.Window {
+  height-request: 200;
+  width-request: 450;
+  modal: true;
+  resizable: true;
+
+  content: Gtk.Overlay overlay {
+    [overlay]
+    Gtk.Box {
+      orientation: vertical;
+      hexpand: true;
+      vexpand: true;
+      Adw.HeaderBar header_bar {
+        styles ['flat']
+        title-widget: Gtk.Label {};
+        decoration-layout: ':';
+        opacity: 0;
+        [end]
+        Gtk.Button {
+          styles ['circular', 'raised']
+          icon-name: 'window-maximize-symbolic';
+          action-name: 'window.toggle-small-window';
+          action-target: "'close'";
+        }
+      }
+      Gtk.Box {
+        vexpand: true;
+        hexpand: true;
+        [suffix]
+        Gtk.Overlay {
+          vexpand: true;
+          hexpand: true;
+          halign: center;
+          valign: center;
+          [overlay]
+          Gtk.Box timer_controls {
+            styles ['overlay','padding-default', 'card']
+            height-request: 100;
+            width-request: 400;
+            hexpand: true;
+            vexpand: true;
+            valign: center;
+            halign: center;
+            opacity: 0;
+            Stack stack_timer_controls {
+              transition-type: crossfade;
+              hexpand: true;
+              vexpand: true;
+              halign: center;
+              valign: center;
+              StackPage {
+                name: "init_timer";
+                child:
+                  Button {
+                    styles ["suggested-action", "circular", "large-button"]
+                    halign: center;
+                    valign: center;
+                    icon-name: "media-playback-start-symbolic";
+                    tooltip-text: _("Init timer");
+                    clicked => $_on_start_pause_timer();
+                  };
+              }
+              StackPage {
+                name: "running_timer";
+                child:
+                  Button {
+                    styles ["circular", "large-button", 'light-5']
+                    halign: center;
+                    valign: center;
+                    icon-name: "media-playback-pause-symbolic";
+                    tooltip-text: _("Pause timer");
+                    clicked => $_on_start_pause_timer();
+                  };
+              }
+              StackPage {
+                name: "paused_timer";
+                child:
+                  Grid {
+                    halign: center;
+                    column-spacing: 18;
+                    column-homogeneous: true;
+                    Button {
+                      styles ["circular", "large-button", 'destructive-action']
+                      halign: center;
+                      valign: center;
+                      icon-name: "view-refresh-symbolic";
+                      tooltip-text: _("Reset timer");
+                      clicked => $_on_reset_timer();
+                    }
+                    Button {
+                      styles ["suggested-action", "circular", "large-button"]
+                      halign: center;
+                      valign: center;
+                      icon-name: "media-playback-start-symbolic";
+                      tooltip-text: _("Init timer");
+                      clicked => $_on_start_pause_timer();
+                    }
+                    Button {
+                      styles ["circular", "large-button", 'light-5']
+                      halign: center;
+                      valign: center;
+                      icon-name: "media-playback-stop-symbolic";
+                      tooltip-text: _("Stop timer");
+                      clicked => $_on_stop_timer();
+                    }
+                  };
+              }
+            }
+          }
+          Gtk.Box {
+
+            Label timer_label {
+              styles ["accent", "fs-1"]
+              label: "00:25:00";
+            }
+            [suffix]
+            Gtk.Overlay pomodoro_counts {
+              valign: start;
+              visible: false;
+              child: Gtk.DrawingArea tag_area {
+                height-request: 25;
+                width-request: 25;
+                tooltip-text: _("Pomodoro sessions");
+              };
+
+              [overlay]
+              Gtk.Label tag_label {
+                use-markup: true;
+                tooltip-text: _("Pomodoro sessions");
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+}

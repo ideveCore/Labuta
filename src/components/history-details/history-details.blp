@@ -1,0 +1,72 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $HistoryDetails : Gtk.ListBoxRow {
+  activatable: false;
+  selectable: false;
+  margin-start: 12;
+  margin-end: 12;
+  Gtk.Box {
+    orientation: vertical;
+    Adw.ActionRow {
+      title: _("Title");
+      title-lines: 1;
+      Gtk.Label title {
+        styles ["accent", "dim-label"]
+        ellipsize: end;
+        label: "00:00:00";
+      }
+    }
+
+    Adw.ActionRow {
+      title: _("Work time");
+      title-lines: 1;
+      Gtk.Label work_time {
+        styles ["accent", "dim-label"]
+        ellipsize: end;
+        label: "00:00:00";
+      }
+    }
+    Adw.ActionRow {
+      title: _("Break time");
+      title-lines: 1;
+      Gtk.Label break_time {
+        styles ["error", "dim-label"]
+        ellipsize: end;
+        label: "00:00:00";
+      }
+    }
+    Adw.ActionRow description {
+      styles ["property"]
+      title: _("Description");
+      subtitle-selectable: true;
+    }
+    Adw.ActionRow {
+      title: _("Date");
+      title-lines: 1;
+      Gtk.Label date {
+        styles ["accent", "dim-label"]
+        ellipsize: end;
+        label: "00:00:00";
+      }
+    }
+
+    Adw.ActionRow {
+      styles ["dim-label"]
+      title: _("Pomodoro sessions");
+      title-lines: 1;
+      Gtk.Label sessions {
+        ellipsize: end;
+      }
+    }
+    Gtk.Button  {
+      styles ["suggested-action"]
+      hexpand: true;
+      margin-start: 5;
+      margin-end: 5;
+      label: _("Continue");
+      clicked => $_on_continue_timer();
+    } 
+  }
+}
+

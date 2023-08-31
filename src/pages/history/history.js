@@ -23,116 +23,163 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import { HistoryRow } from '../../components/history-row/history-row.js';
+import HistoryDetails from '../../components/history-details/history-details.js';
 import Template from './history.blp' assert { type: 'uri' };
-import { format_time, History_list_model } from '../../utils.js';
+import { format_time } from '../../utils.js';
 
-export default class History extends Adw.Bin {
+export class History extends Adw.PreferencesWindow {
   static {
     GObject.registerClass({
       Template,
-      GTypeName: 'History',
       InternalChildren: [
-        'sort_history_dropdown',
-        'sort_first_to_last_button',
-        'sort_last_to_first_button',
         'toggle_view_work_break_time_button',
-        'history_scroll',
-        'history_headerbox',
-        'stack',
+        // 'history_scroll',
+        // 'history_headerbox',
+        // 'stack',
         'list_box',
+        'leaflet',
+        'details_page',
+        'primary_menu',
         'delete_button',
       ]
     }, this);
   }
-  constructor() {
-    super();
-    this.application = Gtk.Application.get_default();
-    this.selected_rows = [];
-    this.sort_by = this.application.settings.get_int('sort-by');
-    this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-    this._sort_history_dropdown.set_model(Gtk.StringList.new([_("Sort by name"), _("Sort by date")]));
-    this._sort_first_to_last_button.set_active(this.sort_first_to_last);
-    this.view_work_time = true;
-    this._sort_history_dropdown.set_selected(this.sort_by);
-    this._sort_history_dropdown.connect('notify::selected-item', () => {
-      this.application.settings.set_int('sort-by', this._sort_history_dropdown.get_selected());
-      this.sort_by = this.application.settings.get_int('sort-by');
-      this._list_box.set_sort_func(this._sort_history.bind(this))
+  constructor(application) {
+    super({
+      transient_for: application.get_active_window(),
     });
-    this._sort_first_to_last_button.connect('clicked', () => {
-      this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
-      this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-      this._list_box.set_sort_func(this._sort_history.bind(this))
-    });
-    this._sort_last_to_first_button.connect('clicked', () => {
-      this.application.settings.set_boolean('sort-first-to-last', this._sort_first_to_last_button.get_active());
-      this.sort_first_to_last = this.application.settings.get_boolean('sort-first-to-last');
-      this._list_box.set_sort_func(this._sort_history.bind(this))
-    });
-    this.history_scroll_adjustment = this._history_scroll.get_vadjustment();
-    this.history_scroll_adjustment.connect('notify::value', (sender, e) => {
-      if (this.history_scroll_adjustment.get_value() == 0.0) {
-        this._history_headerbox.get_style_context().remove_class("history-header");
-      }
-      else {
-        this._history_headerbox.get_style_context().add_class("history-header");
-      }
-    });
+    this.Application = application;
+    this._selected_rows = [];
+    this._view_work_time = true;
     this._toggle_view_work_break_time_button.connect('clicked', () => {
-      this.view_work_time = this._toggle_view_work_break_time_button.get_active();
-      this._load_display_total_time(this.application.data);
+      this._view_work_time = this._toggle_view_work_break_time_button.get_active();
+      this._load_display_total_time(this.Application.data);
     });
+    this._setup_gactions();
     this._load_history_list();
-    this.application.history = {
-      create_row: this.create_row.bind(this),
-    };
   }
-  _sort_history(history_a, history_b, _data) {
-    const a = history_a
-    const b = history_b
-    if (this.sort_by === 0) {
-      return this.sort_first_to_last ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
-    }
-    return this.sort_first_to_last ? a.sorted_date - b.sorted_date : b.sorted_date - a.sorted_date;
+  _setup_gactions() {
+    this.search_action_group = new Gio.SimpleActionGroup();
+    this.history_action_group = new Gio.SimpleActionGroup();
+    this.insert_action_group("search", this.search_action_group);
+    this.insert_action_group("history", this.history_action_group);
+
+    const sorting_action = new Gio.SimpleAction({ name: 'sorting', parameter_type: new GLib.Variant('s', '').get_type() });
+    const order_action = new Gio.SimpleAction({ name: 'order', parameter_type: new GLib.Variant('s', '').get_type() });
+    const clear_action = new Gio.SimpleAction({ name: 'clear' });
+    sorting_action.connect('activate', (simple_action, parameter) => {
+      const sort = parameter.get_string()[0];
+      this.Application.settings.set_string('sort-by', sort);
+      this._list_box.set_sort_func(this._sort_history.bind(this))
+    });
+    order_action.connect('activate', (simple_action, parameter) => {
+      const order = parameter.get_string()[0];
+      this.Application.settings.set_string('order-by', order);
+      this._list_box.set_sort_func(this._sort_history.bind(this))
+    });
+    clear_action.connect('activate', (simple_action) => {
+      let id = 0
+      this.Application.data.get().forEach((item, index) => {
+        this.Application.data.delete(item.id)
+        this._list_box.remove(this._list_box.get_row_at_index(index - id));
+        id++
+      });
+      this._load_history_list();
+    })
+
+    this.search_action_group.add_action(sorting_action);
+    this.search_action_group.add_action(order_action);
+    this.history_action_group.add_action(clear_action);
+
   }
-  create_row(item) {
-    const row = new HistoryRow({
+  _leaflet_navigate_back() {
+    this._leaflet.navigate(Adw.NavigationDirection.BACK);
+  }
+  _create_lealflet_deatails_page(id) {
+    const item = this.Application.data.get_by_id(id)[0];
+    const details = new HistoryDetails({
       id: item.id,
       title: item.title,
-      parent: this._list_box,
+      parent: this,
       sessions: item.sessions,
       subtitle: item.display_date,
       work_time: item.work_time,
       break_time: item.break_time,
       description: item.description,
-      sorted_date: item.sorted_date,
-      on_select_row: this._on_select_row.bind(this),
+    });
+    // Remove existent details
+    const exist_details = this._details_page.get_row_at_index(0)
+    if (exist_details) this._details_page.remove(exist_details);
+    this._details_page.append(details);
+
+    this._leaflet.navigate(Adw.NavigationDirection.FORWARD);
+  }
+  _sort_history(history_a, history_b, _data) {
+    const a = history_a
+    const b = history_b
+    if (this.Application.settings.get_string('sort-by') === 'name') {
+      return this.Application.settings.get_string('order-by') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+    }
+    return this.Application.settings.get_string('order-by') === 'ascending' ? a.sorted_date - b.sorted_date : b.sorted_date - a.sorted_date;
+  }
+  create_row(item) {
+    const row = new Adw.ActionRow();
+    row.set_title(item.title);
+    row.set_subtitle(item.display_date);
+    const check_button = new Gtk.CheckButton();
+    const delete_button = new Gtk.Button({
+      halign: Gtk.Align.CENTER,
+      valign: Gtk.Align.CENTER,
+    });
+    delete_button.set_icon_name('user-trash-symbolic');
+    delete_button.get_style_context().add_class('error');
+    const details_button = new Gtk.Image();
+    details_button.set_from_icon_name('go-next-symbolic');
+    row.add_prefix(delete_button);
+    row.add_prefix(check_button);
+    row.add_suffix(details_button);
+    row.set_activatable_widget(details_button);
+    row.title = item.title;
+    row.sorted_date = item.sorted_date;
+    row.selected = false;
+    row.work_time = item.work_time;
+    row.break_time = item.break_time;
+    row.id = item.id;
+    row.connect('activated', (action_row) => {
+      this._create_lealflet_deatails_page(item.id);
+    });
+    check_button.connect('toggled', (check_button) => {
+      row.selected = check_button.get_active();
+      this._on_select_row(row);
     })
+    delete_button.connect('clicked', () => {
+      this.Application.data.delete(item.id);
+      this._list_box.remove(row);
+    });
     this._list_box.append(row);
   }
   _load_history_list() {
-    if (this.application.data.length === 0) return;
-    this._stack.visible_child_name = "history";
+    if (this.Application.data.get().length === 0) return;
+    // this._stack.visible_child_name = "history";
     this._list_box.set_sort_func(this._sort_history.bind(this));
-    this.application.data.get().forEach((item) => {
+    this.Application.data.get().forEach((item) => {
       this.create_row(item);
     })
-    this.selected_rows = [];
+    this._selected_rows = [];
     this._load_display_total_time();
   }
   _load_display_total_time() {
     let total_work_timer = 0;
     let total_break_timer = 0;
-    if (this.selected_rows.length > 0) {
-      total_work_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
-      total_break_timer = this.selected_rows.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+    if (this._selected_rows.length > 0) {
+      total_work_timer = this._selected_rows.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
+      total_break_timer = this._selected_rows.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     } else {
-      total_work_timer = this.application.data.get().reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
-      total_break_timer = this.application.data.get().reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+      total_work_timer = this.Application.data.get().reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
+      total_break_timer = this.Application.data.get().reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     }
 
-    if (this.view_work_time) {
+    if (this._view_work_time) {
       this._toggle_view_work_break_time_button.get_style_context().remove_class('error');
       this._toggle_view_work_break_time_button.get_style_context().add_class('accent');
       this._toggle_view_work_break_time_button.set_tooltip_text(_('Work time'));
@@ -145,23 +192,23 @@ export default class History extends Adw.Bin {
     }
   }
   _on_delete() {
-    this.selected_rows.forEach((item) => {
-      this.application.data.delete(item.id);
+    this._selected_rows.forEach((item) => {
+      this.Application.data.delete(item.id);
       this._list_box.remove(item);
     });
-    this.selected_rows = [];
+    this._selected_rows = [];
     this._load_display_total_time();
     this._delete_button.set_sensitive(false);
     this._delete_button.set_icon_name('user-trash-symbolic');
   }
   _on_select_row(row) {
     if (row.selected) {
-      this.selected_rows.push(row)
+      this._selected_rows.push(row)
     } else {
-      this.selected_rows = this.selected_rows.filter((item) => item.id !== row.id);
+      this._selected_rows = this._selected_rows.filter((item) => item.id !== row.id);
     }
     this._load_display_total_time();
-    if (this.selected_rows.length > 0) {
+    if (this._selected_rows.length > 0) {
       this._delete_button.set_icon_name('user-trash-full-symbolic');
       this._delete_button.set_sensitive(true);
     } else {
@@ -169,7 +216,5 @@ export default class History extends Adw.Bin {
       this._delete_button.set_sensitive(false);
     }
   }
-  _on_navigate() {
-    this.application.active_window._navigate('timer');
-  }
 }
+

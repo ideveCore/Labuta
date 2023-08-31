@@ -25,6 +25,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Template from './window.blp' assert { type: 'uri' };
 import ThemeSelector from './components/theme-selector/theme-selector.js';
+import { SmallWindow } from './components/small-window/small-window.js';
 
 export default class Window extends Adw.ApplicationWindow {
   static {
@@ -33,7 +34,9 @@ export default class Window extends Adw.ApplicationWindow {
       GTypeName: 'Window',
       InternalChildren: [
         'stack',
-        'menu_button'
+        'shorten_window',
+        'menu_button',
+        'toast_overlay',
       ],
     }, this);
   }
@@ -41,9 +44,11 @@ export default class Window extends Adw.ApplicationWindow {
     super({ application });
 
     // Add theme selector from troll into primary menu
-    const theme_selector = new ThemeSelector()
+    const theme_selector = new ThemeSelector();
     // console.log(theme_selector)
     this._menu_button.get_popover().add_child(theme_selector, 'theme');
+
+    this._small_window = new SmallWindow();
 
     this.connect('close-request', () => {
       application._request_quit()
@@ -55,15 +60,41 @@ export default class Window extends Adw.ApplicationWindow {
         this._stack.visible_child._load_statistics_data();
       }
     });
-    this._setup_actions()
+    this._setup_actions();
+
+    this._small_window.insert_action_group("window", this.window_group);
+    application.Timer.$start(() => {
+      this._shorten_window.set_sensitive(true);
+    });
+    application.Timer.$stop(() => {
+      this._shorten_window.set_sensitive(false);
+    });
+
+    this._shorten_window.set_sensitive(false);
   }
   _setup_actions() {
     const navigate_action = new Gio.SimpleAction({ name: 'navigate', parameter_type: new GLib.Variant('s', '').get_type() })
+    const toggle_small_window = new Gio.SimpleAction({ name: 'toggle-small-window', parameter_type: new GLib.Variant('s', '').get_type() });
+    this.window_group = new Gio.SimpleActionGroup();
+
     navigate_action.connect('activate', (simple_action, parameter) => {
       const value = parameter.get_string();
       this.navigate_to(value[0]);
-    })
-    this.add_action(navigate_action)
+    });
+
+    toggle_small_window.connect('activate', (simple_action, parameter) => {
+      const value = parameter.get_string()[0];
+      if (value === 'open') {
+        this.hide();
+        this._small_window.present();
+      } else {
+        this.present();
+        this._small_window.hide();
+      }
+    });
+    this.add_action(navigate_action);
+    this.add_action(toggle_small_window);
+    this.window_group.add_action(toggle_small_window)
   }
   /**
    *

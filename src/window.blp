@@ -25,6 +25,14 @@ template $Window : Adw.ApplicationWindow {
             stack: stack;
             title: bind template.title;
           }
+          [start]
+          Gtk.Button shorten_window {
+            halign: start;
+            valign: center;
+            icon-name: "pip-in-symbolic";
+            action-name: 'win.toggle-small-window';
+            action-target: "'open'";
+          }
           [end]
           MenuButton menu_button {
             menu-model: primary_menu;
@@ -51,14 +59,6 @@ template $Window : Adw.ApplicationWindow {
             child:
               $Gjs_Statistics {};
           }
-          Adw.ViewStackPage {
-            name: "history";
-            title: _("_History");
-            use-underline: true;
-            icon-name: "history-undo-symbolic";
-            child:
-              $History {};
-          }
         }
         Adw.ViewSwitcherBar {
           stack: stack;
@@ -66,6 +66,7 @@ template $Window : Adw.ApplicationWindow {
         }
       }
     }
+    Adw.ToastOverlay toast_overlay {}
   }
 }
 
@@ -84,6 +85,11 @@ menu primary_menu {
     item {
       label: _("_Keyboard shortcuts");
       action: "app.shortcuts";
+    }
+
+    item {
+      label: _("_History");
+      action: "app.history";
     }
 
     item {

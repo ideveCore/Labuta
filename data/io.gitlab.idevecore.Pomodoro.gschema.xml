@@ -18,8 +18,19 @@
     <key type="s" name="theme">
       <default>"default"</default>
     </key>
-    <key type="i" name="sort-by">
-      <default>1</default>
+    <key type="s" name="sort-by">
+      <choices>
+        <choice value="name" />
+        <choice value="date" />
+      </choices>
+      <default>"date"</default>
+    </key>
+    <key type="s" name="order-by">
+      <choices>
+        <choice value="ascending" />
+        <choice value="descending" />
+      </choices>
+      <default>"ascending"</default>
     </key>
     <key type="b" name="sort-first-to-last">
       <default>true</default>

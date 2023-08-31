@@ -71,7 +71,7 @@ template $Gjs_Timer : Adw.Bin {
                   valign: center;
                   icon-name: "media-playback-start-symbolic";
                   tooltip-text: _("Init timer");
-                  clicked => $_on_handler_timer();
+                  clicked => $_on_start_pause_timer();
                 };
             }
             StackPage {
@@ -83,7 +83,7 @@ template $Gjs_Timer : Adw.Bin {
                   valign: center;
                   icon-name: "media-playback-pause-symbolic";
                   tooltip-text: _("Pause timer");
-                  clicked => $_on_handler_timer();
+                  clicked => $_on_start_pause_timer();
                 };
             }
             StackPage {
@@ -107,7 +107,7 @@ template $Gjs_Timer : Adw.Bin {
                     valign: center;
                     icon-name: "media-playback-start-symbolic";
                     tooltip-text: _("Init timer");
-                    clicked => $_on_handler_timer();
+                    clicked => $_on_start_pause_timer();
                   }
                   Button {
                     styles ["circular", "large-button"]

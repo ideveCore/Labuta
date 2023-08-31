@@ -1,99 +1,118 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $History : Adw.Bin {
-  Gtk.Box {
-    orientation: vertical;
-    Gtk.Stack stack {
-      transition-type: crossfade;
-      vexpand: true;
-      Gtk.StackPage {
-        name: "no_history";
-        child:
-        Adw.StatusPage {
-          icon-name: "history-undo-symbolic";
-          Gtk.Button {
-            styles ["suggested-action", "pill"]
-            label: _("Add new pomodoro");
-            use-underline: true;
-            halign: center;
-            action-name: 'win.navigate';
-            action-target: "'timer'";
+template $Gjs_History : Adw.PreferencesWindow {
+  modal: true;
+  default-height: 450;
+  default-width: 400;
+  title: _("History");
+  Adw.Leaflet leaflet {
+    vexpand: true;
+    hexpand: true;
+    can-navigate-back: true;
+    can-unfold: false;
+    Adw.LeafletPage {
+      navigatable: false;
+      child: Box {
+        hexpand: true;
+        orientation: vertical;
+        Adw.HeaderBar {
+          show-end-title-buttons: bind leaflet.folded;
+          [start]
+          Gtk.ToggleButton toggle_view_work_break_time_button {
+            styles ["custom", "text-button", "title-4"]
+            label: "00:00:00";
+            tooltip-text: _("Work time");
+            active: true;
           }
-        };
-      }
-      Gtk.StackPage {
-        name: "history";
-        child:
-        Adw.Clamp {
-          Gtk.Box {
-            orientation: vertical;
-            Gtk.Box history_headerbox {
-              orientation: horizontal;
-              Adw.PreferencesGroup {
-                margin-top: 7;
-                margin-start: 10;
-                margin-end: 10;
-                header-suffix: Gtk.Box {
-                  orientation: horizontal;
-                  spacing: 6;
-                  Gtk.Box {
-                    Gtk.ToggleButton toggle_view_work_break_time_button {
-                      styles ["custom", "text-button", "title-4"]
-                      label: "00:00:00";
-                      tooltip-text: _("Work time");
-                      active: true;
-                    }
-                  }
+          [start]
 
-                  
-                  Gtk.DropDown sort_history_dropdown {}
-                  
-                  Gtk.Box {
-                    orientation: horizontal;
-                    valign: center;
-                    Gtk.Button delete_button {
-                      styles ["error"]
-                      valign: center;
-                      icon-name: "user-trash-symbolic";
-                      sensitive: false;
-                      margin-end: 10;
-                      clicked => $_on_delete();
-                    }
-                    Gtk.Box {
-                      Gtk.ToggleButton sort_first_to_last_button {
-                        icon-name: "view-sort-descending-symbolic";
-                        tooltip-text: _("Sort From First To Last");
-                        active: bind sort_last_to_first_button.active inverted bidirectional;
-                      }
-                      
-                      Gtk.ToggleButton sort_last_to_first_button {
-                        icon-name: "view-sort-ascending-symbolic";
-                        tooltip-text: _("Sort From Last To First");
-                      }
-                      styles ["linked"]
-                    }
-                  }
-                };
-              }
-            }
-            Gtk.Box {
-              vexpand: true;
-              Gtk.ScrolledWindow history_scroll {
-                hexpand: true;
-                Gtk.ListBox list_box {
-                  styles ["boxed-list"]
-                  valign: start;
-                  margin-bottom: 12;
-                  margin-start: 12;
-                  margin-end: 12;
-                  selection-mode: none;
-                }
+          Gtk.Button delete_button {
+            styles ["error"]
+            valign: center;
+            icon-name: "user-trash-symbolic";
+            sensitive: false;
+            margin-end: 10;
+            clicked => $_on_delete();
+          }
+          [end]
+          MenuButton menu_button {
+            menu-model: primary_menu;
+            icon-name: "open-menu-symbolic";
+            tooltip-text: _("History menu");
+          }
+
+        }
+        Adw.PreferencesGroup {
+          Gtk.Box {
+            vexpand: true;
+            Gtk.ScrolledWindow {
+              hexpand: true;
+              Gtk.ListBox list_box {
+                styles ["boxed-list"]
+                valign: start;
+                margin-top: 12;
+                margin-bottom: 12;
+                margin-start: 12;
+                margin-end: 12;
+                selection-mode: none;
               }
             }
           }
-        };
+        }
+      };
+    }
+    Adw.LeafletPage {
+      child: Box {
+        hexpand: true;
+        orientation: vertical;
+        Adw.HeaderBar {
+          show-end-title-buttons: bind leaflet.folded;
+          [start]
+          Gtk.Button {
+            icon-name: 'left-symbolic';
+            clicked => $_leaflet_navigate_back();
+          }
+        }
+        ListBox details_page {
+        }
+      };
+    }
+  }
+}
+
+menu primary_menu {
+  section {
+    submenu {
+      label: _('Sort by');
+      section {
+        item {
+          label: 'Name';
+          action: 'search.sorting';
+          target: 'name';
+        }
+        item {
+          label: 'Date';
+          action: 'search.sorting';
+          target: 'date';
+        }
       }
+      section {
+        item {
+          label: _('Ascending');
+          action: 'search.order';
+          target: 'ascending';
+        }
+        item {
+          label: _('Descending');
+          action: 'search.order';
+          target: 'descending';
+        }
+      }
+    }
+    item {
+      label: _("Clear history");
+      action: "history.clear";
     }
   }
 }

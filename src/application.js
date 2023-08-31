@@ -35,9 +35,10 @@ import {
 import { getFlatpakInfo } from './utils.js';
 import './pages/timer/timer.js';
 import './pages/statistics/statistics.js';
-import './pages/history/history.js';
+import { History } from './pages/history/history.js';
 import './style.css';
 import Application_data from './application_data.js';
+import Timer from './Timer.js';
 
 export default class Application extends Adw.Application {
   static {
@@ -47,15 +48,21 @@ export default class Application extends Adw.Application {
     super({ application_id: pkg.name, flags: Gio.ApplicationFlags.DEFAULT_FLAGS });
     this.settings = new Gio.Settings({
       schema_id: pkg.name,
-      path: '/io/gitlab/idevecore/Pomodoro/',
     });
     this.timer_state = 'stopped';
     this.data = new Application_data().setup();
     this._setup_actions();
+    this.history = null;
+    this.Timer = new Timer(this);
+    // this.Timer.start();
+    // this.Timer.$((timer) => {
+    //   console.log(timer);
+    // })
   }
   _setup_actions() {
     const quit_action = new Gio.SimpleAction({ name: 'quit' });
     const preferences_action = new Gio.SimpleAction({ name: 'preferences' });
+    const history_action = new Gio.SimpleAction({ name: 'history' });
     const shortcuts_action = new Gio.SimpleAction({ name: 'shortcuts' });
     const show_about_action = new Gio.SimpleAction({ name: 'about' });
     const active_action = new Gio.SimpleAction({ name: 'open' });
@@ -70,6 +77,10 @@ export default class Application extends Adw.Application {
     preferences_action.connect('activate', () => {
       new Preferences(this).present();
     });
+    history_action.connect('activate', () => {
+      this.history = new History(this);
+      this.history.present();
+    });
     shortcuts_action.connect('activate', () => {
       new Shortcuts(this).present();
     })
@@ -82,6 +93,7 @@ export default class Application extends Adw.Application {
     })
     this.add_action(quit_action);
     this.add_action(preferences_action);
+    this.add_action(history_action);
     this.add_action(shortcuts_action);
     this.set_accels_for_action('app.quit', ['<primary>q']);
     this.add_action(show_about_action);

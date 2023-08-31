@@ -21,11 +21,12 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
 import Gdk from 'gi://Gdk';
 import GLib from 'gi://GLib';
 import Template from './timer.blp' assert { type: 'uri' };
 import { Db_item } from '../../db.js';
-import { create_sort_date } from '../../utils.js';
+import { create_sort_date, format_time } from '../../utils.js';
 
 export default class Timer extends Adw.Bin {
   static {
@@ -51,43 +52,62 @@ export default class Timer extends Adw.Bin {
 
     this.application = Gtk.Application.get_default();
     this.timer_running = false;
-    // this.work_time = this.application.settings.get_int('work-time');
-    // this.break_time = this.application.settings.get_int('break-time');
-    // this.long_break = this.application.settings.get_int('long-break');
-    this.work_time = 5;
-    this.break_time = 5;
-    this.long_break = 6;
-
+    this.work_time = this.application.settings.get_int('work-time');
+    this.break_time = this.application.settings.get_int('break-time');
+    this.long_break = this.application.settings.get_int('long-break');
     this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
     this.current_break_time = this.work_time;
     this.is_break_timer = false;
-    this.timer_state = null;
-    this._timer_label.set_text(this._format_timer());
-    this.application.settings.connect("changed::work-time", () => {
-      if (this.application.timer_state === 'stopped') {
-        this.work_time = this.application.settings.get_int('work-time');
-        this.current_work_time = this.work_time;
-        this._timer_label.set_text(this._format_timer());
-      }
+
+    this.application.Timer.$start((timer) => {
+      this._stack_timer_controls.visible_child_name = 'running_timer';
+      this._title_entry.editable = false;
+      this._description_entry.editable = false;
+      this._load_time(timer);
+    })
+    this.application.Timer.$((timer) => {
+      this._load_time(timer);
     });
-    this.application.settings.connect("changed::break-time", () => {
-      if (this.application.timer_state === 'stopped') {
-        this.work_time = this.application.settings.get_int('break-time');
-        this.current_break_time = this.break_time;
-      }
+    this.application.Timer.$pause((timer) => {
+      this._stack_timer_controls.visible_child_name = 'paused_timer';
     });
-    this.application.settings.connect("changed::long-break", () => {
-      if (this.application.timer_state === 'stopped') {
-        this.long_break = this.application.settings.get_int('long-break');
-      }
+    this.application.Timer.$start((timer) => {
+      this._stack_timer_controls.visible_child_name = 'running_timer';
     });
-    this.application.settings.connect("changed::sessions-long-break", () => {
-      if (this.application.timer_state === 'stopped') {
-        this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
-      }
+    this.application.Timer.$stop((timer) => {
+      this._stack_timer_controls.visible_child_name = 'init_timer';
+      this._pomodoro_counts.set_visible(false);
+      this._title_entry.editable = true;
+      this._description_entry.editable = true;
+      this._title_entry.set_text('');
+      this._description_entry.set_text('');
+      this._stack_timer_controls.visible_child_name = 'init_timer';
+      this._timer_label.get_style_context().remove_class('error');
+      this._timer_label.set_text(timer.format_time());
     });
-    this.application.timer = this;
+    this.application.Timer.$end((timer) => {
+      this._stack_timer_controls.visible_child_name = 'paused_timer';
+      this._timer_label.get_style_context().remove_class('error');
+      this._timer_label.set_text(timer.format_time());
+    });
+    this.application.Timer.$settings((timer) => {
+      this._timer_label.set_text(timer.format_time());
+    });
+  }
+  _load_time(timer) {
+    if (timer.current_work_time === timer.work_time) {
+      this._timer_label.get_style_context().remove_class('error');
+    } else if (timer.current_work_time === 0) {
+      this._timer_label.get_style_context().add_class('error');
+    }
+
+    this._timer_label.set_text(timer.format_time());
+
+    if (timer.data.sessions > 0) {
+      this._tag_label.set_label(`<span weight="bold" size="9pt">${timer.data.sessions}</span>`);
+      this._pomodoro_counts.set_visible(true);
+    }
   }
   _get_date() {
     const current_date = GLib.DateTime.new_now_local();
@@ -103,173 +123,42 @@ export default class Timer extends Adw.Bin {
     const second = new GLib.DateTime().get_second();
     return `${hour > 9 ? hour : '0' + hour}:${minute > 9 ? minute : '0' + minute}:${second > 9 ? second : '0' + second}`
   }
-  _format_timer() {
-    let hours = Math.floor(Math.abs(this.current_work_time < 0 ? this.current_work_time + this.current_break_time : this.current_work_time) / 60 / 60)
-    let minutes = Math.floor(Math.abs(this.current_work_time < 0 ? this.current_work_time + this.current_break_time : this.current_work_time) / 60) % 60;
-    let seconds = Math.abs(this.current_work_time < 0 ? this.current_work_time + this.current_break_time : this.current_work_time) % 60;
-
-    if (hours.toString().split('').length < 2) {
-      hours = `0${hours}`
-    }
-    if (minutes.toString().split('').length < 2) {
-      minutes = `0${minutes}`
-    }
-    if (seconds.toString().split('').length < 2) {
-      seconds = `0${seconds}`
-    }
-    return `${hours}:${minutes}:${seconds}`
-  }
-  _run_timer() {
-    GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => {
-      if (this.application.timer_state === 'stopped') {
-        this.work_time = this.application.settings.get_int('work-time');
-        this.break_time = this.application.settings.get_int('break-time');
-        this.long_break = this.application.settings.get_int('long-break');
-        this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
-        this._pomodoro_counts.set_visible(false);
-        this.timer_running = false;
-        this._title_entry.set_text('');
-        this._description_entry.set_text('');
-        this.current_work_time = this.work_time;
-        this.current_break_time = this.break_time;
-        this._title_entry.editable = true;
-        this._description_entry.editable = true;
-        this._stack_timer_controls.visible_child_name = 'init_timer';
-        this._timer_label.get_style_context().remove_class('error');
-        this._timer_label.set_text(this._format_timer());
-        this.data = this.application.data.update(this.data)
-        this.application.history.create_row(this.data)
-        this.data = null;
-        return GLib.SOURCE_REMOVE
-      }
-
-      if (this.application.timer_state === 'paused') {
-        return GLib.SOURCE_CONTINUE
-      }
-
-      if (this.current_work_time === this.work_time) {
-        this._timer_label.get_style_context().remove_class('error');
-        this.application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
-      } else if (this.current_work_time === 0) {
-        this._timer_label.get_style_context().add_class('error');
-        this.application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
-        this.application._play_sound({ name: 'complete', cancellable: null })
-      }
-
-      if (this.current_work_time > 0) {
-        this.data.work_time = this.data.work_time + 1
-        if (!this.application.active_window.visible)
-          this.application._load_background_portal_status(`${_('Work time')}: ${this._format_timer()}`)
-      } else {
-        this.data.break_time = this.data.break_time + 1
-        if (!this.application.active_window.visible)
-          this.application._load_background_portal_status(`${_('Break time')}: ${this._format_timer()}`)
-      }
-
-      this.current_work_time--
-      this.data = this.application.data.update(this.data)
-
-      this._timer_label.set_text(this._format_timer())
-
-      if (this.current_work_time > (this.current_break_time * -1)) {
-        return GLib.SOURCE_CONTINUE
-      }
-
-      this.application.timer_state = 'paused';
-      this._stack_timer_controls.visible_child_name = 'paused_timer';
-      this.current_work_time = this.work_time;
-      this.data.sessions = this.data.sessions + 1;
-      if (this.data.sessions > 0) {
-        this._tag_label.set_label(`<span weight="bold" size="9pt">${this.data.sessions}</span>`);
-        this._pomodoro_counts.set_visible(true);
-      }
-      if (this.data.sessions === this.sessions_long_break) {
-        this.current_break_time = this.long_break;
-      }
-      this.application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
-      this._timer_label.get_style_context().remove_class('error');
-      this.application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null })
-      this._timer_label.set_text(this._format_timer());
-      return GLib.SOURCE_CONTINUE
-    })
-    this._stack_timer_controls.visible_child_name = 'running_timer';
-
-  }
-  _on_handler_timer(timer) {
+  _on_start_pause_timer() {
     const title = this._title_entry.get_text();
     const description = this._description_entry.get_text();
-
-    this._title_entry.editable = false;
-    this._description_entry.editable = false;
-    if (!timer.id) {
-      if (this.application.timer_state === 'stopped') {
-        this.application.timer_state = 'running';
-        const current_date = GLib.DateTime.new_now_local()
-        const db_item = new Db_item({
-          id: null,
-          title: title ? title : `${_('Started at')} ${this._get_schedule()}`,
-          description,
-          work_time: 0,
-          break_time: 0,
-          day: current_date.get_day_of_year(),
-          day_of_month: current_date.get_day_of_month(),
-          year: current_date.get_year(),
-          week: current_date.get_week_of_year(),
-          month: current_date.get_month(),
-          display_date: this._get_date(),
-          sorted_date: Math.floor(create_sort_date(null, null, null) / 1000),
-          sessions: 0,
-        })
-        this.data = this.application.data.save(db_item);
-        this.timer_running = true;
-        this._run_timer();
-      } else if (this.application.timer_state === 'running') {
-        this.application.timer_state = 'paused';
-        this._stack_timer_controls.visible_child_name = 'paused_timer';
-      } else {
-        this.application.timer_state = 'running';
-        this._stack_timer_controls.visible_child_name = 'running_timer';
-      }
+    if (this.application.Timer.timer_state === 'stopped') {
+      const current_date = GLib.DateTime.new_now_local()
+      const db_item = new Db_item({
+        id: null,
+        title: title ? title : `${_('Started at')} ${this._get_schedule()}`,
+        description,
+        work_time: 0,
+        break_time: 0,
+        day: current_date.get_day_of_year(),
+        day_of_month: current_date.get_day_of_month(),
+        year: current_date.get_year(),
+        week: current_date.get_week_of_year(),
+        month: current_date.get_month(),
+        display_date: this._get_date(),
+        sorted_date: Math.floor(create_sort_date(null, null, null) / 1000),
+        sessions: 0,
+      })
+      this.data = this.application.data.save(db_item);
+      this.timer_running = true;
+      this.application.Timer.start(this.data);
+    } else if (this.application.Timer.timer_state === 'running') {
+      this.application.Timer.start(this.data);
+      this._stack_timer_controls.visible_child_name = 'paused_timer';
     } else {
-      if (this.application.timer_state === 'running' || this.application.timer_state === 'paused') {
-        throw new Error(`${_('already has a pomodoro running')}`);
-      } else {
-        const current_date = GLib.DateTime.new_now_local();
-        this.data = timer;
-        this.data.sorted_date = Math.floor(create_sort_date(null, null, null) / 1000);
-        this.data.day = current_date.get_day_of_year();
-        this.data.day_of_month = current_date.get_day_of_month();
-        this.data.year = current_date.get_year();
-        this.data.week = current_date.get_week_of_year();
-        this.data.month = current_date.get_month();
-        this.data.display_date = this._get_date();
-        this.sessions_long_break = this.sessions_long_break + this.sessions_long_break;
-        this.application.timer_state = 'running';
-        this.timer_running = true;
-        this._run_timer();
-        return true;
-      }
+      this.application.Timer.start(this.data);
+      this._stack_timer_controls.visible_child_name = 'running_timer';
     }
   }
   _on_reset_timer() {
-    this.work_time = this.application.settings.get_int('work-time');
-    this.break_time = this.application.settings.get_int('break-time');
-    this.long_break = this.application.settings.get_int('long-break');
-    this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
-    this._pomodoro_counts.set_visible(false);
-    this.timer_running = false;
-    this.current_work_time = this.work_time;
-    this.current_break_time = this.break_time;
-    this._title_entry.editable = true;
-    this._description_entry.editable = true;
-    this._stack_timer_controls.visible_child_name = 'init_timer';
-    this.data = this.application.data.delete(this.data.id);
-    this._timer_label.get_style_context().remove_class('error');
-    this._timer_label.set_text(this._format_timer());
-    this.application.timer_state = 'stopped'
+    this.application.Timer.reset();
   }
   _on_stop_timer() {
-    this.application.timer_state = 'stopped';
+    this.application.Timer.stop();
   }
   _DrawTag(area, cr, width, height) {
     const color = new Gdk.RGBA();
