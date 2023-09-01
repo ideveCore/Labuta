@@ -21,6 +21,7 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
 import Template from './preferences.blp' assert { type: 'uri' };
 
 export default class Preferences extends Adw.PreferencesWindow {
@@ -34,6 +35,7 @@ export default class Preferences extends Adw.PreferencesWindow {
         'set_break_time',
         'set_work_time',
         'set_sessions_long_break',
+        'switch_autostart',
       ],
     }, this);
   }
@@ -52,7 +54,15 @@ export default class Preferences extends Adw.PreferencesWindow {
     this._set_break_time.set_value(Math.floor(this.break_time / 60) % 60);
     this._set_long_break.set_value(Math.floor(this.long_break / 60) % 60);
     this._set_sessions_long_break.set_value(this.sessions_long_break);
-
+    this._set_settings_bind_states();
+  }
+  _set_settings_bind_states() {
+    this.Application.settings.bind(
+      "autostart",
+      this._switch_autostart,
+      "active",
+      Gio.SettingsBindFlags.DEFAULT,
+    );
   }
   _on_boolean_state_set(widget, state) {
     const setting = widget.get_name()

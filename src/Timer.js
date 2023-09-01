@@ -64,6 +64,13 @@ export default class Timer {
       }
       this._application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` });
       this._application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null });
+      if (this._application.settings.get_boolean('autostart')) {
+        setTimeout(() => {
+          if (this.timer_state === 'paused') {
+            this.start();
+          }
+        }, 6000);
+      }
       this._end_listener(this);
       return GLib.SOURCE_CONTINUE
     })

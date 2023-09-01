@@ -12,6 +12,7 @@ install_data(
     'pip-in-symbolic.svg',
     'pip-out-symbolic.svg',
     'left-symbolic.svg',
+    'system-restart-symbolic.svg',
   ],
   install_dir: datadir / 'icons/hicolor/scalable/status',
 )

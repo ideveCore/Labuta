@@ -33,6 +33,18 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
           valign: center;
         }
       }
+      Adw.ActionRow  {
+        title: _("Autorstart");
+        subtitle: _("Automatically start the time after break time");
+        icon-name: "system-restart-symbolic";
+        activatable-widget: switch_autostart;
+        [suffix]
+        Switch switch_autostart {
+          state-set => $_on_boolean_state_set();
+          name: "autostart";
+          valign: center;
+        }
+      }
     }
     Adw.PreferencesGroup {
       title: _("Customize pomodoro");

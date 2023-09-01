@@ -15,8 +15,8 @@
     <key type="b" name="play-sounds">
       <default>true</default>
     </key>
-    <key type="s" name="theme">
-      <default>"default"</default>
+    <key type="b" name="autostart">
+      <default>false</default>
     </key>
     <key type="s" name="sort-by">
       <choices>
