@@ -29,7 +29,6 @@ import { create_sort_date } from './utils.js';
  * @class
  *
  */
-
 export default class Application_data {
   constructor() {
     this._db = new Database();
@@ -43,6 +42,7 @@ export default class Application_data {
    */
   setup() {
     this._db.setup();
+    console.log(this.get())
     try {
       const data_dir = GLib.get_user_config_dir();
       const destination = GLib.build_filenamev([data_dir, 'data.json'])
@@ -51,6 +51,7 @@ export default class Application_data {
       const decoder = new TextDecoder('utf-8');
       const data = JSON.parse(decoder.decode(contents));
       data.forEach((item) => {
+        console.log(item);
         const db_item = new Db_item({
           id: null,
           title: item.title,
@@ -63,15 +64,20 @@ export default class Application_data {
           year: item.date.year,
           month: item.date.month,
           display_date: item.date.display_date,
-          sorted_date: Math.floor(create_sort_date(item.date.year, item.date.month, item.date.day_of_month) / 1000),
+          timestamp: Math.floor(create_sort_date(item.date.year, item.date.month, item.date.day_of_month) / 1000),
           sessions: item.counts,
         });
         this.save(db_item)
       })
       destination_file.delete(null);
     } catch (error) {
+      console.log(error);
       console.log('Error migrating the JSON file to the database or the data has already been migrated')
     }
+
+    // const current_date = GLib.DateTime.new_now_local()
+    // const delete_data = this.get().filter((item) => item.month === Math.abs(current_date.get_month() - )
+    // console.log(new Date(new Date().getTime()));
     return this
   }
 

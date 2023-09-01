@@ -140,7 +140,7 @@ export default class Timer extends Adw.Bin {
         week: current_date.get_week_of_year(),
         month: current_date.get_month(),
         display_date: this._get_date(),
-        sorted_date: Math.floor(create_sort_date(null, null, null) / 1000),
+        timestamp: Math.floor(create_sort_date(null, null, null) / 1000),
         sessions: 0,
       })
       this.data = this.application.data.save(db_item);

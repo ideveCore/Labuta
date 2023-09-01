@@ -18,6 +18,9 @@
     <key type="b" name="autostart">
       <default>false</default>
     </key>
+    <key type="i" name="history-duration">
+      <default>2</default>
+    </key>
     <key type="s" name="sort-by">
       <choices>
         <choice value="name" />

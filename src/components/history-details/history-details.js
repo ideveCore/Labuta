@@ -80,7 +80,7 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
     const timer = this._application.data.get_by_id(this._id)[0];
     if (this._application.Timer.timer_state !== 'running' && this._application.Timer.timer_state !== 'paused') {
       const current_date = GLib.DateTime.new_now_local();
-      timer.sorted_date = Math.floor(create_sort_date(null, null, null) / 1000);
+      timer.timestamp = Math.floor(create_sort_date(null, null, null) / 1000);
       timer.day = current_date.get_day_of_year();
       timer.day_of_month = current_date.get_day_of_month();
       timer.year = current_date.get_year();

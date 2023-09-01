@@ -36,6 +36,7 @@ export default class Preferences extends Adw.PreferencesWindow {
         'set_work_time',
         'set_sessions_long_break',
         'switch_autostart',
+        'set_history_duration',
       ],
     }, this);
   }
@@ -61,6 +62,12 @@ export default class Preferences extends Adw.PreferencesWindow {
       "autostart",
       this._switch_autostart,
       "active",
+      Gio.SettingsBindFlags.DEFAULT,
+    );
+    this.Application.settings.bind(
+      "history-duration",
+      this._set_history_duration,
+      "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
   }

@@ -44,7 +44,7 @@ export const activate_action = (action, parameter, timestamp) => {
       }
     });
 }
-const current_date = GLib.DateTime.new_now_local();
+
 /**
  *
  * Create Sort day for pomodoro timer

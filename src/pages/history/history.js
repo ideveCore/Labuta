@@ -95,6 +95,9 @@ export class History extends Adw.PreferencesWindow {
   _leaflet_navigate_back() {
     this._leaflet.navigate(Adw.NavigationDirection.BACK);
   }
+  _leaflet_navigate_forward() {
+    this._leaflet.navigate(Adw.NavigationDirection.FORWARD);
+  }
   _create_lealflet_deatails_page(id) {
     const item = this.Application.data.get_by_id(id)[0];
     const details = new HistoryDetails({
@@ -112,7 +115,7 @@ export class History extends Adw.PreferencesWindow {
     if (exist_details) this._details_page.remove(exist_details);
     this._details_page.append(details);
 
-    this._leaflet.navigate(Adw.NavigationDirection.FORWARD);
+    this._leaflet_navigate_forward();
   }
   _sort_history(history_a, history_b, _data) {
     const a = history_a
@@ -120,7 +123,7 @@ export class History extends Adw.PreferencesWindow {
     if (this.Application.settings.get_string('sort-by') === 'name') {
       return this.Application.settings.get_string('order-by') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
-    return this.Application.settings.get_string('order-by') === 'ascending' ? a.sorted_date - b.sorted_date : b.sorted_date - a.sorted_date;
+    return this.Application.settings.get_string('order-by') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
   }
   create_row(item) {
     const row = new Adw.ActionRow();
@@ -140,7 +143,7 @@ export class History extends Adw.PreferencesWindow {
     row.add_suffix(details_button);
     row.set_activatable_widget(details_button);
     row.title = item.title;
-    row.sorted_date = item.sorted_date;
+    row.timestamp = item.timestamp;
     row.selected = false;
     row.work_time = item.work_time;
     row.break_time = item.break_time;

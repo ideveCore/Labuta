@@ -45,6 +45,22 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
           valign: center;
         }
       }
+      Adw.ActionRow  {
+        title: _("History duration");
+        subtitle: _("The amount of months that history data will be saved");
+        icon-name: 'history-undo-symbolic';
+        SpinButton set_history_duration {
+          valign: center;
+          numeric: true;
+          adjustment:
+            Adjustment {
+              lower: 2;
+              upper: 12;
+              page-increment: 1;
+              step-increment: 1;
+            };
+        }
+      }
     }
     Adw.PreferencesGroup {
       title: _("Customize pomodoro");
