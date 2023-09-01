@@ -51,15 +51,6 @@ export default class Timer extends Adw.Bin {
     this._tag_area.set_draw_func(this._DrawTag);
 
     this.application = Gtk.Application.get_default();
-    this.timer_running = false;
-    this.work_time = this.application.settings.get_int('work-time');
-    this.break_time = this.application.settings.get_int('break-time');
-    this.long_break = this.application.settings.get_int('long-break');
-    this.sessions_long_break = this.application.settings.get_int('sessions-long-break');
-    this.current_work_time = this.work_time;
-    this.current_break_time = this.work_time;
-    this.is_break_timer = false;
-
     this.application.Timer.$start((timer) => {
       this._stack_timer_controls.visible_child_name = 'running_timer';
       this._title_entry.editable = false;
@@ -94,6 +85,7 @@ export default class Timer extends Adw.Bin {
     this.application.Timer.$settings((timer) => {
       this._load_time(timer);
     });
+    this._load_time(this.application.Timer);
   }
   _load_time(timer) {
     if (timer.current_work_time === timer.work_time) {

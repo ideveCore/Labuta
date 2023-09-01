@@ -18,6 +18,14 @@ export default class Timer {
     this._data = {};
     this.data = {};
     this.timer_state = 'stopped';
+    this.work_time = this._application.settings.get_int('work-time') * 60;
+    this.work_time = this._application.settings.get_int('work-time') * 60;
+    this.current_work_time = this.work_time;
+    this.break_time = this._application.settings.get_int('break-time') * 60;
+    this.current_break_time = this.break_time;
+    this.long_break = this._application.settings.get_int('long-break') * 60;
+    this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
+
     this._setup_settings();
   }
   _run() {
@@ -77,13 +85,13 @@ export default class Timer {
   };
   start(data) {
     if (this.timer_state === 'stopped') {
-      // this.work_time = this._application.settings.get_int('work-time');
+      // this.work_time = this._application.settings.get_int('work-time') * 60;
       this.work_time = 5;
       this.current_work_time = this.work_time;
-      // this.break_time = this._application.settings.get_int('break-time');
+      // this.break_time = this._application.settings.get_int('break-time') * 60;
       this.break_time = 5;
       this.current_break_time = this.break_time;
-      // this.long_break = this._application.settings.get_int('long-break');
+      // this.long_break = this._application.settings.get_int('long-break') * 60;
       this.long_break = 6;
       this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
       this.data = data
@@ -138,20 +146,20 @@ export default class Timer {
   _setup_settings() {
     this._application.settings.connect("changed::work-time", () => {
       if (this.timer_state === 'stopped') {
-        this.work_time = this._application.settings.get_int('work-time');
+        this.work_time = this._application.settings.get_int('work-time') * 60;
         this.current_work_time = this.work_time;
         this._setting_listener(this);
       }
     });
     this._application.settings.connect("changed::break-time", () => {
       if (this.timer_state === 'stopped') {
-        this.break_time = this._application.settings.get_int('break-time');
+        this.break_time = this._application.settings.get_int('break-time') * 60;
         this.current_break_time = this.break_time;
       }
     });
     this._application.settings.connect("changed::long-break", () => {
       if (this.timer_state === 'stopped') {
-        this.long_break = this._application.settings.get_int('long-break');
+        this.long_break = this._application.settings.get_int('long-break') * 60;
       }
     });
     this._application.settings.connect("changed::sessions-long-break", () => {

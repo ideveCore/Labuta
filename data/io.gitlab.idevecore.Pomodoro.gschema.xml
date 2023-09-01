@@ -48,13 +48,13 @@
       <default>false</default>
     </key>
     <key type="i" name="work-time">
-      <default>1500</default>
+      <default>25</default>
     </key>
     <key type="i" name="break-time">
-      <default>300</default>
+      <default>5</default>
     </key>
     <key type="i" name="long-break">
-      <default>900</default>
+      <default>15</default>
     </key>
     <key type="i" name="sessions-long-break">
       <default>4</default>

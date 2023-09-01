@@ -42,7 +42,6 @@ export default class Application_data {
    */
   setup() {
     this._db.setup();
-    console.log(this.get())
     try {
       const data_dir = GLib.get_user_config_dir();
       const destination = GLib.build_filenamev([data_dir, 'data.json'])

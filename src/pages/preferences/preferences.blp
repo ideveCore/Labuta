@@ -16,7 +16,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         activatable-widget: switch_run_in_background;
         [suffix]
         Switch switch_run_in_background {
-          state-set => $_on_boolean_state_set();
           name: "run-in-background";
           valign: center;
         }
@@ -28,7 +27,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         activatable-widget: switch_play_sounds;
         [suffix]
         Switch switch_play_sounds {
-          state-set => $_on_boolean_state_set();
           name: "play-sounds";
           valign: center;
         }
@@ -40,7 +38,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         activatable-widget: switch_autostart;
         [suffix]
         Switch switch_autostart {
-          state-set => $_on_boolean_state_set();
           name: "autostart";
           valign: center;
         }
@@ -68,7 +65,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         title: _("Work time - (minutes)");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
         SpinButton set_work_time {
-          value-changed => $_on_work_time_changed();
           valign: center;
           numeric: true;
           adjustment:
@@ -84,7 +80,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         title: _("Break time - (minutes)");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
         SpinButton set_break_time {
-          value-changed => $_on_break_time_changed();
           valign: center;
           numeric: true;
           adjustment:
@@ -100,7 +95,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         title: _("Long break time - (minutes)");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
         SpinButton set_long_break {
-          value-changed => $_on_long_break_changed();
           valign: center;
           numeric: true;
           adjustment:
@@ -116,7 +110,6 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         title: _("Sessions until the long break - (minutes)");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
         SpinButton set_sessions_long_break {
-          value-changed => $_on_sessions_long_break_changed();
           valign: center;
           numeric: true;
           adjustment:
