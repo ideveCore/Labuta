@@ -51,7 +51,6 @@ export default class Application extends Adw.Application {
     });
     this.timer_state = 'stopped';
     this.data = new Application_data().setup();
-    console.log(this.data.get());
     this.Timer = new Timer(this);
     this._setup_actions();
   }

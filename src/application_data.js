@@ -71,13 +71,8 @@ export default class Application_data {
       })
       destination_file.delete(null);
     } catch (error) {
-      console.log(error);
       console.log('Error migrating the JSON file to the database or the data has already been migrated')
     }
-
-    // const current_date = GLib.DateTime.new_now_local()
-    // const delete_data = this.get().filter((item) => item.month === Math.abs(current_date.get_month() - )
-    // console.log(new Date(new Date().getTime()));
     return this
   }
 

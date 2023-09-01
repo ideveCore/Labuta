@@ -29,7 +29,11 @@
 
 .light-5 {
   background-color: @light_5;
-  color: white;
+  color: rgb(255, 255, 255);
+}
+
+.text-light {
+  color: rgb(255, 255, 255);
 }
 
 /* spinbutton styles */

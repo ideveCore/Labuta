@@ -71,9 +71,11 @@ export default class Timer extends Adw.Bin {
     });
     this.application.Timer.$pause((timer) => {
       this._stack_timer_controls.visible_child_name = 'paused_timer';
+      this._load_time(timer);
     });
     this.application.Timer.$start((timer) => {
       this._stack_timer_controls.visible_child_name = 'running_timer';
+      this._load_time(timer);
     });
     this.application.Timer.$stop((timer) => {
       this._stack_timer_controls.visible_child_name = 'init_timer';
@@ -82,17 +84,15 @@ export default class Timer extends Adw.Bin {
       this._description_entry.editable = true;
       this._title_entry.set_text('');
       this._description_entry.set_text('');
-      this._stack_timer_controls.visible_child_name = 'init_timer';
-      this._timer_label.get_style_context().remove_class('error');
-      this._timer_label.set_text(timer.format_time());
+      this._load_time(timer);
+      this._pomodoro_counts.set_visible(false);
     });
     this.application.Timer.$end((timer) => {
       this._stack_timer_controls.visible_child_name = 'paused_timer';
-      this._timer_label.get_style_context().remove_class('error');
-      this._timer_label.set_text(timer.format_time());
+      this._load_time(timer);
     });
     this.application.Timer.$settings((timer) => {
-      this._timer_label.set_text(timer.format_time());
+      this._load_time(timer);
     });
   }
   _load_time(timer) {
