@@ -82,8 +82,7 @@ export class SmallWindow extends Adw.Window {
     });
     this._application.Timer.$end((timer) => {
       this._stack_timer_controls.visible_child_name = 'paused_timer';
-      this._timer_label.get_style_context().remove_class('error');
-      this._timer_label.set_text(timer.format_time());
+      this._load_timer(timer);
     });
     this._setup_event_controller();
   }
@@ -94,7 +93,6 @@ export class SmallWindow extends Adw.Window {
       this._timer_label.get_style_context().add_class('error');
     }
     this._timer_label.set_text(timer.format_time());
-    this._stack_timer_controls.visible_child_name = 'running_timer';
 
     if (timer.data.sessions > 0) {
       this._tag_label.set_label(`<span weight="bold" size="9pt">${timer.data.sessions}</span>`);

@@ -2,30 +2,34 @@ using Gtk 4.0;
 using Adw 1;
 
 template $SmallWindow : Adw.Window {
-  height-request: 200;
-  width-request: 450;
+  height-request: 150;
+  width-request: 400;
   modal: true;
   resizable: true;
 
   content: Gtk.Overlay overlay {
     [overlay]
+    Adw.HeaderBar header_bar {
+      styles ['flat']
+      title-widget: Gtk.Label {};
+      decoration-layout: ':';
+      opacity: 0;
+      halign: end;
+      valign: start;
+      [end]
+      Gtk.Button {
+        styles ['circular', 'raised']
+        icon-name: 'pip-out-symbolic';
+        action-name: 'window.toggle-small-window';
+        action-target: "'close'";
+        tooltip-text: _("Maximize window");
+      }
+    }
     Gtk.Box {
       orientation: vertical;
       hexpand: true;
       vexpand: true;
-      Adw.HeaderBar header_bar {
-        styles ['flat']
-        title-widget: Gtk.Label {};
-        decoration-layout: ':';
-        opacity: 0;
-        [end]
-        Gtk.Button {
-          styles ['circular', 'raised']
-          icon-name: 'window-maximize-symbolic';
-          action-name: 'window.toggle-small-window';
-          action-target: "'close'";
-        }
-      }
+      
       Gtk.Box {
         vexpand: true;
         hexpand: true;
@@ -37,11 +41,7 @@ template $SmallWindow : Adw.Window {
           valign: center;
           [overlay]
           Gtk.Box timer_controls {
-            styles ['overlay','padding-default', 'card']
-            height-request: 100;
-            width-request: 400;
-            hexpand: true;
-            vexpand: true;
+            styles ['padding-default']
             valign: center;
             halign: center;
             opacity: 0;
