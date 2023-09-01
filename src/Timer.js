@@ -32,6 +32,7 @@ export default class Timer {
 
       if (this.current_work_time === this.work_time) {
         this._application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
+        this._application._play_sound({ name: 'message-new-instant', cancellable: null });
       } else if (this.current_work_time === 0) {
         this._application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
         this._application._play_sound({ name: 'complete', cancellable: null });
@@ -56,14 +57,14 @@ export default class Timer {
       }
 
       this.timer_state = 'paused';
-      this._end_listener(this);
       this.current_work_time = this.work_time;
       this.data.sessions = this.data.sessions + 1;
       if (this.data.sessions === this.sessions_long_break) {
         this.current_break_time = this.long_break;
       }
-      this._application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
-      this._application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null })
+      this._application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` });
+      this._application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null });
+      this._end_listener(this);
       return GLib.SOURCE_CONTINUE
     })
   };
