@@ -87,6 +87,7 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
       timer.week = current_date.get_week_of_year();
       timer.month = current_date.get_month();
       timer.display_date = this._get_date();
+      timer.sessions = 0;
       this._application.Timer.start(this._application.data.update(timer));
       this._parent.close();
     }

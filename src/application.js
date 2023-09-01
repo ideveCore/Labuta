@@ -121,13 +121,19 @@ Blueprint 0.10.0
     };
     return new Adw.AboutWindow(aboutParams);
   }
+
+  /**
+   *
+   * Request quit
+   *
+   */
   _request_quit() {
     this.run_in_background = this.settings.get_boolean('run-in-background');
     if (!this.run_in_background) {
       this._open_close_option_dialog()
       return
     }
-    if (this.timer_state === 'stopped') {
+    if (this.Timer.timer_state === 'stopped') {
       this.quit();
       return
     }
@@ -138,7 +144,7 @@ Blueprint 0.10.0
   _open_close_option_dialog() {
     let dialog = new Adw.MessageDialog();
     dialog.set_heading(_('Stop timer?'));
-    dialog.set_transient_for(this.active_window);
+    dialog.set_transient_for(this.get_active_window());
     dialog.set_body(_('There is a running timer, wants to stop and exit the application?'));
     dialog.add_response('continue', _('Continue'));
     dialog.add_response('exit', _('Exit'));
@@ -146,13 +152,13 @@ Blueprint 0.10.0
 
     dialog.connect('response', (dialog, id) => {
       if (id === 'exit') {
-        this.timer_state = 'stopped';
+        this.Timer.timer_state = 'stopped';
         setTimeout(() => {
           this.quit()
         }, 1000)
       }
     })
-    if (this.timer_state === 'running' || this.timer_state == 'paused') {
+    if (this.Timer.timer_state === 'running' || this.Timer.timer_state == 'paused') {
       return dialog.present()
     }
     this.quit()

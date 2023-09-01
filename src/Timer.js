@@ -19,7 +19,6 @@ export default class Timer {
     this.data = {};
     this.timer_state = 'stopped';
     this.work_time = this._application.settings.get_int('work-time') * 60;
-    this.work_time = this._application.settings.get_int('work-time') * 60;
     this.current_work_time = this.work_time;
     this.break_time = this._application.settings.get_int('break-time') * 60;
     this.current_break_time = this.break_time;
@@ -66,9 +65,13 @@ export default class Timer {
 
       this.timer_state = 'paused';
       this.current_work_time = this.work_time;
+      this.current_break_time = this.break_time;
       this.data.sessions = this.data.sessions + 1;
+      this._end_listener(this);
       if (this.data.sessions === this.sessions_long_break) {
         this.current_break_time = this.long_break;
+        this.data.sessions = 0;
+        this.data = this._application.data.update(this.data)
       }
       this._application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` });
       this._application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null });
@@ -79,20 +82,19 @@ export default class Timer {
           }
         }, 6000);
       }
-      this._end_listener(this);
       return GLib.SOURCE_CONTINUE
     })
   };
   start(data) {
     if (this.timer_state === 'stopped') {
       // this.work_time = this._application.settings.get_int('work-time') * 60;
-      this.work_time = 5;
+      this.work_time = 2;
       this.current_work_time = this.work_time;
       // this.break_time = this._application.settings.get_int('break-time') * 60;
-      this.break_time = 5;
+      this.break_time = 1;
       this.current_break_time = this.break_time;
       // this.long_break = this._application.settings.get_int('long-break') * 60;
-      this.long_break = 6;
+      this.long_break = 3;
       this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
       this.data = data
       this.timer_state = 'running';
@@ -114,9 +116,9 @@ export default class Timer {
     this._stop_listener(this);
   }
   stop() {
-    this.work_time = this._application.settings.get_int('work-time');
-    this.break_time = this._application.settings.get_int('break-time');
-    this.long_break = this._application.settings.get_int('long-break');
+    this.work_time = this._application.settings.get_int('work-time') * 60;
+    this.break_time = this._application.settings.get_int('break-time') * 60;
+    this.long_break = this._application.settings.get_int('long-break') * 60;
     this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
     this.current_break_time = this.break_time;
