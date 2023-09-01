@@ -51,13 +51,8 @@ export default class Application extends Adw.Application {
     });
     this.timer_state = 'stopped';
     this.data = new Application_data().setup();
-    this._setup_actions();
-    this.history = null;
     this.Timer = new Timer(this);
-    // this.Timer.start();
-    // this.Timer.$((timer) => {
-    //   console.log(timer);
-    // })
+    this._setup_actions();
   }
   _setup_actions() {
     const quit_action = new Gio.SimpleAction({ name: 'quit' });
@@ -217,6 +212,30 @@ Blueprint 0.10.0
     let { active_window } = this;
     if (!active_window) {
       active_window = new Window(this);
+      this.settings.bind(
+        "width",
+        active_window,
+        "default-width",
+        Gio.SettingsBindFlags.DEFAULT,
+      );
+      this.settings.bind(
+        "height",
+        active_window,
+        "default-height",
+        Gio.SettingsBindFlags.DEFAULT,
+      );
+      this.settings.bind(
+        "is-maximized",
+        active_window,
+        "maximized",
+        Gio.SettingsBindFlags.DEFAULT,
+      );
+      this.settings.bind(
+        "is-fullscreen",
+        active_window,
+        "fullscreened",
+        Gio.SettingsBindFlags.DEFAULT,
+      );
     }
     active_window.present();
   }

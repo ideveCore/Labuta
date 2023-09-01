@@ -32,8 +32,17 @@
       </choices>
       <default>"ascending"</default>
     </key>
-    <key type="b" name="sort-first-to-last">
-      <default>true</default>
+    <key name="width" type="i">
+      <default>420</default>
+    </key>
+    <key name="height" type="i">
+      <default>600</default>
+    </key>
+    <key name="is-maximized" type="b">
+      <default>false</default>
+    </key>
+    <key name="is-fullscreen" type="b">
+      <default>false</default>
     </key>
     <key type="i" name="work-time">
       <default>1500</default>
