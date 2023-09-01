@@ -1,12 +1,6 @@
 .fs-1 {
   font-size: 3em;
 }
-.overlay {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.overlay:hover {
-  opacity: 1;
-}
 .fs-2 {
   font-size: 2em;
 }
@@ -37,4 +31,20 @@
   background-color: @light_5;
   color: white;
 }
+
+/* spinbutton styles */
+spinbutton {
+  background-color: transparent;
+  outline: none;
+}
+spinbutton > button {
+  background-color: alpha(currentColor,.1);
+  border: none;
+  border-radius: 50%;
+  margin-left: 0.5em;
+}
+spinbutton > button:hover {
+  background-color: alpha(currentColor,.15);
+}
+
 
