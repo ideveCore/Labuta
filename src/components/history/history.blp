@@ -33,6 +33,7 @@ template $Gjs_History : Adw.PreferencesWindow {
             icon-name: "user-trash-symbolic";
             sensitive: false;
             margin-end: 10;
+            tooltip-text: _("Delete selected items");
             clicked => $_on_delete();
           }
           [end]
@@ -104,12 +105,12 @@ menu primary_menu {
       label: _('Sort by');
       section {
         item {
-          label: 'Name';
+          label: _("Name");
           action: 'search.sorting';
           target: 'name';
         }
         item {
-          label: 'Date';
+          label: _("Date");
           action: 'search.sorting';
           target: 'date';
         }
