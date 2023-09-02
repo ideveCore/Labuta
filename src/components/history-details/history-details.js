@@ -21,6 +21,7 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
+import Adw from 'gi://Adw';
 import Template from './history-details.blp' assert { type: 'uri' };
 import { create_timestamp, format_time } from '../../utils.js';
 
@@ -42,6 +43,7 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
         'break_time',
         'description',
         'sessions',
+        'toast_overlay',
       ],
     }, this);
   }
@@ -95,6 +97,10 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
       timer.sessions = 0;
       this._application.Timer.start(this._application.data.update(timer));
       this._parent.close();
+    } else {
+      this._toast_overlay.add_toast(new Adw.Toast({
+        title: _("Timer already in progress"),
+      }));
     }
   }
   /**

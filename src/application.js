@@ -99,10 +99,12 @@ export default class Application extends Adw.Application {
     this.add_action(quit_action);
     this.add_action(preferences_action);
     this.add_action(history_action);
-    this.set_accels_for_action('app.quit', ['<primary>q']);
-    this.set_accels_for_action('win.show-help-overlay', ['<Primary>question'])
     this.add_action(show_about_action);
     this.add_action(active_action);
+    this.set_accels_for_action('app.quit', ['<primary>q']);
+    this.set_accels_for_action('win.show-help-overlay', ['<Primary>question']);
+    this.set_accels_for_action('app.history', ['<Primary>h']);
+    this.set_accels_for_action('app.preferences', ['<Primary>comma']);
   }
 
   /**

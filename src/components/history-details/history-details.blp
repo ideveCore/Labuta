@@ -67,6 +67,7 @@ template $HistoryDetails : Gtk.ListBoxRow {
       label: _("Continue");
       clicked => $_on_continue_timer();
     } 
+    Adw.ToastOverlay toast_overlay {}
   }
 }
 
