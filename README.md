@@ -1,9 +1,3 @@
-<style>
-  .icon-link {
-    margin-right: 20px;
-  }
-</style>
-
 <img heigth="128" src="./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Pomodoro.svg" align="left" />
 
 # Pomodoro
@@ -44,7 +38,7 @@ A simple timer application, its main objective is to be simple, and intuitive.
 If you like this project and have some spare money left, consider donating:
 
 ### Ko-fi and Github Sponsors
-<a href='https://ko-fi.com/idevecore'><img class='icon-link' width='60' alt='Download on Flathub' src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png'/></a>
+<a href='https://ko-fi.com/idevecore'><img width='60' alt='Download on Flathub' src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png'/></a>
 <a href='https://github.com/sponsors/ideveCore'><img width='60' alt='Download on Flathub' src='https://github.githubassets.com/images/email/sponsors/mona.png'/></a>
 
 ## License 
