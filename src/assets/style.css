@@ -1,0 +1,54 @@
+.fs-1 {
+  font-size: 3em;
+}
+.fs-2 {
+  font-size: 2em;
+}
+
+.fs-3 {
+  font-size: 1.2em;
+}
+
+.large-button {
+  padding: 0.5em;
+}
+
+.padding-default {
+  padding: 0.5em;
+}
+
+.history-header {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: @borders;
+}
+
+.select-button {
+  border-radius: 50%;
+}
+
+.light-5 {
+  background-color: @light_5;
+  color: rgb(255, 255, 255);
+}
+
+.text-light {
+  color: rgb(255, 255, 255);
+}
+
+/* spinbutton styles */
+spinbutton {
+  background-color: transparent;
+  outline: none;
+}
+spinbutton > button {
+  background-color: alpha(currentColor,.1);
+  border: none;
+  border-radius: 50%;
+  margin-left: 0.5em;
+}
+spinbutton > button:hover {
+  background-color: alpha(currentColor,.15);
+}
+
+

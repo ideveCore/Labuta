@@ -19,37 +19,85 @@
  */
 
 import GObject from 'gi://GObject';
-import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import Template from './window.blp' assert { type: 'uri' };
+import ThemeSelector from './components/theme-selector/theme-selector.js';
+import Shortcuts from './components/shortcuts/shortcuts.js';
+import { SmallWindow } from './components/small-window/small-window.js';
 
+/**
+ *
+ * Create Window page
+ * @class
+ *
+ */
 export default class Window extends Adw.ApplicationWindow {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: 'Window',
       InternalChildren: [
         'stack',
+        'shorten_window',
+        'menu_button',
+        'toast_overlay',
       ],
     }, this);
   }
   constructor(application) {
     super({ application });
 
+    const theme_selector = new ThemeSelector();
+    this._menu_button.get_popover().add_child(theme_selector, 'theme');
+    this.set_help_overlay(new Shortcuts(application));
+    this._small_window = new SmallWindow();
+
+    this._setup_actions();
+
+    this._small_window.insert_action_group("window", this.window_group);
+
+    application.Timer.$start(() => {
+      this._shorten_window.set_sensitive(true);
+    });
+    application.Timer.$stop(() => {
+      this._shorten_window.set_sensitive(false);
+    });
+
+    this._shorten_window.set_sensitive(false);
+
     this.connect('close-request', () => {
       application._request_quit()
       return true
     })
-
     this._stack.connect('notify::visible-child', () => {
-      if (this._stack.visible_child_name == 'history') {
-        this._stack.visible_child._load_history_list();
-      } else if (this._stack.visible_child_name == 'statistics') {
+      if (this._stack.visible_child_name == 'statistics') {
         this._stack.visible_child._load_statistics_data();
       }
     });
-  }
 
-  _navigate(navigate) {
-    this._stack.visible_child_name = navigate;
+  }
+  /**
+   *
+   * Setup actions
+   *
+   */
+  _setup_actions() {
+    const toggle_small_window = new Gio.SimpleAction({ name: 'toggle-small-window', parameter_type: new GLib.Variant('s', '').get_type() });
+    this.window_group = new Gio.SimpleActionGroup();
+
+    toggle_small_window.connect('activate', (simple_action, parameter) => {
+      const value = parameter.get_string()[0];
+      if (value === 'open') {
+        this.hide();
+        this._small_window.present();
+      } else {
+        this.present();
+        this._small_window.hide();
+      }
+    });
+    this.add_action(toggle_small_window);
+    this.window_group.add_action(toggle_small_window)
   }
 }

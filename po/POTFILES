@@ -17,3 +17,25 @@ src/application.js
 src/main.js
 
 troll/src/util.js
+src/tray.js
+troll/src/widgets/ThemeSelector.blp
+troll/src/widgets/ThemeSelector.js
+src/settings.js
+src/components/theme-selector/theme-selector.blp
+src/components/theme-selector/theme-selector.js
+src/db.js
+src/application_data.js
+src/components/history-dialog/history-dialog.blp
+src/components/history-dialog/history-dialog.js
+src/overrides.js
+src/components/small-window/small-window.blp
+src/components/small-window/small-window.js
+src/Timer.js
+src/components/history-details/history-details.blp
+src/components/history-details/history-details.js
+src/components/history/history.blp
+src/components/history/history.js
+src/components/shortcuts/shortcuts.blp
+src/components/shortcuts/shortcuts.js
+src/components/preferences/preferences.blp
+src/components/preferences/preferences.js

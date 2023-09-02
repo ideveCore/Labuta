@@ -1,8 +1,8 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $Gjs_Window : Adw.ApplicationWindow {
-  default-width: 450;
+template $Window : Adw.ApplicationWindow {
+  default-width: 420;
   default-height: 600;
   hide-on-close: true;
   title: _("Pomodoro");
@@ -16,17 +16,24 @@ template $Gjs_Window : Adw.ApplicationWindow {
       can-navigate-back: true;
       Box {
         orientation: vertical;
-
         Adw.HeaderBar {
-          styles ['flat']
           centering-policy: strict;
           [title]
           Adw.ViewSwitcherTitle view_switcher_title {
             stack: stack;
             title: bind template.title;
           }
+          [start]
+          Gtk.Button shorten_window {
+            halign: start;
+            valign: center;
+            icon-name: "pip-in-symbolic";
+            action-name: 'win.toggle-small-window';
+            action-target: "'open'";
+            tooltip-text: _("Minimize window");
+          }
           [end]
-          MenuButton {
+          MenuButton menu_button {
             menu-model: primary_menu;
             icon-name: "open-menu-symbolic";
             tooltip-text: _("Main menu");
@@ -41,7 +48,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
             use-underline: true;
             icon-name: "hourglass-symbolic";
             child:
-              $Gjs_Timer {};
+              $Timer {};
           }
           Adw.ViewStackPage {
             name: "statistics";
@@ -49,15 +56,7 @@ template $Gjs_Window : Adw.ApplicationWindow {
             use-underline: true;
             icon-name: "profit-symbolic";
             child:
-              $Gjs_Statistics {};
-          }
-          Adw.ViewStackPage {
-            name: "history";
-            title: _("_History");
-            use-underline: true;
-            icon-name: "history-undo-symbolic";
-            child:
-              $Gjs_History {};
+              $Statistics {};
           }
         }
         Adw.ViewSwitcherBar {
@@ -66,10 +65,16 @@ template $Gjs_Window : Adw.ApplicationWindow {
         }
       }
     }
+    Adw.ToastOverlay toast_overlay {}
   }
 }
 
 menu primary_menu {
+  section {
+    item {
+      custom: "theme";
+    }
+  }
   section {
     item {
       label: _("_Preferences");
@@ -78,12 +83,21 @@ menu primary_menu {
 
     item {
       label: _("_Keyboard shortcuts");
-      action: "app.shortcuts";
+      action: "win.show-help-overlay";
+    }
+
+    item {
+      label: _("_History");
+      action: "app.history";
     }
 
     item {
       label: _("_About Pomodoro");
       action: "app.about";
+    }
+    item {
+      label: _("_Quit");
+      action: "app.quit";
     }
   }
 }

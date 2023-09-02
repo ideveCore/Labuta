@@ -1,0 +1,29 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Shortcuts : ShortcutsWindow {
+  modal: true;
+  ShortcutsSection {
+    section-name: "shortcuts";
+    max-height: 10;
+    ShortcutsGroup {
+      title: C_("shortcut window", "General");
+      ShortcutsShortcut {
+        accelerator: "<Control>question";
+        title: C_("shortcut window", "Keyboard shortcuts");
+      }
+      ShortcutsShortcut {
+        accelerator: "<Control>comma";
+        title: C_("shortcut window", "Preferences");
+      }
+      ShortcutsShortcut {
+        accelerator: "<Control>h";
+        title: C_("shortcut window", "History");
+      }
+      ShortcutsShortcut {
+        accelerator: "<Control>Q";
+        title: C_("shortcut window", "Quit");
+      }
+    }
+  }
+}

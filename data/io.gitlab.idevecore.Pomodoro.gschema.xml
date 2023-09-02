@@ -1,29 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="pomodoro">
   <schema id="@app_id@" path="/io/gitlab/idevecore/Pomodoro/" gettext-domain="@app_id@">
+    <key type="s" name="color-scheme">
+      <choices>
+        <choice value="auto" />
+        <choice value="light" />
+        <choice value="dark" />
+      </choices>
+      <default>"auto"</default>
+    </key>
     <key type="b" name="run-in-background">
       <default>true</default>
     </key>
     <key type="b" name="play-sounds">
       <default>true</default>
     </key>
-    <key type="s" name="theme">
-      <default>"default"</default>
+    <key type="b" name="autostart">
+      <default>false</default>
     </key>
-    <key type="i" name="sort-by">
-      <default>1</default>
+    <key type="i" name="history-duration">
+      <default>2</default>
     </key>
-    <key type="b" name="sort-first-to-last">
-      <default>true</default>
+    <key type="s" name="sort-by">
+      <choices>
+        <choice value="name" />
+        <choice value="date" />
+      </choices>
+      <default>"date"</default>
     </key>
-    <key type="i" name="work-time">
-      <default>1500</default>
+    <key type="s" name="order-by">
+      <choices>
+        <choice value="ascending" />
+        <choice value="descending" />
+      </choices>
+      <default>"descending"</default>
     </key>
-    <key type="i" name="break-time">
-      <default>300</default>
+    <key name="width" type="i">
+      <default>420</default>
     </key>
-    <key type="i" name="long-break">
-      <default>900</default>
+    <key name="height" type="i">
+      <default>600</default>
+    </key>
+    <key name="is-maximized" type="b">
+      <default>false</default>
+    </key>
+    <key name="is-fullscreen" type="b">
+      <default>false</default>
+    </key>
+    <key type="i" name="work-time-st">
+      <default>25</default>
+    </key>
+    <key type="i" name="break-time-st">
+      <default>5</default>
+    </key>
+    <key type="i" name="long-break-st">
+      <default>15</default>
     </key>
     <key type="i" name="sessions-long-break">
       <default>4</default>

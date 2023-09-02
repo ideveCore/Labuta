@@ -1,5 +1,5 @@
 project('pomodoro',
-  version: '1.2.0',
+  version: '1.3.0',
   meson_version: '>= 0.63.0',
   default_options: [ 'warning_level=2', 'werror=false', ],
 )
@@ -31,7 +31,6 @@ pkgdatadir = datadir / application_id
 subdir('data')
 subdir('src')
 subdir('po')
-
 
 install_symlink(
   meson.project_name(),

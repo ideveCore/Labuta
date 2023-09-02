@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $Gjs_Timer : Adw.Bin {
+template $Timer : Adw.Bin {
   Adw.Clamp {
     valign: center;
     halign: center;
@@ -45,6 +45,7 @@ template $Gjs_Timer : Adw.Bin {
 
                 [overlay]
                 Gtk.Label tag_label {
+                  styles ['text-light']
                   use-markup: true;
                   tooltip-text: _("Pomodoro sessions");
                 }
@@ -71,7 +72,7 @@ template $Gjs_Timer : Adw.Bin {
                   valign: center;
                   icon-name: "media-playback-start-symbolic";
                   tooltip-text: _("Init timer");
-                  clicked => $_on_handler_timer();
+                  clicked => $_on_start_pause_timer();
                 };
             }
             StackPage {
@@ -83,7 +84,7 @@ template $Gjs_Timer : Adw.Bin {
                   valign: center;
                   icon-name: "media-playback-pause-symbolic";
                   tooltip-text: _("Pause timer");
-                  clicked => $_on_handler_timer();
+                  clicked => $_on_start_pause_timer();
                 };
             }
             StackPage {
@@ -107,7 +108,7 @@ template $Gjs_Timer : Adw.Bin {
                     valign: center;
                     icon-name: "media-playback-start-symbolic";
                     tooltip-text: _("Init timer");
-                    clicked => $_on_handler_timer();
+                    clicked => $_on_start_pause_timer();
                   }
                   Button {
                     styles ["circular", "large-button"]

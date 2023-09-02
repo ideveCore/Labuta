@@ -1,38 +1,45 @@
-Pomodoro
-=======
+<img heigth="128" src="./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Pomodoro.svg" align="left" />
 
+# Pomodoro
 
-![Application icon](./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Pomodoro.svg)
+A simple timer application, its main objective is to be simple, and intuitive.
 
-## A simple timer application, its main objective is to be simple, and intuitive.
-### Home page, here you create a title and a description and start the timer in a simple and quick way.
-![Full UI](./data/screenshots/01.png)
+![Pomodoro](data/screenshots/01.png)
 
-![Full UI](./data/screenshots/02.png)
+## Features
+- History
+- Statistics
+- Run in background
+- Feedback sounds
+- Progress notification
 
-### Here you have access to a quick statistics panel.
-![Full UI](./data/screenshots/03.png)
+## Flathub
+<a href='https://flathub.org/apps/io.github.idevecore.Pomodoro'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
-### Here you have the History of all your Pomodoros.
-![Full UI](./data/screenshots/04.png)
+## Building
 
-![Full UI](./data/screenshots/05.png)
+###  Requirements
+- Gjs `gjs` 
+- GTK4 `gtk4` 
+- libadwaita (>= 1.2.0) `libadwaita`
+- Meson `meson` 
+- Ninja `ninja` 
+- D-Bus `python-dbus`
 
-I'm also on youtube, all the steps to build this app are there.
-==========
-### Youtube playlist: https://www.youtube.com/playlist?list=PLCWMX5EFKy29tHWr3i7BfJ_eIi8HDAc45
+### Building from Git
+```bash 
+ git clone --recurse-submodules https://gitlab.com/idevecore/pomodoro.git
+ cd pomodoro
+ meson builddir --prefix=/usr/local 
+ sudo ninja -C builddir install 
+ ```
 
-Help me continue to bring updates and improvements to this app and others.
-==========
-### My Ko-Fi: https://ko-fi.com/idevecore
+## Donate
+If you like this project and have some spare money left, consider donating:
 
-Any doubts, contact me:
-=========
-### Email: ideve.core@gmail.com
-### Email: francisco.jeferson.dev@gmail.com
+### Ko-fi and Github Sponsors
+<a href='https://ko-fi.com/idevecore'><img width='60' alt='Download on Flathub' src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png'/></a>
+<a href='https://github.com/sponsors/ideveCore'><img width='60' alt='Download on Flathub' src='https://github.githubassets.com/images/email/sponsors/mona.png'/></a>
 
-Copyright 2023 Ideve Core
-=====
-Pomodoro is released under the terms of the GNU General Public License, either
-version 3.0 or, at your option, any later version.
-
+## License 
+ [GNU General Public License 3 or later](https://www.gnu.org/licenses/gpl-3.0.en.html)
