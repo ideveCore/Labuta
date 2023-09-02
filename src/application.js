@@ -130,12 +130,18 @@ Blueprint 0.10.0
       application_icon: pkg.name,
       developer_name: 'Ideve Core',
       version: pkg.version,
+      comments: _(
+        "Pomodoro is a timer utility with rules, ideal for better productivity.",
+      ),
+      website: "https://gitlab.com/idevecore/pomodoro",
+      support_url: "https://gitlab.com/idevecore/pomodoro",
       developers: [
         'Ideve Core'
       ],
       issue_url: 'https://gitlab.com/idevecore/pomodoro/-/issues',
       debug_info,
       copyright: '© 2023 Ideve Core',
+      license_type: Gtk.License.GPL_3_0_ONLY,
     };
     return new Adw.AboutWindow(aboutParams);
   }

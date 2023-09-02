@@ -25,7 +25,7 @@ msgstr "Temporizador"
 msgid "Timer;Clock;StopWatch;"
 msgstr "Tempo;Relógio;Temporizador;"
 
-#: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:11
+#: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:11 src/application.js:134
 msgid "Pomodoro is a timer utility with rules, ideal for better productivity."
 msgstr ""
 "Pomodoro é um utilitário de temporizador com regras, ideal para melhor a "
