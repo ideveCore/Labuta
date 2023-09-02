@@ -45,8 +45,15 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
       ],
     }, this);
   }
+  constructor() {
+    super();
+    this._application = Gtk.Application.get_default();
+    this._id = null;
+    this._parent = null;
+  }
+
   /**
-   * Create HistoryDetails element
+   * update details
    * @param {Object} history_data
    * @param {Gtk.ListBox} history_data.parent
    * @param {number} history_data.id 
@@ -58,9 +65,7 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
    * @param {number} history_data.sessions
    *
    */
-  constructor({ parent, id, title, subtitle, work_time, break_time, description, sessions }) {
-    super();
-    this._application = Gtk.Application.get_default();
+  update_details({ parent, id, title, subtitle, work_time, break_time, description, sessions }) {
     this._id = id;
     this._parent = parent
     this._title.set_text(title);

@@ -204,6 +204,7 @@ export class Database {
       DELETE FROM history WHERE timestamp < strftime('%s', 'now', '-${history_duration} months');
     `);
   }
+
   /**
    *
    * Save item in database
@@ -252,6 +253,7 @@ export class Database {
     });
     return item;
   }
+
   /**
    *
    * Delete item from database
@@ -267,6 +269,18 @@ export class Database {
     )
     this._connection.statement_execute_non_select(builder.get_statement(), null)
   }
+
+  /**
+   *
+   * Delete all conluns in table
+   * 
+   */
+  delete_all() {
+    this._connection.execute_non_select_command(`
+      DELETE FROM history;
+    `);
+  }
+
   /**
    * update item from database
    * @param {Db_item} db_item 

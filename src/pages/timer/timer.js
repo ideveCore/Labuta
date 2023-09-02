@@ -26,7 +26,7 @@ import Gdk from 'gi://Gdk';
 import GLib from 'gi://GLib';
 import Template from './timer.blp' assert { type: 'uri' };
 import { Db_item } from '../../db.js';
-import { create_sort_date, format_time } from '../../utils.js';
+import { create_sort_date } from '../../utils.js';
 
 export default class Timer extends Adw.Bin {
   static {
@@ -53,6 +53,8 @@ export default class Timer extends Adw.Bin {
     this.application = Gtk.Application.get_default();
     this.application.Timer.$start((timer) => {
       this._stack_timer_controls.visible_child_name = 'running_timer';
+      this._title_entry.set_text(timer.data.title);
+      this._description_entry.set_text(timer.data.description);
       this._title_entry.editable = false;
       this._description_entry.editable = false;
       this._load_time(timer);

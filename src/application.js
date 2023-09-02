@@ -27,6 +27,8 @@ import { gettext as _ } from 'gettext';
 import Window from './window.js';
 import Preferences from './pages/preferences/preferences.js';
 import Shortcuts from './pages/shortcuts/shortcuts.js';
+import './components/history-details/history-details.js';
+
 import {
   getGIRepositoryVersion,
   getGjsVersion,
@@ -35,7 +37,7 @@ import {
 import { getFlatpakInfo } from './utils.js';
 import './pages/timer/timer.js';
 import './pages/statistics/statistics.js';
-import { History } from './pages/history/history.js';
+import { History } from './components/history/history.js';
 import './style.css';
 import Application_data from './application_data.js';
 import Timer from './Timer.js';

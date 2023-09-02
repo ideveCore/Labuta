@@ -33,3 +33,5 @@ src/components/small-window/small-window.js
 src/Timer.js
 src/components/history-details/history-details.blp
 src/components/history-details/history-details.js
+src/components/history/history.blp
+src/components/history/history.js

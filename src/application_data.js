@@ -32,6 +32,7 @@ import { create_sort_date } from './utils.js';
 export default class Application_data {
   constructor() {
     this._db = new Database();
+    this.data = null;
   }
 
   /**
@@ -86,6 +87,7 @@ export default class Application_data {
    */
   save(data) {
     if (!data) return null
+    this.data = null;
     return this._db.save(data);
   }
 
@@ -96,7 +98,8 @@ export default class Application_data {
    *
    */
   get() {
-    return this._db.query(this._get_all_query());
+    if (!this.data) this.data = this._db.query(this._get_all_query());
+    return this.data;
   }
 
   /**
@@ -121,6 +124,7 @@ export default class Application_data {
    */
   update(data) {
     if (!data) return null;
+    this.data = null;
     return this._db.update(data);
   }
 
@@ -131,8 +135,19 @@ export default class Application_data {
    * @returns {null}
    */
   delete(id) {
-    if (!id) return null
+    if (!id) return null;
+    this.data = null;
     return this._db.delete(id);
+  }
+
+  /**
+   *
+   * Delete all item from table
+   *
+   */
+  delete_all() {
+    this._db.delete_all();
+    this.data = null;
   }
 
   /**

@@ -23,9 +23,9 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import HistoryDetails from '../../components/history-details/history-details.js';
 import Template from './history.blp' assert { type: 'uri' };
 import { format_time } from '../../utils.js';
+import { Db_item } from '../../db.js';
 
 export class History extends Adw.PreferencesWindow {
   static {
@@ -33,11 +33,10 @@ export class History extends Adw.PreferencesWindow {
       Template,
       InternalChildren: [
         'toggle_view_work_break_time_button',
-        // 'history_scroll',
-        // 'history_headerbox',
-        // 'stack',
+        'stack',
         'list_box',
         'leaflet',
+        'history_details',
         'details_page',
         'primary_menu',
         'delete_button',
@@ -78,54 +77,22 @@ export class History extends Adw.PreferencesWindow {
       this._list_box.set_sort_func(this._sort_history.bind(this))
     });
     clear_action.connect('activate', (simple_action) => {
-      let id = 0
-      this.Application.data.get().forEach((item, index) => {
-        this.Application.data.delete(item.id)
-        this._list_box.remove(this._list_box.get_row_at_index(index - id));
-        id++
-      });
-      this._load_history_list();
+      this.Application.data.delete_all();
+      this._stack.visible_child_name = "empty_history";
     })
 
     this.search_action_group.add_action(sorting_action);
     this.search_action_group.add_action(order_action);
     this.history_action_group.add_action(clear_action);
-
   }
-  _leaflet_navigate_back() {
-    this._leaflet.navigate(Adw.NavigationDirection.BACK);
-  }
-  _leaflet_navigate_forward() {
-    this._leaflet.navigate(Adw.NavigationDirection.FORWARD);
-  }
-  _create_lealflet_deatails_page(id) {
-    const item = this.Application.data.get_by_id(id)[0];
-    const details = new HistoryDetails({
-      id: item.id,
-      title: item.title,
-      parent: this,
-      sessions: item.sessions,
-      subtitle: item.display_date,
-      work_time: item.work_time,
-      break_time: item.break_time,
-      description: item.description,
-    });
-    // Remove existent details
-    const exist_details = this._details_page.get_row_at_index(0)
-    if (exist_details) this._details_page.remove(exist_details);
-    this._details_page.append(details);
-
-    this._leaflet_navigate_forward();
-  }
-  _sort_history(history_a, history_b, _data) {
-    const a = history_a
-    const b = history_b
-    if (this.Application.settings.get_string('sort-by') === 'name') {
-      return this.Application.settings.get_string('order-by') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
-    }
-    return this.Application.settings.get_string('order-by') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
-  }
-  create_row(item) {
+  /**
+   *
+   * Create history row
+   * @param {Db_item} item
+   * @returns {Adw.ActionRow} row
+   *
+   */
+  _create_row(item) {
     const row = new Adw.ActionRow();
     row.set_title(item.title);
     row.set_subtitle(item.display_date);
@@ -159,18 +126,86 @@ export class History extends Adw.PreferencesWindow {
       this.Application.data.delete(item.id);
       this._list_box.remove(row);
     });
-    this._list_box.append(row);
+    return row
   }
+
+  /**
+   *
+   * Create details page of history
+   * @param {number} id
+   *
+   */
+  _create_lealflet_deatails_page(id) {
+    const item = this.Application.data.get_by_id(id)[0];
+    this._history_details.update_details({
+      id: item.id,
+      title: item.title,
+      parent: this,
+      sessions: item.sessions,
+      subtitle: item.display_date,
+      work_time: item.work_time,
+      break_time: item.break_time,
+      description: item.description,
+    });
+    this._leaflet_navigate_forward();
+  }
+
+  /**
+   * 
+   * Leaflet navigate back method
+   *
+   */
+  _leaflet_navigate_back() {
+    this._leaflet.navigate(Adw.NavigationDirection.BACK);
+  }
+
+  /**
+   * 
+   * Leaflet navigate forward method 
+   *
+   */
+  _leaflet_navigate_forward() {
+    this._leaflet.navigate(Adw.NavigationDirection.FORWARD);
+  }
+
+  /**
+   *
+   * Load history 
+   *
+   */
   _load_history_list() {
     if (this.Application.data.get().length === 0) return;
-    // this._stack.visible_child_name = "history";
+    this._stack.visible_child_name = "history";
     this._list_box.set_sort_func(this._sort_history.bind(this));
     this.Application.data.get().forEach((item) => {
-      this.create_row(item);
+      this._list_box.append(this._create_row(item));
     })
     this._selected_rows = [];
     this._load_display_total_time();
   }
+  /**
+   *
+   * Set sort function in Gtk.ListBox
+   * @param {this._create_row} history_a
+   * @param {this._create_row} history_b
+   * @param {*} _data 
+   * @returns {*}
+   * @example Return sort function
+   *
+   */
+  _sort_history(history_a, history_b, _data) {
+    const a = history_a
+    const b = history_b
+    if (this.Application.settings.get_string('sort-by') === 'name') {
+      return this.Application.settings.get_string('order-by') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+    }
+    return this.Application.settings.get_string('order-by') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
+  }
+  /**
+   *
+   * Load display time
+   *
+   */
   _load_display_total_time() {
     let total_work_timer = 0;
     let total_break_timer = 0;
@@ -194,6 +229,11 @@ export class History extends Adw.PreferencesWindow {
       this._toggle_view_work_break_time_button.set_label(format_time(total_break_timer));
     }
   }
+  /**
+   *
+   * Delete selectd history row
+   *
+   */
   _on_delete() {
     this._selected_rows.forEach((item) => {
       this.Application.data.delete(item.id);
@@ -204,6 +244,13 @@ export class History extends Adw.PreferencesWindow {
     this._delete_button.set_sensitive(false);
     this._delete_button.set_icon_name('user-trash-symbolic');
   }
+
+  /**
+   *
+   * Called when history row selected
+   * @param {ths._create_row} row 
+   *
+   */
   _on_select_row(row) {
     if (row.selected) {
       this._selected_rows.push(row)

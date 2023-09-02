@@ -41,21 +41,37 @@ template $Gjs_History : Adw.PreferencesWindow {
             icon-name: "open-menu-symbolic";
             tooltip-text: _("History menu");
           }
-
         }
         Adw.PreferencesGroup {
           Gtk.Box {
-            vexpand: true;
-            Gtk.ScrolledWindow {
-              hexpand: true;
-              Gtk.ListBox list_box {
-                styles ["boxed-list"]
-                valign: start;
-                margin-top: 12;
-                margin-bottom: 12;
-                margin-start: 12;
-                margin-end: 12;
-                selection-mode: none;
+            Gtk.Stack stack {
+              transition-type: crossfade;
+              vexpand: true;
+              Gtk.StackPage {
+                name: "empty_history";
+                child:
+                  Adw.StatusPage {
+                    icon-name: "history-undo-symbolic";
+                    Gtk.Label {
+                      styles ["title-1"]
+                      label: _("Empty history");
+                    }
+                  };
+              }
+              Gtk.StackPage {
+                name: "history";
+                child: Gtk.ScrolledWindow {
+                  hexpand: true;
+                  Gtk.ListBox list_box {
+                    styles ["boxed-list"]
+                    valign: start;
+                    margin-top: 12;
+                    margin-bottom: 12;
+                    margin-start: 12;
+                    margin-end: 12;
+                    selection-mode: none;
+                  }
+                };
               }
             }
           }
@@ -75,6 +91,7 @@ template $Gjs_History : Adw.PreferencesWindow {
           }
         }
         ListBox details_page {
+          $HistoryDetails history_details {}
         }
       };
     }
