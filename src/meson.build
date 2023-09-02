@@ -36,4 +36,4 @@ configure_file(
   install_dir: pkgdatadir
 )
 
-subdir('icons')
+subdir('assets/icons')

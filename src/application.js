@@ -23,8 +23,9 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
+import Gdk from 'gi://Gdk';
 import { gettext as _ } from 'gettext';
-import './style.css';
+import Style from './assets/style.css';
 import Window from './window.js';
 import './pages/timer/timer.js';
 import './pages/statistics/statistics.js';
@@ -40,6 +41,7 @@ import {
 import { get_flatpak_info } from './utils.js';
 import Application_data from './application_data.js';
 import Timer from './Timer.js';
+let provider;
 
 /**
  *
@@ -296,5 +298,16 @@ Blueprint 0.10.0
       );
     }
     active_window.present();
+
+    // Load styles in app
+    if (!provider) {
+      provider = new Gtk.CssProvider();
+      provider.load_from_resource(Style);
+      Gtk.StyleContext.add_provider_for_display(
+        Gdk.Display.get_default(),
+        provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+      );
+    }
   }
 };
