@@ -84,19 +84,19 @@ export default class Preferences extends Adw.PreferencesWindow {
       Gio.SettingsBindFlags.DEFAULT,
     );
     this._application.settings.bind(
-      "work-time",
+      "work-time-st",
       this._set_work_time,
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
     this._application.settings.bind(
-      "break-time",
+      "break-time-st",
       this._set_break_time,
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
     this._application.settings.bind(
-      "long-break",
+      "long-break-st",
       this._set_long_break,
       "value",
       Gio.SettingsBindFlags.DEFAULT,

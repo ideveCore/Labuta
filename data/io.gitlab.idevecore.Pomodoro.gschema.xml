@@ -47,13 +47,13 @@
     <key name="is-fullscreen" type="b">
       <default>false</default>
     </key>
-    <key type="i" name="work-time">
+    <key type="i" name="work-time-st">
       <default>25</default>
     </key>
-    <key type="i" name="break-time">
+    <key type="i" name="break-time-st">
       <default>5</default>
     </key>
-    <key type="i" name="long-break">
+    <key type="i" name="long-break-st">
       <default>15</default>
     </key>
     <key type="i" name="sessions-long-break">
