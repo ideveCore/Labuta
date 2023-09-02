@@ -25,10 +25,17 @@ import GLib from 'gi://GLib';
 import Template from './statistics.blp' assert { type: 'uri' };
 import { format_time } from '../../utils.js';
 
+/**
+ *
+ * Create statistics page
+ * @class
+ *
+ */
 export default class Statistics extends Adw.Bin {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: 'Statistics',
       InternalChildren: [
         'work_time_today',
         'work_time_today_label',
@@ -48,6 +55,12 @@ export default class Statistics extends Adw.Bin {
     this._current_date = GLib.DateTime.new_now_local();
     this._load_statistics_data();
   }
+
+  /**
+   *
+   * Load statistics mehtod
+   *
+   */
   _load_statistics_data() {
     this._load_work_time();
     this._load_break_time();
@@ -61,6 +74,11 @@ export default class Statistics extends Adw.Bin {
   _get_month() {
     return this._current_date.get_month();
   }
+  /**
+   *
+   * Load work time times
+   *
+   */
   _load_work_time() {
     const today = this.application.data.get().filter((item) => item.day === this._get_day())
     const yesterday = this.application.data.get().filter((item) => item.day === this._get_day() - 1);
@@ -110,6 +128,11 @@ export default class Statistics extends Adw.Bin {
     this._work_time_month_label.set_text(format_time(work_time_month));
     this._work_time_month.set_subtitle(percentage_work_time_month_last_month())
   }
+  /**
+   *
+   * Load brean time times
+   *
+   */
   _load_break_time() {
     const today = this.application.data.get().filter((item) => item.day === this._get_day())
     const week = this.application.data.get().filter((item) => item.week === this._get_week());

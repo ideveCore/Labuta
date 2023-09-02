@@ -21,17 +21,23 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
 import Gdk from 'gi://Gdk';
 import GLib from 'gi://GLib';
 import Template from './timer.blp' assert { type: 'uri' };
 import { Db_item } from '../../db.js';
-import { create_sort_date } from '../../utils.js';
+import { create_timestamp } from '../../utils.js';
 
+/**
+ *
+ * Create timer page
+ * @class
+ *
+ */
 export default class Timer extends Adw.Bin {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: 'Timer',
       InternalChildren: [
         "tag_label",
         "tag_area",
@@ -45,10 +51,10 @@ export default class Timer extends Adw.Bin {
   }
   constructor() {
     super();
-    var sizeGroup = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
-    sizeGroup.add_widget(this._tag_area);
-    sizeGroup.add_widget(this._tag_label);
-    this._tag_area.set_draw_func(this._DrawTag);
+    var size_group = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
+    size_group.add_widget(this._tag_area);
+    size_group.add_widget(this._tag_label);
+    this._tag_area.set_draw_func(this._draw_tag);
 
     this.application = Gtk.Application.get_default();
     this.application.Timer.$start((timer) => {
@@ -89,6 +95,10 @@ export default class Timer extends Adw.Bin {
     });
     this._load_time(this.application.Timer);
   }
+  /**
+   *
+   * Load time method
+   */
   _load_time(timer) {
     if (timer.current_work_time === timer.work_time) {
       this._timer_label.get_style_context().remove_class('error');
@@ -103,6 +113,12 @@ export default class Timer extends Adw.Bin {
       this._pomodoro_counts.set_visible(true);
     }
   }
+
+  /**
+   *
+   * Get current date formatted method
+   *
+   */
   _get_date() {
     const current_date = GLib.DateTime.new_now_local();
     const day_of_week = current_date.format('%A');
@@ -111,12 +127,24 @@ export default class Timer extends Adw.Bin {
     const year = current_date.get_year();
     return `${day_of_week}, ${day_of_month} ${_("of")} ${month_of_year} ${_("of")} ${year}`
   }
-  _get_schedule() {
+
+  /**
+   *
+   * Get current time method
+   *
+   */
+  _get_time() {
     const hour = new GLib.DateTime().get_hour();
     const minute = new GLib.DateTime().get_minute();
     const second = new GLib.DateTime().get_second();
     return `${hour > 9 ? hour : '0' + hour}:${minute > 9 ? minute : '0' + minute}:${second > 9 ? second : '0' + second}`
   }
+
+  /**
+   *
+   * Create pause or start timer method
+   *
+   */
   _on_start_pause_timer() {
     const title = this._title_entry.get_text();
     const description = this._description_entry.get_text();
@@ -124,7 +152,7 @@ export default class Timer extends Adw.Bin {
       const current_date = GLib.DateTime.new_now_local()
       const db_item = new Db_item({
         id: null,
-        title: title ? title : `${_('Started at')} ${this._get_schedule()}`,
+        title: title ? title : `${_('Started at')} ${this._get_time()}`,
         description,
         work_time: 0,
         break_time: 0,
@@ -134,7 +162,7 @@ export default class Timer extends Adw.Bin {
         week: current_date.get_week_of_year(),
         month: current_date.get_month(),
         display_date: this._get_date(),
-        timestamp: Math.floor(create_sort_date(null, null, null) / 1000),
+        timestamp: Math.floor(create_timestamp(null, null, null) / 1000),
         sessions: 0,
       })
       this.data = this.application.data.save(db_item);
@@ -148,13 +176,30 @@ export default class Timer extends Adw.Bin {
       this._stack_timer_controls.visible_child_name = 'running_timer';
     }
   }
+
+  /**
+   *
+   * Reset timer method
+   */
   _on_reset_timer() {
     this.application.Timer.reset();
   }
+
+  /**
+   *
+   * Stop timer method
+   *
+   */
   _on_stop_timer() {
     this.application.Timer.stop();
   }
-  _DrawTag(area, cr, width, height) {
+
+  /**
+   *
+   * Draw pomodoro sessions element
+   *
+   */
+  _draw_tag(area, cr, width, height) {
     const color = new Gdk.RGBA();
     color.parse('rgba(220 ,20 ,60 , 1)');
     Gdk.cairo_set_source_rgba(cr, color);

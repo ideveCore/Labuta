@@ -24,6 +24,12 @@ import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Template from './preferences.blp' assert { type: 'uri' };
 
+/**
+ *
+ * Create Preferences page
+ * @class
+ *
+ */
 export default class Preferences extends Adw.PreferencesWindow {
   static {
     GObject.registerClass({
@@ -47,6 +53,11 @@ export default class Preferences extends Adw.PreferencesWindow {
     this._application = application;
     this._set_settings_bind_states();
   }
+  /**
+   *
+   * Set settings bind functions
+   *
+   */
   _set_settings_bind_states() {
     this._application.settings.bind(
       "run-in-background",

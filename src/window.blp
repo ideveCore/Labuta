@@ -48,7 +48,7 @@ template $Window : Adw.ApplicationWindow {
             use-underline: true;
             icon-name: "hourglass-symbolic";
             child:
-              $Gjs_Timer {};
+              $Timer {};
           }
           Adw.ViewStackPage {
             name: "statistics";
@@ -56,7 +56,7 @@ template $Window : Adw.ApplicationWindow {
             use-underline: true;
             icon-name: "profit-symbolic";
             child:
-              $Gjs_Statistics {};
+              $Statistics {};
           }
         }
         Adw.ViewSwitcherBar {
@@ -83,7 +83,7 @@ menu primary_menu {
 
     item {
       label: _("_Keyboard shortcuts");
-      action: "app.shortcuts";
+      action: "win.show-help-overlay";
     }
 
     item {

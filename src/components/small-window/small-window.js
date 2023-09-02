@@ -56,10 +56,10 @@ export class SmallWindow extends Adw.Window {
   constructor() {
     super();
     this._application = Gtk.Application.get_default();
-    const sizeGroup = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
-    sizeGroup.add_widget(this._tag_area);
-    sizeGroup.add_widget(this._tag_label);
-    this._tag_area.set_draw_func(this._DrawTag);
+    const size_group = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
+    size_group.add_widget(this._tag_area);
+    size_group.add_widget(this._tag_label);
+    this._tag_area.set_draw_func(this._draw_tag);
 
     this._load_timer(this._application.Timer);
     this._application.Timer.$((timer) => {
@@ -86,6 +86,11 @@ export class SmallWindow extends Adw.Window {
     });
     this._setup_event_controller();
   }
+  /**
+   *
+   * Load timer data
+   *
+   */
   _load_timer(timer) {
     if (timer.current_work_time === timer.work_time) {
       this._timer_label.get_style_context().remove_class('error');
@@ -100,6 +105,12 @@ export class SmallWindow extends Adw.Window {
     }
 
   }
+
+  /**
+   *
+   * Setup event controles (Mouse enter|leave)...
+   *
+   */
   _setup_event_controller() {
     const controller = new Gtk.EventControllerMotion();
     controller.connect("enter", () => {
@@ -121,7 +132,12 @@ export class SmallWindow extends Adw.Window {
   _on_stop_timer() {
     this._application.Timer.stop();
   }
-  _DrawTag(area, cr, width, height) {
+
+  /**
+   *
+   * Create and add styles in Pomodoro session element
+   */
+  _draw_tag(area, cr, width, height) {
     const color = new Gdk.RGBA();
     color.parse('rgba(220 ,20 ,60 , 1)');
     Gdk.cairo_set_source_rgba(cr, color);

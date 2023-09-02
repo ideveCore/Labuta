@@ -24,24 +24,29 @@ import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import { gettext as _ } from 'gettext';
+import './style.css';
 import Window from './window.js';
-import Preferences from './pages/preferences/preferences.js';
-import Shortcuts from './pages/shortcuts/shortcuts.js';
+import './pages/timer/timer.js';
+import './pages/statistics/statistics.js';
 import './components/history-details/history-details.js';
+import Preferences from './components/preferences/preferences.js';
+import { History } from './components/history/history.js';
 
 import {
   getGIRepositoryVersion,
   getGjsVersion,
   getGLibVersion,
 } from "../troll/src/util.js";
-import { getFlatpakInfo } from './utils.js';
-import './pages/timer/timer.js';
-import './pages/statistics/statistics.js';
-import { History } from './components/history/history.js';
-import './style.css';
+import { get_flatpak_info } from './utils.js';
 import Application_data from './application_data.js';
 import Timer from './Timer.js';
 
+/**
+ *
+ * Create Application
+ * @class
+ *
+ */
 export default class Application extends Adw.Application {
   static {
     GObject.registerClass(this);
@@ -51,16 +56,20 @@ export default class Application extends Adw.Application {
     this.settings = new Gio.Settings({
       schema_id: pkg.name,
     });
-    this.timer_state = 'stopped';
     this.data = new Application_data().setup();
     this.Timer = new Timer(this);
     this._setup_actions();
   }
+
+  /**
+   *
+   * Setup GAction method
+   *
+   */
   _setup_actions() {
     const quit_action = new Gio.SimpleAction({ name: 'quit' });
     const preferences_action = new Gio.SimpleAction({ name: 'preferences' });
     const history_action = new Gio.SimpleAction({ name: 'history' });
-    const shortcuts_action = new Gio.SimpleAction({ name: 'shortcuts' });
     const show_about_action = new Gio.SimpleAction({ name: 'about' });
     const active_action = new Gio.SimpleAction({ name: 'open' });
 
@@ -78,9 +87,6 @@ export default class Application extends Adw.Application {
       this.history = new History(this);
       this.history.present();
     });
-    shortcuts_action.connect('activate', () => {
-      new Shortcuts(this).present();
-    })
     show_about_action.connect('activate', () => {
       const aboutWindow = this._create_about_dialog();
       aboutWindow.present();
@@ -91,13 +97,19 @@ export default class Application extends Adw.Application {
     this.add_action(quit_action);
     this.add_action(preferences_action);
     this.add_action(history_action);
-    this.add_action(shortcuts_action);
     this.set_accels_for_action('app.quit', ['<primary>q']);
+    this.set_accels_for_action('win.show-help-overlay', ['<Primary>question'])
     this.add_action(show_about_action);
     this.add_action(active_action);
   }
+
+  /**
+   *
+   * Create About dialog method
+   *
+   */
   _create_about_dialog() {
-    const flatpak_info = getFlatpakInfo();
+    const flatpak_info = get_flatpak_info();
     const debug_info = `
 ${pkg.name} ${pkg.version}
 ${GLib.get_os_info("ID")} ${GLib.get_os_info("VERSION_ID")}
@@ -126,7 +138,7 @@ Blueprint 0.10.0
 
   /**
    *
-   * Request quit
+   * Request quit method
    *
    */
   _request_quit() {
@@ -143,6 +155,13 @@ Blueprint 0.10.0
     if (!this.active_window)
       return
   }
+
+  /**
+   *
+   * Open or close dialog method
+   * Open if application not permitted run in background
+   *
+   */
   _open_close_option_dialog() {
     let dialog = new Adw.MessageDialog();
     dialog.set_heading(_('Stop timer?'));
@@ -165,6 +184,15 @@ Blueprint 0.10.0
     }
     this.quit()
   }
+
+  /**
+   *
+   * Send notification method
+   * @param {Object} notification 
+   * @param {string} notification.title 
+   * @param {string} notification.body 
+   *
+   */
   _send_notification({ title, body }) {
     const notification = new Gio.Notification();
     notification.set_title(title);
@@ -173,6 +201,15 @@ Blueprint 0.10.0
     notification.set_default_action("app.open");
     this.send_notification("lunch-is-ready", notification);
   }
+
+  /**
+   *
+   * Play sound method
+   * @param {Object} sound 
+   * @param {string} sound.name 
+   * @param {Gio.cancellable||null} sound.cancellable 
+   *
+   */
   _play_sound({ name, cancellable }) {
     if (!this.settings.get_boolean('play-sounds')) return
     return new Promise((resolve, reject) => {
@@ -189,6 +226,13 @@ Blueprint 0.10.0
       );
     });
   }
+
+  /**
+   *
+   * Load timer status in portal
+   * @param {string} message 
+   *
+   */
   _load_background_portal_status(message) {
     const connection = Gio.DBus.session;
     const messageVariant = new GLib.Variant('(a{sv})', [{
@@ -216,6 +260,12 @@ Blueprint 0.10.0
       }
     );
   }
+
+  /**
+   *
+   * Create main window method
+   *
+   */
   vfunc_activate() {
     let { active_window } = this;
     if (!active_window) {

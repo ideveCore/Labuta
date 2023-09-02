@@ -19,14 +19,20 @@
  */
 
 import GObject from 'gi://GObject';
-import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Template from './window.blp' assert { type: 'uri' };
 import ThemeSelector from './components/theme-selector/theme-selector.js';
+import Shortcuts from './components/shortcuts/shortcuts.js';
 import { SmallWindow } from './components/small-window/small-window.js';
 
+/**
+ *
+ * Create Window page
+ * @class
+ *
+ */
 export default class Window extends Adw.ApplicationWindow {
   static {
     GObject.registerClass({
@@ -43,26 +49,15 @@ export default class Window extends Adw.ApplicationWindow {
   constructor(application) {
     super({ application });
 
-    // Add theme selector from troll into primary menu
     const theme_selector = new ThemeSelector();
-    // console.log(theme_selector)
     this._menu_button.get_popover().add_child(theme_selector, 'theme');
-
+    this.set_help_overlay(new Shortcuts(application));
     this._small_window = new SmallWindow();
 
-    this.connect('close-request', () => {
-      application._request_quit()
-      return true
-    })
-
-    this._stack.connect('notify::visible-child', () => {
-      if (this._stack.visible_child_name == 'statistics') {
-        this._stack.visible_child._load_statistics_data();
-      }
-    });
     this._setup_actions();
 
     this._small_window.insert_action_group("window", this.window_group);
+
     application.Timer.$start(() => {
       this._shorten_window.set_sensitive(true);
     });
@@ -71,16 +66,26 @@ export default class Window extends Adw.ApplicationWindow {
     });
 
     this._shorten_window.set_sensitive(false);
+
+    this.connect('close-request', () => {
+      application._request_quit()
+      return true
+    })
+    this._stack.connect('notify::visible-child', () => {
+      if (this._stack.visible_child_name == 'statistics') {
+        this._stack.visible_child._load_statistics_data();
+      }
+    });
+
   }
+  /**
+   *
+   * Setup actions
+   *
+   */
   _setup_actions() {
-    const navigate_action = new Gio.SimpleAction({ name: 'navigate', parameter_type: new GLib.Variant('s', '').get_type() })
     const toggle_small_window = new Gio.SimpleAction({ name: 'toggle-small-window', parameter_type: new GLib.Variant('s', '').get_type() });
     this.window_group = new Gio.SimpleActionGroup();
-
-    navigate_action.connect('activate', (simple_action, parameter) => {
-      const value = parameter.get_string();
-      this.navigate_to(value[0]);
-    });
 
     toggle_small_window.connect('activate', (simple_action, parameter) => {
       const value = parameter.get_string()[0];
@@ -92,17 +97,7 @@ export default class Window extends Adw.ApplicationWindow {
         this._small_window.hide();
       }
     });
-    this.add_action(navigate_action);
     this.add_action(toggle_small_window);
     this.window_group.add_action(toggle_small_window)
-  }
-  /**
-   *
-   * Navigate for page
-   * @param {string} navigate
-   *
-   */
-  navigate_to(navigate) {
-    this._stack.visible_child_name = navigate;
   }
 }

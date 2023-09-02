@@ -20,20 +20,26 @@
 
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
-import Adw from 'gi://Adw';
 import Template from './shortcuts.blp' assert { type: 'uri' };
 
+/**
+ *
+ * Create Shortcuts window
+ * @class
+ *
+ */
 export default class Shortcuts extends Gtk.ShortcutsWindow {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: "Shortcuts",
       InternalChildren: [],
     }, this);
   }
   constructor(application) {
-    super();
-    this.Application = application;
-    this.transient_for = this.Application.active_window;
+    super({
+      transient_for: application.get_active_window(),
+    });
   }
 }
 

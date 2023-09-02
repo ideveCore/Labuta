@@ -1,4 +1,26 @@
+/* Timer.js
+ *
+ * Copyright 2023 Ideve Core
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import GLib from 'gi://GLib';
+import Adw from 'gi://Adw';
+import { Db_item } from './db.js';
 
 /**
  *
@@ -7,6 +29,12 @@ import GLib from 'gi://GLib';
  *
  */
 export default class Timer {
+  /**
+   *
+   * Create Timer instance
+   * @param {Adw.ApplicationWindow} application 
+   *
+   */
   constructor(application) {
     this._application = application;
     this._listeners = [];
@@ -27,6 +55,11 @@ export default class Timer {
 
     this._setup_settings();
   }
+  /**
+   *
+   * Run time 
+   *
+   */
   _run() {
     GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => {
       if (this.timer_state === 'stopped') {
@@ -85,16 +118,19 @@ export default class Timer {
       return GLib.SOURCE_CONTINUE
     })
   };
+  /**
+  *
+  * Start timer
+  * @param {Db_item} data 
+  *
+  */
   start(data) {
     if (this.timer_state === 'stopped') {
-      // this.work_time = this._application.settings.get_int('work-time') * 60;
-      this.work_time = 2;
+      this.work_time = this._application.settings.get_int('work-time') * 60;
       this.current_work_time = this.work_time;
-      // this.break_time = this._application.settings.get_int('break-time') * 60;
-      this.break_time = 1;
+      this.break_time = this._application.settings.get_int('break-time') * 60;
       this.current_break_time = this.break_time;
-      // this.long_break = this._application.settings.get_int('long-break') * 60;
-      this.long_break = 3;
+      this.long_break = this._application.settings.get_int('long-break') * 60;
       this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
       this.data = data
       this.timer_state = 'running';
@@ -108,6 +144,12 @@ export default class Timer {
       this.timer_state = 'paused';
     }
   }
+
+  /**
+   * 
+   * Reset timer method
+   *
+   */
   reset() {
     this.current_work_time = this.work_time;
     this.current_break_time = this.break_time;
@@ -115,6 +157,11 @@ export default class Timer {
     this.timer_state = 'stopped';
     this._stop_listener(this);
   }
+  /**
+   *
+   * Stop timer method
+   *
+   */
   stop() {
     this.work_time = this._application.settings.get_int('work-time') * 60;
     this.break_time = this._application.settings.get_int('break-time') * 60;
@@ -127,6 +174,11 @@ export default class Timer {
     this._stop_listener(this);
     this.data = {};
   }
+  /**
+   *
+   * Listerners
+   *
+   */
   $(listener) {
     this._listeners.push(listener);
   }
@@ -200,6 +252,11 @@ export default class Timer {
       listener(this);
     }
   }
+  /**
+   *
+   * Format timer method
+   *
+   */
   format_time() {
     let hours = Math.floor(Math.abs(this.current_work_time < 0 ? this.current_work_time + this.current_break_time : this.current_work_time) / 60 / 60)
     let minutes = Math.floor(Math.abs(this.current_work_time < 0 ? this.current_work_time + this.current_break_time : this.current_work_time) / 60) % 60;
@@ -216,5 +273,4 @@ export default class Timer {
     }
     return `${hours}:${minutes}:${seconds}`
   }
-
 }

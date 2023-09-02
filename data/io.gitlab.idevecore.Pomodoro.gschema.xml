@@ -33,7 +33,7 @@
         <choice value="ascending" />
         <choice value="descending" />
       </choices>
-      <default>"ascending"</default>
+      <default>"descending"</default>
     </key>
     <key name="width" type="i">
       <default>420</default>

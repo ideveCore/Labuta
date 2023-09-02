@@ -21,7 +21,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import { Database, Query_builder, Db_item, Pomodoro_query } from './db.js'
-import { create_sort_date } from './utils.js';
+import { create_timestamp } from './utils.js';
 
 /**
  *
@@ -51,7 +51,6 @@ export default class Application_data {
       const decoder = new TextDecoder('utf-8');
       const data = JSON.parse(decoder.decode(contents));
       data.forEach((item) => {
-        console.log(item);
         const db_item = new Db_item({
           id: null,
           title: item.title,
@@ -64,7 +63,7 @@ export default class Application_data {
           year: item.date.year,
           month: item.date.month,
           display_date: item.date.display_date,
-          timestamp: Math.floor(create_sort_date(item.date.year, item.date.month, item.date.day_of_month) / 1000),
+          timestamp: Math.floor(create_timestamp(item.date.year, item.date.month, item.date.day_of_month) / 1000),
           sessions: item.counts,
         });
         this.save(db_item)

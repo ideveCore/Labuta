@@ -27,6 +27,12 @@ import Template from './history.blp' assert { type: 'uri' };
 import { format_time } from '../../utils.js';
 import { Db_item } from '../../db.js';
 
+/**
+ *
+ * Create History window
+ * @class
+ *
+ */
 export class History extends Adw.PreferencesWindow {
   static {
     GObject.registerClass({
@@ -57,6 +63,11 @@ export class History extends Adw.PreferencesWindow {
     this._setup_gactions();
     this._load_history_list();
   }
+  /**
+   *
+   * Setup GAction methods
+   *
+   */
   _setup_gactions() {
     this.search_action_group = new Gio.SimpleActionGroup();
     this.history_action_group = new Gio.SimpleActionGroup();
@@ -85,6 +96,7 @@ export class History extends Adw.PreferencesWindow {
     this.search_action_group.add_action(order_action);
     this.history_action_group.add_action(clear_action);
   }
+
   /**
    *
    * Create history row
@@ -183,6 +195,7 @@ export class History extends Adw.PreferencesWindow {
     this._selected_rows = [];
     this._load_display_total_time();
   }
+
   /**
    *
    * Set sort function in Gtk.ListBox
@@ -201,6 +214,7 @@ export class History extends Adw.PreferencesWindow {
     }
     return this.Application.settings.get_string('order-by') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
   }
+
   /**
    *
    * Load display time
@@ -229,6 +243,7 @@ export class History extends Adw.PreferencesWindow {
       this._toggle_view_work_break_time_button.set_label(format_time(total_break_timer));
     }
   }
+
   /**
    *
    * Delete selectd history row
