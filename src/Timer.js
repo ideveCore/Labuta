@@ -126,11 +126,11 @@ export default class Timer {
   */
   start(data) {
     if (this.timer_state === 'stopped') {
-      this.work_time = this._application.settings.get_int('work-time') * 60;
+      this.work_time = this._application.settings.get_int('work-time-st') * 60;
       this.current_work_time = this.work_time;
-      this.break_time = this._application.settings.get_int('break-time') * 60;
+      this.break_time = this._application.settings.get_int('break-time-st') * 60;
       this.current_break_time = this.break_time;
-      this.long_break = this._application.settings.get_int('long-break') * 60;
+      this.long_break = this._application.settings.get_int('long-break-st') * 60;
       this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
       this.data = data
       this.timer_state = 'running';
@@ -165,7 +165,7 @@ export default class Timer {
   stop() {
     this.work_time = this._application.settings.get_int('work-time-st') * 60;
     this.break_time = this._application.settings.get_int('break-time-st') * 60;
-    this.long_break = this._application.settings.get_int('long-brea-st') * 60;
+    this.long_break = this._application.settings.get_int('long-break-st') * 60;
     this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
     this.current_break_time = this.break_time;
