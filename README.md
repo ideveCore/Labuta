@@ -37,9 +37,8 @@ A simple timer application, its main objective is to be simple, and intuitive.
 ## Donate
 If you like this project and have some spare money left, consider donating:
 
-### Ko-fi and Github Sponsors
+### Ko-fi
 <a href='https://ko-fi.com/idevecore'><img width='60' alt='Download on Flathub' src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png'/></a>
-<a href='https://github.com/sponsors/ideveCore'><img width='60' alt='Download on Flathub' src='https://github.githubassets.com/images/email/sponsors/mona.png'/></a>
 
 ## License 
  [GNU General Public License 3 or later](https://www.gnu.org/licenses/gpl-3.0.en.html)
