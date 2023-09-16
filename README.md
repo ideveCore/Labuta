@@ -14,7 +14,7 @@ A simple timer application, its main objective is to be simple, and intuitive.
 - Progress notification
 
 ## Flathub
-<a href='https://flathub.org/apps/io.github.idevecore.Pomodoro'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
+<a href='https://flathub.org/apps/io.gitlab.idevecore.Pomodoro'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
 ## Building
 
