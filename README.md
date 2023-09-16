@@ -37,9 +37,9 @@ A simple timer application, its main objective is to be simple, and intuitive.
 ## Donate
 If you like this project and have some spare money left, consider donating:
 
-### Ko-fi
-<a href='https://ko-fi.com/idevecore'><img width='60' alt='Download on Flathub' src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png'/></a>
-<a href='https://patreon.com/IdeveCore'><img width='60' alt='Download on Flathub' src='https://c5.patreon.com/external/logo/guidelines/logo-standard-lockups.png'/></a>
+### Ko-fi or Patreon
+<a href='https://ko-fi.com/idevecore'><img width='60' alt='To Ko-fi' src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png'/></a>
+<a href='https://patreon.com/IdeveCore'><img width='60' alt='To Patreon' src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogosmarcas.net%2Fwp-content%2Fuploads%2F2020%2F11%2FPatreon-Logo-2013-2017.jpg&f=1&nofb=1&ipt=e6f7675606e3f61043f355654594c8e91710618e09f88bf646b65f6e4e664782&ipo=images'/></a>
 
 ## License 
  [GNU General Public License 3 or later](https://www.gnu.org/licenses/gpl-3.0.en.html)
