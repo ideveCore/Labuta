@@ -220,9 +220,9 @@ Blueprint 0.10.0
    * @param {Gio.cancellable||null} sound.cancellable 
    *
    */
-  _play_sound({ name, cancellable }) {
+  _play_sound({ name, cancellable, iter=1 }) {
     if (!this.settings.get_boolean('play-sounds')) return
-    return new Promise((resolve, reject) => {
+    const sound = new Promise((resolve, reject) => {
       this.gsound.play_full(
         { 'event.id': name },
         cancellable,
@@ -234,7 +234,11 @@ Blueprint 0.10.0
           }
         }
       );
-    });
+    }).then((res) => {
+      if (iter > 1) {
+        this._play_sound({ name, cancellable, iter: --iter })
+      }
+    })
   }
 
   /**

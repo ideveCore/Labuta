@@ -1,0 +1,150 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $SoundPreferences : Adw.Window {
+  default-width: 350;
+  modal: true;
+  title: _('Sound preferences');
+  resizable: false;
+
+  content: Gtk.Box {
+    hexpand: true;
+    vexpand: true;
+    orientation: vertical;
+    Adw.HeaderBar {
+      styles ["flat"]
+    }
+    Adw.PreferencesGroup {
+      margin-start: 10; 
+      margin-end: 10; 
+      margin-bottom: 10; 
+      margin-top: 10; 
+      Adw.ExpanderRow {
+        title: 'Start time sound';
+        subtitle: 'freedesktop';
+        [prefix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'media-playback-start-symbolic';
+          clicked => $_play_start_time_sound();
+        }
+        [prefix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'system-restart-symbolic';
+        }
+        Adw.ActionRow {
+          title: 'message-new-instant';
+          subtitle: 'freedesktop';
+          [suffix]
+          Gtk.Button {
+            halign: center;
+            valign: center;
+            icon-name: 'folder-open-symbolic';
+          }
+        }
+        Adw.ActionRow {
+          title: 'Repeat sound';
+          SpinButton start_time_repeat_sound {
+            valign: center;
+            numeric: true;
+            adjustment:
+              Adjustment {
+                lower: 1;
+                upper: 10;
+                value: 1;
+                page-increment: 1;
+                step-increment: 1;
+              };
+          }
+        }
+      }
+      Adw.ExpanderRow {
+        title: 'Break time sound';
+        subtitle: 'freedesktop';
+        [prefix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'media-playback-start-symbolic';
+          clicked => $_play_break_time_sound();
+        }
+        [prefix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'system-restart-symbolic';
+        }
+        Adw.ActionRow {
+          title: 'complete';
+          subtitle: 'freedesktop';
+          [suffix]
+          Gtk.Button {
+            halign: center;
+            valign: center;
+            icon-name: 'folder-open-symbolic';
+          }
+        }
+        Adw.ActionRow {
+          title: 'Repeat sound';
+          SpinButton break_time_repeat_sound {
+            valign: center;
+            numeric: true;
+            adjustment:
+              Adjustment {
+                lower: 1;
+                upper: 10;
+                value: 1;
+                page-increment: 1;
+                step-increment: 1;
+              };
+          }
+        }
+      }
+      Adw.ExpanderRow {
+        title: 'Finish time sound';
+        subtitle: 'freedesktop';
+        [prefix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'media-playback-start-symbolic';
+          clicked => $_play_finish_time_sound();
+        }
+        [prefix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'system-restart-symbolic';
+        }
+        Adw.ActionRow {
+          title: 'alarm-clock-elapsed';
+          subtitle: 'freedesktop';
+          [suffix]
+          Gtk.Button {
+            halign: center;
+            valign: center;
+            icon-name: 'folder-open-symbolic';
+          }
+        }
+        Adw.ActionRow {
+          title: 'Repeat sound';
+          SpinButton finish_time_repeat_sound {
+            valign: center;
+            numeric: true;
+            adjustment:
+              Adjustment {
+                lower: 1;
+                upper: 10;
+                value: 1;
+                page-increment: 1;
+                step-increment: 1;
+              };
+          }
+        }
+      }
+    }
+  };
+}

@@ -26,6 +26,13 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         icon-name: "sound-wave-symbolic";
         activatable-widget: switch_play_sounds;
         [suffix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'settings-symbolic';
+          sensitive: bind switch_play_sounds.active;
+          clicked => $_open_sound_preferences();
+        }
         Switch switch_play_sounds {
           name: "play-sounds";
           valign: center;
