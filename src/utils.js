@@ -22,6 +22,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
 import GObject from 'gi://GObject';
+import Gst from 'gi://Gst';
 
 /**
  *
@@ -73,3 +74,78 @@ export function get_flatpak_info() {
   }
   return keyFile;
 }
+
+
+
+export class Sound {
+  constructor({ settings }) {
+    this._application = Gtk.Application.get_default();
+    this._settings = JSON.parse(this._application.settings.get_string(settings))
+    this.playbin = Gst.ElementFactory.make('playbin', 'playbin');
+    this.playbin.set_property('volume', 1);
+    this.playbin.set_property('mute', false);
+    this.playbin.set_state(Gst.State.READY);
+
+    if (this._application.settings.get_boolean('play-sounds')) {
+      if (this._settings.type === 'freedesktop') {
+        this._gsound_play(this._settings.uri, this._settings.repeat)
+      } else {
+        this._gst_play(this._settings.uri, this._settings.repeat)
+      }
+    }
+  }
+  _gsound_play(name, repeat) {
+    const sound = new Promise((resolve, reject) => {
+      this._application.gsound.play_full(
+        { 'event.id': name },
+        null,
+        (source, res) => {
+          try {
+            resolve(source.play_full_finish(res));
+          } catch (e) {
+            reject(e);
+          }
+        }
+      );
+    }).then((res) => {
+      if (repeat > 1) {
+        this._gsound_play(name, --repeat)
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+
+  }
+  _gst_play(uri, repeat) {
+    this.playbin.set_property('uri', uri);
+    this.bus = this.playbin.get_bus()
+    this.bus.add_signal_watch()
+    this.bus.connect('message::error', (error, message) => {
+      log('Playback error:', message.parse_error())
+    })
+    this.bus.connect('message::eos', () => {
+      this.playbin.set_state(Gst.State.READY)
+      if (repeat > 1) {
+        this._gst_play(uri, --repeat)
+      }
+
+    })
+    this.playbin.set_state(Gst.State.PLAYING)
+  }
+  // mount_path() {
+  //   const uri = `resource://${this._application.resource_base_path}/${this._sound_id}`
+  //   this.playbin.set_property('uri', uri);
+  // }
+  // play() {
+  //   this.bus = this.playbin.get_bus()
+  //   this.bus.add_signal_watch()
+  //   this.bus.connect('message::error', (error) => {
+  //     log(`${error}`)
+  //   })
+  //   this.bus.connect('message::eos', () => {
+  //     this.playbin.set_state(Gst.State.READY)
+  //   })
+  //   this.playbin.set_state(Gst.State.PLAYING)
+  // }
+}
+

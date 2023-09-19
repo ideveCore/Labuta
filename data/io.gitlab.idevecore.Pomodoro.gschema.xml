@@ -59,6 +59,16 @@
     <key type="i" name="sessions-long-break">
       <default>4</default>
     </key>
+    <key type="s" name="start-time-sound">
+      <default>'{"type":"freedesktop", "uri": "message-new-instant", "repeat":1}'</default>
+    </key>
+    <key type="s" name="break-time-sound">
+      <default>'{"type":"freedesktop", "uri": "complete", "repeat":1}'</default>
+    </key>
+    <key type="s" name="finish-time-sound">
+      <default>'{"type":"freedesktop", "uri": "alarm-clock-elapsed", "repeat":1}'</default>
+    </key>
   </schema>
 </schemalist>
+
 
