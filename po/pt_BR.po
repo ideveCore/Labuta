@@ -4,17 +4,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pomodoro master\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/idevecore/pomodoro/-/issues\n"
+"Report-Msgid-Bugs-To: ideve.core@gmail.com\n"
 "POT-Creation-Date: 2023-05-22 12:53+0000\n"
-"PO-Revision-Date: 2023-09-02 18:14-0300\n"
+"PO-Revision-Date: 2023-09-25 23:12+0000\n"
 "Last-Translator: Ideve Core <ideve.core@gmail.com>\n"
-"Language-Team: Brazilian Portuguese <ideve.core@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"pomodoro/pomodoro/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
-"X-Generator: Gtranslator 42.0\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.1-dev\n"
 "X-Project-Style: gnome\n"
 
 #: data/io.gitlab.idevecore.Pomodoro.in.in:3
@@ -23,18 +24,18 @@ msgstr "Temporizador"
 
 #: data/io.gitlab.idevecore.Pomodoro.in.in:9
 msgid "Timer;Clock;StopWatch;"
-msgstr "Tempo;Relógio;Temporizador;"
+msgstr "Temporizador;Relógio;Cronómentro;"
 
 #: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:11 src/application.js:134
 msgid "Pomodoro is a timer utility with rules, ideal for better productivity."
 msgstr ""
-"Pomodoro é um utilitário de temporizador com regras, ideal para melhor a "
+"Pomodoro é um utilitário de temporizador com regras, ideal para melhorar a "
 "produtividade."
 
 #. application
 #: src/application.js:171
 msgid "Stop timer?"
-msgstr "Parar temporizador"
+msgstr "Parar temporizador?"
 
 #: src/application.js:173
 msgid "There is a running timer, wants to stop and exit the application?"
@@ -63,7 +64,7 @@ msgstr "_Temporizador"
 
 #: src/window.blp:55
 msgid "_Statistics"
-msgstr "_Estatisticas"
+msgstr "_Estatísticas"
 
 #: src/window.blp:80
 msgid "_Preferences"
@@ -316,7 +317,7 @@ msgstr "Pomodoro tempo de pausa"
 
 #: src/Timer.js:109
 msgid "Pomodoro finished"
-msgstr "Pomdoro finalizado"
+msgstr "Pomodoro finalizado"
 
 #. statistics page
 #: src/pages/statistics/statistics.blp:32
@@ -336,7 +337,7 @@ msgstr "Esse mês"
 #: src/pages/statistics/statistics.js:110
 #: src/pages/statistics/statistics.js:119
 msgid "more"
-msgstr "A mais"
+msgstr "a mais"
 
 #. statistics dupliucated lines
 #: src/pages/statistics/statistics.js:102
