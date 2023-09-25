@@ -51,7 +51,7 @@ template $AlarmPreferences : Adw.Window {
           }
         }
         Adw.ActionRow {
-          title: 'Repeat alarm';
+          title: _('Repeat alarm');
           SpinButton repeat_timer_start_alarm {
             valign: center;
             numeric: true;
@@ -75,6 +75,7 @@ template $AlarmPreferences : Adw.Window {
           halign: center;
           valign: center;
           icon-name: 'media-playback-start-symbolic';
+          tooltip-text: _("Play sound");
           clicked => $_play_timer_break_alarm();
         }
         [prefix]
@@ -82,6 +83,7 @@ template $AlarmPreferences : Adw.Window {
           halign: center;
           valign: center;
           icon-name: 'system-restart-symbolic';
+          tooltip-text: _("Reset settings");
           clicked => $_reset_timer_break_settings();
         }
         Adw.ActionRow uri_timer_break_alarm {
@@ -92,6 +94,7 @@ template $AlarmPreferences : Adw.Window {
             halign: center;
             valign: center;
             icon-name: 'folder-open-symbolic';
+            tooltip-text: _("Select sound file");
             clicked => $_select_timer_break_alarm();
           }
         }
@@ -120,6 +123,7 @@ template $AlarmPreferences : Adw.Window {
           halign: center;
           valign: center;
           icon-name: 'media-playback-start-symbolic';
+          tooltip-text: _("Play sound");
           clicked => $_play_timer_finish_alarm();
         }
         [prefix]
@@ -127,6 +131,7 @@ template $AlarmPreferences : Adw.Window {
           halign: center;
           valign: center;
           icon-name: 'system-restart-symbolic';
+          tooltip-text: _("Reset settings");
           clicked => $_reset_timer_finish_settings();
         }
         Adw.ActionRow uri_timer_finish_alarm {
@@ -137,6 +142,7 @@ template $AlarmPreferences : Adw.Window {
             halign: center;
             valign: center;
             icon-name: 'folder-open-symbolic';
+            tooltip-text: _("Select sound file");
             clicked => $_select_timer_finish_alarm();
           }
         }
