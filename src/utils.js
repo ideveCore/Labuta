@@ -21,7 +21,8 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
-import GObject from 'gi://GObject';
+import GSound from 'gi://GSound';
+import Gst from 'gi://Gst';
 
 /**
  *
@@ -73,3 +74,95 @@ export function get_flatpak_info() {
   }
   return keyFile;
 }
+
+
+/**
+ *
+ * Alarm Player
+ * @class
+ *
+ */
+export class Alarm {
+  constructor() {
+    if (Alarm.instance) {
+      return Alarm.instance;
+    }
+    Alarm.instance = this;
+    this._application = Gtk.Application.get_default();
+    this._gsound = new GSound.Context();
+    this._gsound.init(null);
+    Gst.init(null);
+    this.playbin = Gst.ElementFactory.make('playbin', 'playbin');
+    this.playbin.set_property('volume', 1);
+    this.playbin.set_property('mute', false);
+    this.playbin.set_state(Gst.State.READY);
+  }
+
+  /**
+   *
+   * @param {string} settings 
+   *
+   */
+  play(settings) {
+    this._settings = JSON.parse(this._application.settings.get_string(settings))
+
+    if (this._application.settings.get_boolean('play-sounds')) {
+      if (this._settings.type === 'freedesktop') {
+        this._gsound_play(this._settings.uri, this._settings.repeat)
+      } else {
+        this._gst_play(this._settings.uri, this._settings.repeat)
+      }
+    }
+  }
+
+  /**
+   * Play alarm using libgsound
+   *
+   * @param {string} name 
+   * @param {number} repeat 
+   */
+  _gsound_play(name, repeat) {
+    new Promise((resolve, reject) => {
+      this._gsound.play_full(
+        { 'event.id': name },
+        null,
+        (source, res) => {
+          try {
+            resolve(source.play_full_finish(res));
+          } catch (e) {
+            reject(e);
+          }
+        }
+      );
+    }).then((res) => {
+      if (repeat > 1) {
+        this._gsound_play(name, --repeat)
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  /**
+   * Play alarm using libgst
+   *
+   * @param {string} uri
+   * @param {number} repeat
+   */
+  _gst_play(uri, repeat) {
+    this.playbin.set_property('uri', uri);
+    this.bus = this.playbin.get_bus()
+    this.bus.add_signal_watch()
+    this.bus.connect('message::error', (error, message) => {
+      log('Bus error:', message.parse_error())
+    })
+    this.bus.connect('message::eos', () => {
+      this.playbin.set_state(Gst.State.READY)
+      if (repeat > 1) {
+        this._gst_play(uri, --repeat)
+      }
+    })
+    this.playbin.set_state(Gst.State.PLAYING)
+  }
+}
+
