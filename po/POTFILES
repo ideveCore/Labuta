@@ -41,3 +41,5 @@ src/components/preferences/preferences.blp
 src/components/preferences/preferences.js
 src/components/sound-preferences/sound-preferences.blp
 src/components/sound-preferences/sound-preferences.js
+src/components/alarm-preferences/alarm-preferences.blp
+src/components/alarm-preferences/alarm-preferences.js

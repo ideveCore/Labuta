@@ -214,35 +214,6 @@ Blueprint 0.10.0
 
   /**
    *
-   * Play sound method
-   * @param {Object} sound 
-   * @param {string} sound.name 
-   * @param {Gio.cancellable||null} sound.cancellable 
-   *
-   */
-  _play_sound({ name, cancellable, iter=1 }) {
-    if (!this.settings.get_boolean('play-sounds')) return
-    const sound = new Promise((resolve, reject) => {
-      this.gsound.play_full(
-        { 'event.id': name },
-        cancellable,
-        (source, res) => {
-          try {
-            resolve(source.play_full_finish(res));
-          } catch (e) {
-            reject(e);
-          }
-        }
-      );
-    }).then((res) => {
-      if (iter > 1) {
-        this._play_sound({ name, cancellable, iter: --iter })
-      }
-    })
-  }
-
-  /**
-   *
    * Load timer status in portal
    * @param {string} message 
    *

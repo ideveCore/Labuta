@@ -59,13 +59,13 @@
     <key type="i" name="sessions-long-break">
       <default>4</default>
     </key>
-    <key type="s" name="start-time-sound">
+    <key type="s" name="timer-start-alarm">
       <default>'{"type":"freedesktop", "uri": "message-new-instant", "repeat":1}'</default>
     </key>
-    <key type="s" name="break-time-sound">
+    <key type="s" name="timer-break-alarm">
       <default>'{"type":"freedesktop", "uri": "complete", "repeat":1}'</default>
     </key>
-    <key type="s" name="finish-time-sound">
+    <key type="s" name="timer-finish-alarm">
       <default>'{"type":"freedesktop", "uri": "alarm-clock-elapsed", "repeat":1}'</default>
     </key>
   </schema>

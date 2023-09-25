@@ -21,7 +21,7 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
-import GObject from 'gi://GObject';
+import GSound from 'gi://GSound';
 import Gst from 'gi://Gst';
 
 /**
@@ -76,15 +76,35 @@ export function get_flatpak_info() {
 }
 
 
-
-export class Sound {
-  constructor({ settings }) {
+/**
+ *
+ * Alarm Player
+ * @class
+ *
+ */
+export class Alarm {
+  constructor() {
+    if (Alarm.instance) {
+      return Alarm.instance;
+    }
+    Alarm.instance = this;
     this._application = Gtk.Application.get_default();
-    this._settings = JSON.parse(this._application.settings.get_string(settings))
+    this._gsound = new GSound.Context();
+    this._gsound.init(null);
+    Gst.init(null);
     this.playbin = Gst.ElementFactory.make('playbin', 'playbin');
     this.playbin.set_property('volume', 1);
     this.playbin.set_property('mute', false);
     this.playbin.set_state(Gst.State.READY);
+  }
+
+  /**
+   *
+   * @param {string} settings 
+   *
+   */
+  play(settings) {
+    this._settings = JSON.parse(this._application.settings.get_string(settings))
 
     if (this._application.settings.get_boolean('play-sounds')) {
       if (this._settings.type === 'freedesktop') {
@@ -94,9 +114,16 @@ export class Sound {
       }
     }
   }
+
+  /**
+   * Play alarm using libgsound
+   *
+   * @param {string} name 
+   * @param {number} repeat 
+   */
   _gsound_play(name, repeat) {
-    const sound = new Promise((resolve, reject) => {
-      this._application.gsound.play_full(
+    new Promise((resolve, reject) => {
+      this._gsound.play_full(
         { 'event.id': name },
         null,
         (source, res) => {
@@ -114,38 +141,28 @@ export class Sound {
     }).catch((error) => {
       console.log(error)
     })
-
   }
+
+  /**
+   * Play alarm using libgst
+   *
+   * @param {string} uri
+   * @param {number} repeat
+   */
   _gst_play(uri, repeat) {
     this.playbin.set_property('uri', uri);
     this.bus = this.playbin.get_bus()
     this.bus.add_signal_watch()
     this.bus.connect('message::error', (error, message) => {
-      log('Playback error:', message.parse_error())
+      log('Bus error:', message.parse_error())
     })
     this.bus.connect('message::eos', () => {
       this.playbin.set_state(Gst.State.READY)
       if (repeat > 1) {
         this._gst_play(uri, --repeat)
       }
-
     })
     this.playbin.set_state(Gst.State.PLAYING)
   }
-  // mount_path() {
-  //   const uri = `resource://${this._application.resource_base_path}/${this._sound_id}`
-  //   this.playbin.set_property('uri', uri);
-  // }
-  // play() {
-  //   this.bus = this.playbin.get_bus()
-  //   this.bus.add_signal_watch()
-  //   this.bus.connect('message::error', (error) => {
-  //     log(`${error}`)
-  //   })
-  //   this.bus.connect('message::eos', () => {
-  //     this.playbin.set_state(Gst.State.READY)
-  //   })
-  //   this.playbin.set_state(Gst.State.PLAYING)
-  // }
 }
 

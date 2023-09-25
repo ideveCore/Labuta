@@ -21,10 +21,11 @@
 import GLib from 'gi://GLib';
 import Adw from 'gi://Adw';
 import { Db_item } from './db.js';
+import { Alarm } from './utils.js';
 
 /**
  *
- * Create timer
+ * Timer
  * @class
  *
  */
@@ -52,7 +53,7 @@ export default class Timer {
     this.current_break_time = this.break_time;
     this.long_break = this._application.settings.get_int('long-break-st') * 60;
     this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
-
+    this._alarm = new Alarm();
     this._setup_settings();
   }
   /**
@@ -72,10 +73,10 @@ export default class Timer {
 
       if (this.current_work_time === this.work_time) {
         this._application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
-        this._application._play_sound({ name: 'message-new-instant', cancellable: null });
+        this._alarm.play('timer-start-alarm');
       } else if (this.current_work_time === 0) {
         this._application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
-        this._application._play_sound({ name: 'complete', cancellable: null });
+        this._alarm.play('timer-break-alarm');
       }
 
       if (this.current_work_time > 0) {
@@ -107,7 +108,7 @@ export default class Timer {
         this.data = this._application.data.update(this.data)
       }
       this._application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` });
-      this._application._play_sound({ name: 'alarm-clock-elapsed', cancellable: null });
+      this._alarm.play('timer-finish-alarm');
       if (this._application.settings.get_boolean('autostart')) {
         setTimeout(() => {
           if (this.timer_state === 'paused') {
