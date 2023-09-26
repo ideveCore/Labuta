@@ -20,7 +20,7 @@ template $AlarmPreferences : Adw.Window {
       margin-bottom: 10; 
       margin-top: 10; 
       Adw.ExpanderRow timer_start_alarm {
-        title: 'Timer start alarm';
+        title: _('Timer start alarm');
         subtitle: 'freedesktop';
         [prefix]
         Gtk.Button {
@@ -68,7 +68,7 @@ template $AlarmPreferences : Adw.Window {
         }
       }
       Adw.ExpanderRow timer_break_alarm {
-        title: 'Timer break alarm';
+        title: _('Timer break alarm');
         subtitle: 'freedesktop';
         [prefix]
         Gtk.Button {
@@ -99,7 +99,7 @@ template $AlarmPreferences : Adw.Window {
           }
         }
         Adw.ActionRow {
-          title: 'Repeat alarm';
+          title: _('Repeat alarm');
           SpinButton repeat_timer_break_alarm {
             valign: center;
             numeric: true;
@@ -116,7 +116,7 @@ template $AlarmPreferences : Adw.Window {
         }
       }
       Adw.ExpanderRow timer_finish_alarm {
-        title: 'Timer finish alarm';
+        title: _('Timer finish alarm');
         subtitle: 'freedesktop';
         [prefix]
         Gtk.Button {
@@ -147,7 +147,7 @@ template $AlarmPreferences : Adw.Window {
           }
         }
         Adw.ActionRow {
-          title: 'Repeat alarm';
+          title: _('Repeat alarm');
           SpinButton repeat_timer_finish_alarm {
             valign: center;
             numeric: true;
