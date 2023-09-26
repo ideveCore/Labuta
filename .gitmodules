@@ -1,3 +1,7 @@
 [submodule "troll"]
 	path = troll
-	url = https://github.com/sonnyp/troll.git
+  url = https://github.com/sonnyp/troll.git
+
+[submodule "po"]
+	path = po
+	url = https://gitlab.com/idevecore/pomodoro-translations.git
