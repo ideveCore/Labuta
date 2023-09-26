@@ -326,7 +326,7 @@ msgid "Continue"
 msgstr ""
 
 #: src/application.js:176
-msgid "Exit"
+msgid "Quit"
 msgstr ""
 
 #: src/Timer.js:74
