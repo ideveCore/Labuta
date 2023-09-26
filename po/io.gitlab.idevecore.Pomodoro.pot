@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: dialect\n"
+"Project-Id-Version: Pomodoro\n"
   "Report-Msgid-Bugs-To: \n"
   "POT-Creation-Date: 2023-09-01 15:15-0500\n"
   "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -74,10 +74,6 @@ msgstr "";
 
 #: src/pages/shortcuts/shortcuts.blp:21 src/components/history/history.blp:8
 msgid "History"
-msgstr ""
-
-#: src/pages/shortcuts/shortcuts.blp:17
-msgid "Quit"
 msgstr ""
 
 #: src/components/history/history.blp:25 src/components/history/history.js:237
@@ -216,14 +212,6 @@ msgstr ""
 
 #: src/pages/shortcuts/shortcuts.blp:13
 msgid "Keyboard shortcuts"
-msgstr ""
-
-#: src/pages/shortcuts/shortcuts.blp:17
-msgid "Preferences"
-msgstr ""
-
-#: src/pages/shortcuts/shortcuts.blp:21
-msgid "History"
 msgstr ""
 
 #: src/pages/shortcuts/shortcuts.blp:25
