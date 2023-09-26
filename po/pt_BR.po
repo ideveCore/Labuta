@@ -6,272 +6,334 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pomodoro\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: ideve.core@gmail.com\n"
 "POT-Creation-Date: 2023-09-01 15:15-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-09-26 17:06+0000\n"
+"Last-Translator: Ideve Core <ideve.core@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"pomodoro/pomodoro/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:9
+#, fuzzy
 msgid "Pomodoro is a productivity-focused timer"
-msgstr ""
+msgstr "Pomodoro é um temporizador centrado na produtividade"
 
 #: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:11 src/application.js:134
+#, fuzzy
 msgid "Pomodoro is a timer utility with rules, ideal for better productivity."
 msgstr ""
+"Pomodoro é um utilitário de temporizador com regras, ideal para melhorar a "
+"produtividade."
 
 #: data/io.gitlab.idevecore.Pomodoro.in.in:3
+#, fuzzy
 msgid "StopWatch"
-msgstr ""
+msgstr "Cronómetro"
 
 #: data/io.gitlab.idevecore.Pomodoro.in.in:9
+#, fuzzy
 msgid "Timer;Clock;StopWatch;"
-msgstr ""
+msgstr "Temporizador;Relógio;Cronómetro;"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:7
+#, fuzzy
 msgid "alarm preferences"
-msgstr ""
+msgstr "Preferências do alarme"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:23
+#, fuzzy
 msgid "Timer start alarm"
-msgstr ""
+msgstr "Alarme de início do temporizador"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:30
 #: src/components/alarm-preferences/alarm-preferences.blp:78
 #: src/components/alarm-preferences/alarm-preferences.blp:126
+#, fuzzy
 msgid "Play sound"
-msgstr ""
+msgstr "Reproduzir som"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:38
 #: src/components/alarm-preferences/alarm-preferences.blp:86
 #: src/components/alarm-preferences/alarm-preferences.blp:134
+#, fuzzy
 msgid "Reset settings"
-msgstr ""
+msgstr "Redefinir definições"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:49
 #: src/components/alarm-preferences/alarm-preferences.blp:97
 #: src/components/alarm-preferences/alarm-preferences.blp:145
+#, fuzzy
 msgid "Select sound file"
-msgstr ""
+msgstr "Selecionar o arquivo de som"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:54
 #: src/components/alarm-preferences/alarm-preferences.blp:102
 #: src/components/alarm-preferences/alarm-preferences.blp:150
+#, fuzzy
 msgid "Repeat alarm"
-msgstr ""
+msgstr "Repetir alarme"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:71
+#, fuzzy
 msgid "Timer break alarm"
-msgstr ""
+msgstr "Alarme de inicio da pausa"
 
 #: src/components/alarm-preferences/alarm-preferences.blp:119
+#, fuzzy
 msgid "Timer finish alarm"
-msgstr ""
+msgstr "Alarme de final da pausa"
 
 #: src/pages/shortcuts/shortcuts.blp:21 src/components/history/history.blp:8
+#, fuzzy
 msgid "History"
-msgstr ""
+msgstr "Histórico"
 
 #: src/components/history/history.blp:25 src/components/history/history.js:237
 #: src/components/history-details/history-details.blp:22 src/Timer.js:84
 #: src/pages/statistics/statistics.blp:36
 #: src/pages/statistics/statistics.blp:61
 #: src/pages/statistics/statistics.blp:85
+#, fuzzy
 msgid "Work time"
-msgstr ""
+msgstr "Tempo de trabalho"
 
 #: src/components/history/history.blp:36
+#, fuzzy
 msgid "Delete selected items"
-msgstr ""
+msgstr "Excluir itens selecionados"
 
 #: src/components/history/history.blp:43
+#, fuzzy
 msgid "History menu"
-msgstr ""
+msgstr "Menu do histórico"
 
 #: src/components/history/history.blp:58
+#, fuzzy
 msgid "Empty history"
-msgstr ""
+msgstr "Histórico vazio"
 
 #: src/components/history/history.blp:105
+#, fuzzy
 msgid "Sort by"
-msgstr ""
+msgstr "Ordenar por"
 
 #: src/components/history/history.blp:108
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: src/components/history/history.blp:113
 #: src/components/history-details/history-details.blp:45
+#, fuzzy
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: src/components/history/history.blp:120
+#, fuzzy
 msgid "Ascending"
-msgstr ""
+msgstr "Crescente"
 
 #: src/components/history/history.blp:125
+#, fuzzy
 msgid "Descending"
-msgstr ""
+msgstr "Decrescente"
 
 #: src/components/history/history.js:242
 #: src/components/history-details/history-details.blp:31 src/Timer.js:88
 #: src/pages/statistics/statistics.blp:44
 #: src/pages/statistics/statistics.blp:69
 #: src/pages/statistics/statistics.blp:93
+#, fuzzy
 msgid "Break time"
-msgstr ""
+msgstr "Tempo de pausa"
 
 #: src/components/history/history.js:132
+#, fuzzy
 msgid "Clear history"
-msgstr ""
+msgstr "Apagar histórico"
 
 #: src/components/history-details/history-details.blp:12
+#, fuzzy
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: src/components/history-details/history-details.blp:41 src/Timer.js:74
 #: src/Timer.js:77 src/Timer.js:109
+#, fuzzy
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #: src/pages/preferences/preferences.blp:9 src/pages/shortcuts/shortcuts.blp:17
+#, fuzzy
 msgid "Preferences"
-msgstr ""
+msgstr "Preferências"
 
 #: src/pages/preferences/preferences.blp:11
+#, fuzzy
 msgid "User interface"
-msgstr ""
+msgstr "Interface do usuário"
 
 #: src/pages/preferences/preferences.blp:13
+#, fuzzy
 msgid "Allow execution in the background"
-msgstr ""
+msgstr "Permitir execuçaõ em segundo plano"
 
 #: src/pages/preferences/preferences.blp:14
+#, fuzzy
 msgid "Hides the window instead of leaving if there is pomodoro running"
-msgstr ""
+msgstr "Esconde a janela em vez de sair se houver pomodoro correndo"
 
 #: src/pages/preferences/preferences.blp:24
+#, fuzzy
 msgid "Allow sounds"
-msgstr ""
+msgstr "Permitir tocar sons"
 
 #: src/pages/preferences/preferences.blp:25
+#, fuzzy
 msgid "Plays the feedback sounds"
-msgstr ""
+msgstr "Toca os sons de feedback"
 
 #: src/pages/preferences/preferences.blp:42
+#, fuzzy
 msgid "Autostart"
-msgstr ""
+msgstr "Inicio automático"
 
 #: src/pages/preferences/preferences.blp:43
+#, fuzzy
 msgid "Automatically start the timer after break time"
-msgstr ""
+msgstr "Comece automaticamente o temporizador após o tempo de pausa"
 
 #: src/pages/preferences/preferences.blp:53
+#, fuzzy
 msgid "History duration"
-msgstr ""
+msgstr "Duração da história"
 
 #: src/pages/preferences/preferences.blp:54
+#, fuzzy
 msgid "The amount of months that history data will be saved"
-msgstr ""
+msgstr "A quantidade de meses que os dados do histórico serão salvos"
 
 #: src/pages/preferences/preferences.blp:70
+#, fuzzy
 msgid "Customize pomodoro"
-msgstr ""
+msgstr "Customizar o Pomodoro"
 
 #: src/pages/preferences/preferences.blp:72
+#, fuzzy
 msgid "Work time - (minutes)"
-msgstr ""
+msgstr "Tempo de trabalho - (minutos)"
 
 #. preferences dupliucated lines 
 #: src/pages/preferences/preferences.blp:73
 #: src/pages/preferences/preferences.blp:88
 #: src/pages/preferences/preferences.blp:103
 #: src/pages/preferences/preferences.blp:119
+#, fuzzy
 msgid "The ideal is to follow the rules of the Pomodoro"
-msgstr ""
+msgstr "O ideal é seguir as regras do Pomodoro"
 
 #: src/pages/preferences/preferences.blp:87
+#, fuzzy
 msgid "Break time - (minutes)"
-msgstr ""
+msgstr "Tempo de intervalo - (minutos)"
 
 #: src/pages/preferences/preferences.blp:102
+#, fuzzy
 msgid "Long break time - (minutes)"
-msgstr ""
+msgstr "Tempo do longo intervalo - (minutos)"
 
 #: src/pages/preferences/preferences.blp:117
+#, fuzzy
 msgid "Sessions until the long break - (minutes)"
-msgstr ""
+msgstr "Sessões até a longa pausa - (minutos)"
 
 #: src/pages/shortcuts/shortcuts.blp:10
+#, fuzzy
 msgid "General"
-msgstr ""
+msgstr "Geral"
 
 #: src/pages/shortcuts/shortcuts.blp:13
+#, fuzzy
 msgid "Keyboard shortcuts"
-msgstr ""
+msgstr "Atalhos de teclado"
 
 #: src/pages/shortcuts/shortcuts.blp:25
 #: src/application.js:176
+#, fuzzy
 msgid "Quit"
-msgstr ""
+msgstr "Sair"
 
 #: src/components/samll-window/small-window.blp:25
+#, fuzzy
 msgid "Maximize window"
-msgstr ""
+msgstr "Maximizar a janela"
 
 #: src/components/samll-window/small-window.blp:62
 #: src/components/samll-window/small-window.blp:98 src/pages/timer/timer.blp:74
 #: src/pages/timer/timer.blp:110
+#, fuzzy
 msgid "Init timer"
-msgstr ""
+msgstr "Iniciar o temporizador"
 
 #: src/components/samll-window/small-window.blp:74 src/pages/timer/timer.blp:86
+#, fuzzy
 msgid "Pause timer"
-msgstr ""
+msgstr "Pausar o temporizador"
 
 #: src/components/samll-window/small-window.blp:90
 #: src/pages/timer/timer.blp:102
+#, fuzzy
 msgid "Reset timer"
-msgstr ""
+msgstr "Reiniciar o temporizador"
 
 #: src/components/samll-window/small-window.blp:106
 #: src/pages/timer/timer.blp:118
+#, fuzzy
 msgid "Stop timer"
-msgstr ""
+msgstr "Parar o temporizador"
 
 #: src/components/theme-selector/theme-selector.blp:20
+#, fuzzy
 msgid "Follow sytem style"
-msgstr ""
+msgstr "Siga o tema do sistema"
 
 #: src/components/theme-selector/theme-selector.blp:29
+#, fuzzy
 msgid "Light style"
-msgstr ""
+msgstr "Estilo claro"
 
 #: src/components/theme-selector/theme-selector.blp:39
+#, fuzzy
 msgid "Dark style"
-msgstr ""
+msgstr "Estilo escuro"
 
 #: src/pages/statistics/statistics.blp:32
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Hoje"
 
 #: src/pages/statistics/statistics.blp:54
+#, fuzzy
 msgid "This week"
-msgstr ""
+msgstr "Esta semana"
 
 #: src/pages/statistics/statistics.blp:78
+#, fuzzy
 msgid "This month"
-msgstr ""
+msgstr "Este mês"
 
 #: src/pages/statistics/statistics.js:160
 #: src/pages/statistics/statistics.js:110
 #: src/pages/statistics/statistics.js:119
+#, fuzzy
 msgid "more"
-msgstr ""
+msgstr "mais"
 
 #: src/pages/statistics/statistics.js:102
 #: src/pages/statistics/statistics.js:112
@@ -280,101 +342,123 @@ msgid "less"
 msgstr ""
 
 #: src/pages/statistics/statistics.js:103
+#, fuzzy
 msgid "than yesterday"
-msgstr ""
+msgstr "que ontem"
 
 #: src/pages/statistics/statistics.js:113
+#, fuzzy
 msgid "than last week"
-msgstr ""
+msgstr "que semana passada"
 
 #: src/pages/statistics/statistics.js:122
+#, fuzzy
 msgid "than last month"
-msgstr ""
+msgstr "que mês passado"
 
 #: src/components/samll-window/small-window.blp:126
 #: src/components/samll-window/small-window.blp:133
 #: src/components/history-details/history-details.blp:56
 #: src/pages/timer/timer.blp:43 src/components/history-row/history-row.blp:50
+#, fuzzy
 msgid "Pomodoro sessions"
-msgstr ""
+msgstr "Sessoẽs do Pomodoro"
 
 #: src/pages/timer/timer.blp:58
 msgid "Title (optional)"
 msgstr ""
 
 #: src/pages/timer/timer.blp:61
+#, fuzzy
 msgid "Description (optional)"
-msgstr ""
+msgstr "Descrição (opcional)"
 
 #: src/pages/timer/timer.js:128
+#, fuzzy
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #: src/pages/timer/timer.js:155
+#, fuzzy
 msgid "Started at"
-msgstr ""
+msgstr "Iniciado em"
 
 #: src/application.js:171
 msgid "Stop timer?"
 msgstr ""
 
 #: src/application.js:173
+#, fuzzy
 msgid "There is a running timer, wants to stop and exit the application?"
-msgstr ""
+msgstr "Há um temporizador em execução, quer parar e sair da aplicação?"
 
 #: src/application.js:174 src/components/history-details/history-details.blp:67
+#, fuzzy
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #: src/Timer.js:74
+#, fuzzy
 msgid "Pomodoro started"
-msgstr ""
+msgstr "Pomodoro iniciado"
 
 #. timer dupliucated lines
 #: src/Timer.js:74 src/Timer.js:77 src/Timer.js:109
+#, fuzzy
 msgid "Created at"
-msgstr ""
+msgstr "Criado as"
 
 #: src/Timer.js:77
+#, fuzzy
 msgid "Pomodoro break time"
-msgstr ""
+msgstr "Pomodoro tempo de intervalo"
 
 #: src/Timer.js:109
+#, fuzzy
 msgid "Pomodoro finished"
-msgstr ""
+msgstr "Pomodoro finalizado"
 
 #: src/window.blp:33
+#, fuzzy
 msgid "Minimize window"
-msgstr ""
+msgstr "Minimizar a janela"
 
 #: src/window.blp:39
+#, fuzzy
 msgid "Main menu"
-msgstr ""
+msgstr "Menu principal"
 
 #: src/window.blp:47
+#, fuzzy
 msgid "_Timer"
-msgstr ""
+msgstr "_Temporizador"
 
 #: src/window.blp:55
+#, fuzzy
 msgid "_Statistics"
-msgstr ""
+msgstr "_Estatisticas"
 
 #: src/window.blp:80
+#, fuzzy
 msgid "_Preferences"
-msgstr ""
+msgstr "_Preferências"
 
 #: src/window.blp:85
+#, fuzzy
 msgid "_Keyboard shortcuts"
-msgstr ""
+msgstr "_Atalhos de teclado"
 
 #: src/window.blp:90
+#, fuzzy
 msgid "_History"
-msgstr ""
+msgstr "_Histórico"
 
 #: src/window.blp:95
+#, fuzzy
 msgid "_About Pomodoro"
-msgstr ""
+msgstr "_Sobre o Pomodoro"
 
 #: src/window.blp:99
+#, fuzzy
 msgid "_Quit"
-msgstr ""
+msgstr "_Sair"
