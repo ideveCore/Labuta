@@ -1,0 +1,380 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Pomodoro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pomodoro\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-01 15:15-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:9
+msgid "Pomodoro is a productivity-focused timer"
+msgstr ""
+
+#: data/io.gitlab.idevecore.Pomodoro.appdata.xml.in.in:11 src/application.js:134
+msgid "Pomodoro is a timer utility with rules, ideal for better productivity."
+msgstr ""
+
+#: data/io.gitlab.idevecore.Pomodoro.in.in:3
+msgid "StopWatch"
+msgstr ""
+
+#: data/io.gitlab.idevecore.Pomodoro.in.in:9
+msgid "Timer;Clock;StopWatch;"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:7
+msgid "alarm preferences"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:23
+msgid "Timer start alarm"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:30
+#: src/components/alarm-preferences/alarm-preferences.blp:78
+#: src/components/alarm-preferences/alarm-preferences.blp:126
+msgid "Play sound"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:38
+#: src/components/alarm-preferences/alarm-preferences.blp:86
+#: src/components/alarm-preferences/alarm-preferences.blp:134
+msgid "Reset settings"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:49
+#: src/components/alarm-preferences/alarm-preferences.blp:97
+#: src/components/alarm-preferences/alarm-preferences.blp:145
+msgid "Select sound file"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:54
+#: src/components/alarm-preferences/alarm-preferences.blp:102
+#: src/components/alarm-preferences/alarm-preferences.blp:150
+msgid "Repeat alarm"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:71
+msgid "Timer break alarm"
+msgstr ""
+
+#: src/components/alarm-preferences/alarm-preferences.blp:119
+msgid "Timer finish alarm"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:21 src/components/history/history.blp:8
+msgid "History"
+msgstr ""
+
+#: src/components/history/history.blp:25 src/components/history/history.js:237
+#: src/components/history-details/history-details.blp:22 src/Timer.js:84
+#: src/pages/statistics/statistics.blp:36
+#: src/pages/statistics/statistics.blp:61
+#: src/pages/statistics/statistics.blp:85
+msgid "Work time"
+msgstr ""
+
+#: src/components/history/history.blp:36
+msgid "Delete selected items"
+msgstr ""
+
+#: src/components/history/history.blp:43
+msgid "History menu"
+msgstr ""
+
+#: src/components/history/history.blp:58
+msgid "Empty history"
+msgstr ""
+
+#: src/components/history/history.blp:105
+msgid "Sort by"
+msgstr ""
+
+#: src/components/history/history.blp:108
+msgid "Name"
+msgstr ""
+
+#: src/components/history/history.blp:113
+#: src/components/history-details/history-details.blp:45
+msgid "Date"
+msgstr ""
+
+#: src/components/history/history.blp:120
+msgid "Ascending"
+msgstr ""
+
+#: src/components/history/history.blp:125
+msgid "Descending"
+msgstr ""
+
+#: src/components/history/history.js:242
+#: src/components/history-details/history-details.blp:31 src/Timer.js:88
+#: src/pages/statistics/statistics.blp:44
+#: src/pages/statistics/statistics.blp:69
+#: src/pages/statistics/statistics.blp:93
+msgid "Break time"
+msgstr ""
+
+#: src/components/history/history.js:132
+msgid "Clear history"
+msgstr ""
+
+#: src/components/history-details/history-details.blp:12
+msgid "Title"
+msgstr ""
+
+#: src/components/history-details/history-details.blp:41 src/Timer.js:74
+#: src/Timer.js:77 src/Timer.js:109
+msgid "Description"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:9 src/pages/shortcuts/shortcuts.blp:17
+msgid "Preferences"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:11
+msgid "User interface"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:13
+msgid "Allow execution in the background"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:14
+msgid "Hides the window instead of leaving if there is pomodoro running"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:24
+msgid "Allow sounds"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:25
+msgid "Plays the feedback sounds"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:42
+msgid "Autostart"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:43
+msgid "Automatically start the timer after break time"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:53
+msgid "History duration"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:54
+msgid "The amount of months that history data will be saved"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:70
+msgid "Customize pomodoro"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:72
+msgid "Work time - (minutes)"
+msgstr ""
+
+#. preferences dupliucated lines 
+#: src/pages/preferences/preferences.blp:73
+#: src/pages/preferences/preferences.blp:88
+#: src/pages/preferences/preferences.blp:103
+#: src/pages/preferences/preferences.blp:119
+msgid "The ideal is to follow the rules of the Pomodoro"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:87
+msgid "Break time - (minutes)"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:102
+msgid "Long break time - (minutes)"
+msgstr ""
+
+#: src/pages/preferences/preferences.blp:117
+msgid "Sessions until the long break - (minutes)"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:10
+msgid "General"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:13
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: src/pages/shortcuts/shortcuts.blp:25
+#: src/application.js:176
+msgid "Quit"
+msgstr ""
+
+#: src/components/samll-window/small-window.blp:25
+msgid "Maximize window"
+msgstr ""
+
+#: src/components/samll-window/small-window.blp:62
+#: src/components/samll-window/small-window.blp:98 src/pages/timer/timer.blp:74
+#: src/pages/timer/timer.blp:110
+msgid "Init timer"
+msgstr ""
+
+#: src/components/samll-window/small-window.blp:74 src/pages/timer/timer.blp:86
+msgid "Pause timer"
+msgstr ""
+
+#: src/components/samll-window/small-window.blp:90
+#: src/pages/timer/timer.blp:102
+msgid "Reset timer"
+msgstr ""
+
+#: src/components/samll-window/small-window.blp:106
+#: src/pages/timer/timer.blp:118
+msgid "Stop timer"
+msgstr ""
+
+#: src/components/theme-selector/theme-selector.blp:20
+msgid "Follow sytem style"
+msgstr ""
+
+#: src/components/theme-selector/theme-selector.blp:29
+msgid "Light style"
+msgstr ""
+
+#: src/components/theme-selector/theme-selector.blp:39
+msgid "Dark style"
+msgstr ""
+
+#: src/pages/statistics/statistics.blp:32
+msgid "Today"
+msgstr ""
+
+#: src/pages/statistics/statistics.blp:54
+msgid "This week"
+msgstr ""
+
+#: src/pages/statistics/statistics.blp:78
+msgid "This month"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:160
+#: src/pages/statistics/statistics.js:110
+#: src/pages/statistics/statistics.js:119
+msgid "more"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:102
+#: src/pages/statistics/statistics.js:112
+#: src/pages/statistics/statistics.js:121
+msgid "less"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:103
+msgid "than yesterday"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:113
+msgid "than last week"
+msgstr ""
+
+#: src/pages/statistics/statistics.js:122
+msgid "than last month"
+msgstr ""
+
+#: src/components/samll-window/small-window.blp:126
+#: src/components/samll-window/small-window.blp:133
+#: src/components/history-details/history-details.blp:56
+#: src/pages/timer/timer.blp:43 src/components/history-row/history-row.blp:50
+msgid "Pomodoro sessions"
+msgstr ""
+
+#: src/pages/timer/timer.blp:58
+msgid "Title (optional)"
+msgstr ""
+
+#: src/pages/timer/timer.blp:61
+msgid "Description (optional)"
+msgstr ""
+
+#: src/pages/timer/timer.js:128
+msgid "of"
+msgstr ""
+
+#: src/pages/timer/timer.js:155
+msgid "Started at"
+msgstr ""
+
+#: src/application.js:171
+msgid "Stop timer?"
+msgstr ""
+
+#: src/application.js:173
+msgid "There is a running timer, wants to stop and exit the application?"
+msgstr ""
+
+#: src/application.js:174 src/components/history-details/history-details.blp:67
+msgid "Continue"
+msgstr ""
+
+#: src/Timer.js:74
+msgid "Pomodoro started"
+msgstr ""
+
+#. timer dupliucated lines
+#: src/Timer.js:74 src/Timer.js:77 src/Timer.js:109
+msgid "Created at"
+msgstr ""
+
+#: src/Timer.js:77
+msgid "Pomodoro break time"
+msgstr ""
+
+#: src/Timer.js:109
+msgid "Pomodoro finished"
+msgstr ""
+
+#: src/window.blp:33
+msgid "Minimize window"
+msgstr ""
+
+#: src/window.blp:39
+msgid "Main menu"
+msgstr ""
+
+#: src/window.blp:47
+msgid "_Timer"
+msgstr ""
+
+#: src/window.blp:55
+msgid "_Statistics"
+msgstr ""
+
+#: src/window.blp:80
+msgid "_Preferences"
+msgstr ""
+
+#: src/window.blp:85
+msgid "_Keyboard shortcuts"
+msgstr ""
+
+#: src/window.blp:90
+msgid "_History"
+msgstr ""
+
+#: src/window.blp:95
+msgid "_About Pomodoro"
+msgstr ""
+
+#: src/window.blp:99
+msgid "_Quit"
+msgstr ""
