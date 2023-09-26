@@ -32,7 +32,6 @@ msgstr ""
 msgid "Timer;Clock;StopWatch;"
 msgstr "";
 
-
 #: src/components/alarm-preferences/alarm-preferences.blp:7
 msgid "alarm preferences";
 msgstr "";
