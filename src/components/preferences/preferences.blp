@@ -39,8 +39,8 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         }
       }
       Adw.ActionRow  {
-        title: _("Autorstart");
-        subtitle: _("Automatically start the time after break time");
+        title: _("Autostart");
+        subtitle: _("Automatically start the timer after break time");
         icon-name: "system-restart-symbolic";
         activatable-widget: switch_autostart;
         [suffix]
@@ -114,7 +114,7 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         }
       }
       Adw.ActionRow  {
-        title: _("Sessions until the long break - (minutes)");
+        title: _("Sessions until the long break");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
         SpinButton set_sessions_long_break {
           valign: center;
