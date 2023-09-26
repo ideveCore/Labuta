@@ -215,6 +215,7 @@ msgid "Keyboard shortcuts"
 msgstr ""
 
 #: src/pages/shortcuts/shortcuts.blp:25
+#: src/application.js:176
 msgid "Quit"
 msgstr ""
 
@@ -323,10 +324,6 @@ msgstr ""
 
 #: src/application.js:174 src/components/history-details/history-details.blp:67
 msgid "Continue"
-msgstr ""
-
-#: src/application.js:176
-msgid "Quit"
 msgstr ""
 
 #: src/Timer.js:74
