@@ -128,7 +128,7 @@ export class History extends Adw.PreferencesWindow {
     row.break_time = item.break_time;
     row.id = item.id;
     row.connect('activated', (action_row) => {
-      this._create_lealflet_deatails_page(item.id);
+      this._create_lealflet_deatails_page(item);
     });
     check_button.connect('toggled', (check_button) => {
       row.selected = check_button.get_active();
@@ -147,8 +147,7 @@ export class History extends Adw.PreferencesWindow {
    * @param {number} id
    *
    */
-  _create_lealflet_deatails_page(id) {
-    const item = this.Application.data.get_by_id(id)[0];
+  _create_lealflet_deatails_page(item) {
     this._history_details.update_details({
       id: item.id,
       title: item.title,
@@ -189,9 +188,42 @@ export class History extends Adw.PreferencesWindow {
     if (this.Application.data.get().length === 0) return;
     this._stack.visible_child_name = "history";
     this._list_box.set_sort_func(this._sort_history.bind(this));
-    this.Application.data.get().forEach((item) => {
+    const data = this.Application.data.get();
+    const history_group = {};
+    const history_data = [];
+
+    data.forEach((data) => {
+      const id = `${data.title}${data.description}`;
+      if (!history_group[id]) {
+        history_group[id] = [];
+      }
+      history_group[id].push(data);
+    });
+
+    Object.values(history_group).map((data) => {
+      if(data.length > 1) {
+        history_data.push(data.reduce((accumulator, object) => {
+          accumulator.sessions += object.sessions
+          accumulator.work_time += object.work_time;
+          accumulator.break_time += object.break_time;
+          if(accumulator.timestamp < object.timestamp) {
+            accumulator.day = object.day;
+            accumulator.day_of_month = object.day_of_month;
+            accumulator.year = object.year;
+            accumulator.week = object.week;
+            accumulator.month = object.month;
+            accumulator.display_date = object.display_date;
+            accumulator.timestamp = object.timestamp;
+          }
+          return accumulator;
+        }));
+      } else {
+        history_data.push(data[0]);
+      }
+    });
+    history_data.forEach((item) => {
       this._list_box.append(this._create_row(item));
-    })
+    });
     this._selected_rows = [];
     this._load_display_total_time();
   }

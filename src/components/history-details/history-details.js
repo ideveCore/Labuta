@@ -23,6 +23,7 @@ import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import Adw from 'gi://Adw';
 import Template from './history-details.blp' assert { type: 'uri' };
+import { Db_item } from '../../db.js';
 import { create_timestamp, format_time } from '../../utils.js';
 
 /**
@@ -68,6 +69,8 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
    *
    */
   update_details({ parent, id, title, subtitle, work_time, break_time, description, sessions }) {
+    this.title = title;
+    this.description = description;
     this._id = id;
     this._parent = parent
     this._title.set_text(title);
@@ -84,18 +87,24 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
    *
    */
   _on_continue_timer() {
-    const timer = this._application.data.get_by_id(this._id)[0];
     if (this._application.Timer.timer_state !== 'running' && this._application.Timer.timer_state !== 'paused') {
-      const current_date = GLib.DateTime.new_now_local();
-      timer.timestamp = Math.floor(create_timestamp(null, null, null) / 1000);
-      timer.day = current_date.get_day_of_year();
-      timer.day_of_month = current_date.get_day_of_month();
-      timer.year = current_date.get_year();
-      timer.week = current_date.get_week_of_year();
-      timer.month = current_date.get_month();
-      timer.display_date = this._get_date();
-      timer.sessions = 0;
-      this._application.Timer.start(this._application.data.update(timer));
+      const current_date = GLib.DateTime.new_now_local()
+      const db_item = new Db_item({
+        id: null,
+        title: this.title,
+        description: this.description,
+        work_time: 0,
+        break_time: 0,
+        day: current_date.get_day_of_year(),
+        day_of_month: current_date.get_day_of_month(),
+        year: current_date.get_year(),
+        week: current_date.get_week_of_year(),
+        month: current_date.get_month(),
+        display_date: this._get_date(),
+        timestamp: Math.floor(create_timestamp(null, null, null) / 1000),
+        sessions: 0,
+      })
+      this._application.Timer.start(this._application.data.save(db_item));
       this._parent.close();
     } else {
       this._toast_overlay.add_toast(new Adw.Toast({
