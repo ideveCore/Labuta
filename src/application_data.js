@@ -18,7 +18,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Database, Query_builder, Db_item, Pomodoro_query } from './db.js'
+import { Database, Query_builder, Db_item, Pomodoro_query } from './db.js';
 
 /**
  *
@@ -28,19 +28,13 @@ import { Database, Query_builder, Db_item, Pomodoro_query } from './db.js'
  */
 export default class Application_data {
   constructor() {
+    if(Application_data.instance) {
+      return Application_data.instance;
+    }
+    Application_data.instance = this;
     this._db = new Database();
     this.data = null;
-  }
-
-  /**
-   *
-   * Setup database
-   * @returns {Application_data}
-   *
-   */
-  setup() {
     this._db.setup();
-    return this
   }
 
   /**

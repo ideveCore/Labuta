@@ -27,20 +27,20 @@ import Gdk from 'gi://Gdk';
 import { gettext as _ } from 'gettext';
 import Style from './assets/style.css';
 import Window from './window.js';
-import './pages/timer/timer.js';
-import './pages/statistics/statistics.js';
-import './components/history-details/history-details.js';
 import Preferences from './components/preferences/preferences.js';
 import { History } from './components/history/history.js';
-
 import {
   getGIRepositoryVersion,
   getGjsVersion,
   getGLibVersion,
 } from "../troll/src/util.js";
 import { get_flatpak_info } from './utils.js';
-import Application_data from './application_data.js';
+import GSettings from './gsettings.js';
 import Timer from './Timer.js';
+import './pages/timer/timer.js';
+import './pages/statistics/statistics.js';
+import './components/history-details/history-details.js';
+
 let provider;
 
 /**
@@ -55,11 +55,8 @@ export default class Application extends Adw.Application {
   }
   constructor() {
     super({ application_id: pkg.name, flags: Gio.ApplicationFlags.DEFAULT_FLAGS });
-    this.settings = new Gio.Settings({
-      schema_id: pkg.name,
-    });
-    this.data = new Application_data().setup();
-    this.Timer = new Timer(this);
+    this._settings = new GSettings();
+    this._timer = new Timer();
     this._setup_actions();
   }
 
@@ -86,8 +83,7 @@ export default class Application extends Adw.Application {
       new Preferences(this).present();
     });
     history_action.connect('activate', () => {
-      this.history = new History(this);
-      this.history.present();
+      new History(this).present();
     });
     show_about_action.connect('activate', () => {
       const aboutWindow = this._create_about_dialog();
@@ -152,12 +148,12 @@ Blueprint 0.10.0
    *
    */
   _request_quit() {
-    this.run_in_background = this.settings.get_boolean('run-in-background');
+    this.run_in_background = this._settings.get_boolean('run-in-background');
     if (!this.run_in_background) {
       this._open_close_option_dialog()
       return
     }
-    if (this.Timer.timer_state === 'stopped') {
+    if (this._timer.timer_state === 'stopped') {
       this.quit();
       return
     }
@@ -183,67 +179,16 @@ Blueprint 0.10.0
 
     dialog.connect('response', (dialog, id) => {
       if (id === 'exit') {
-        this.Timer.timer_state = 'stopped';
+        this._timer.timer_state = 'stopped';
         setTimeout(() => {
           this.quit()
         }, 1000)
       }
     })
-    if (this.Timer.timer_state === 'running' || this.Timer.timer_state == 'paused') {
+    if (this._timer.timer_state === 'running' || this.Timer.timer_state == 'paused') {
       return dialog.present()
     }
     this.quit()
-  }
-
-  /**
-   *
-   * Send notification method
-   * @param {Object} notification 
-   * @param {string} notification.title 
-   * @param {string} notification.body 
-   *
-   */
-  _send_notification({ title, body }) {
-    const notification = new Gio.Notification();
-    notification.set_title(title);
-    notification.set_body(body);
-    notification.set_priority('presence');
-    notification.set_default_action("app.open");
-    this.send_notification("lunch-is-ready", notification);
-  }
-
-  /**
-   *
-   * Load timer status in portal
-   * @param {string} message 
-   *
-   */
-  _load_background_portal_status(message) {
-    const connection = Gio.DBus.session;
-    const messageVariant = new GLib.Variant('(a{sv})', [{
-      'message': new GLib.Variant('s', message)
-    }]);
-    connection.call(
-      'org.freedesktop.portal.Desktop',
-      '/org/freedesktop/portal/desktop',
-      'org.freedesktop.portal.Background',
-      'SetStatus',
-      messageVariant,
-      null,
-      Gio.DBusCallFlags.NONE,
-      -1,
-      null,
-      (connection, res) => {
-        try {
-          connection.call_finish(res);
-        } catch (e) {
-          if (e instanceof Gio.DBusError)
-            Gio.DBusError.strip_remote_error(e);
-
-          logError(e);
-        }
-      }
-    );
   }
 
   /**
@@ -255,25 +200,25 @@ Blueprint 0.10.0
     let { active_window } = this;
     if (!active_window) {
       active_window = new Window(this);
-      this.settings.bind(
+      this._settings.bind(
         "width",
         active_window,
         "default-width",
         Gio.SettingsBindFlags.DEFAULT,
       );
-      this.settings.bind(
+      this._settings.bind(
         "height",
         active_window,
         "default-height",
         Gio.SettingsBindFlags.DEFAULT,
       );
-      this.settings.bind(
+      this._settings.bind(
         "is-maximized",
         active_window,
         "maximized",
         Gio.SettingsBindFlags.DEFAULT,
       );
-      this.settings.bind(
+      this._settings.bind(
         "is-fullscreen",
         active_window,
         "fullscreened",

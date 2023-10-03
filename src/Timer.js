@@ -20,8 +20,11 @@
 
 import GLib from 'gi://GLib';
 import Adw from 'gi://Adw';
+import Gtk from 'gi://Gtk';
 import { Db_item } from './db.js';
-import { Alarm } from './utils.js';
+import { Alarm, send_notification, load_timer_status_in_bg_mode } from './utils.js';
+import PomodoroItem from './pomodoro-item.js';
+import GSettings from './gsettings.js';
 
 /**
  *
@@ -36,26 +39,41 @@ export default class Timer {
    * @param {Adw.ApplicationWindow} application 
    *
    */
-  constructor(application) {
-    this._application = application;
-    this._listeners = [];
-    this._start_listeners = []
-    this._pause_listeners = [];
-    this._stop_listeners = [];
-    this._end_listeners = [];
-    this._setting_listeners = [];
-    this._data = {};
-    this.data = {};
+  constructor() {
+    if(Timer.instance) {
+      return Timer.instance;
+    }
+    Timer.instance = this
+    this._application = Gtk.Application.get_default();
+    this._pomodoro_item = new PomodoroItem();
+    this._settings = new GSettings();
     this.timer_state = 'stopped';
-    this.work_time = this._application.settings.get_int('work-time-st') * 60;
+    this.work_time = this._settings.get_int('work-time-st') * 60;
     this.current_work_time = this.work_time;
-    this.break_time = this._application.settings.get_int('break-time-st') * 60;
+    this.break_time = this._settings.get_int('break-time-st') * 60;
     this.current_break_time = this.break_time;
-    this.long_break = this._application.settings.get_int('long-break-st') * 60;
-    this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
+    this.long_break = this._settings.get_int('long-break-st') * 60;
+    this.sessions_long_break = this._settings.get_int('sessions-long-break');
     this._alarm = new Alarm();
-    this._setup_settings();
+    this._events = {
+      start: [],
+      pause: [],
+      stop: [],
+      run: [],
+      end: [],
+    };
+    this._settings.change('timer_customization', () => {
+      if (this.timer_state === 'stopped') {
+        this.work_time = this._settings.get_int('work-time-st') * 60;
+        this.current_work_time = this.work_time;
+        this.break_time = this._settings.get_int('break-time-st') * 60;
+        this.current_break_time = this.break_time;
+        this.long_break = this._settings.get_int('long-break-st') * 60;
+        this.sessions_long_break = this._settings.get_int('sessions-long-break');
+      }
+    })
   }
+
   /**
    *
    * Run time 
@@ -72,76 +90,78 @@ export default class Timer {
       }
 
       if (this.current_work_time === this.work_time) {
-        this._application._send_notification({ title: `${_("Pomodoro started")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
+        send_notification({ title: `${_("Pomodoro started")} - ${this._pomodoro_item.get.title}`, body: `${_("Description")}: ${this._pomodoro_item.get.description}\n${_("Created at")}: ${this._pomodoro_item.get.display_date}` })
         this._alarm.play('timer-start-alarm');
       } else if (this.current_work_time === 0) {
-        this._application._send_notification({ title: `${_("Pomodoro break time")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` })
+        send_notification({ title: `${_("Pomodoro break time")} - ${this._pomodoro_item.get.title}`, body: `${_("Description")}: ${this._pomodoro_item.get.description}\n${_("Created at")}: ${this._pomodoro_item.get.display_date}` })
         this._alarm.play('timer-break-alarm');
       }
 
       if (this.current_work_time > 0) {
-        this.data.work_time = this.data.work_time + 1;
-        if (!this._application.active_window.visible)
-          this._application._load_background_portal_status(`${_('Work time')}: ${this.format_time()}`);
+        this._pomodoro_item.set = {work_time: this._pomodoro_item.get.work_time + 1};
       } else {
-        this.data.break_time = this.data.break_time + 1;
-        if (!this._application.active_window.visible)
-          this._application._load_background_portal_status(`${_('Break time')}: ${this.format_time()}`);
+        this._pomodoro_item.set = {break_time: this._pomodoro_item.get.break_time + 1};
       }
 
+      if(!this._application.get_active_window().visible)
+        load_timer_status_in_bg_mode(`${this.current_work_time > 0 ? _('Work time') :  _('Break time')}: ${this.format_time()}`);
+
       this.current_work_time--
-      this.data = this._application.data.update(this.data)
-      this.listener(this);
+      this._pomodoro_item.update();
+      this.event('run');
 
       if (this.current_work_time > (this.current_break_time * -1)) {
         return GLib.SOURCE_CONTINUE
       }
 
       this.timer_state = 'paused';
+      if(!this._application.get_active_window().visible)
+        load_timer_status_in_bg_mode(`${_('Paused')}`);
+
       this.current_work_time = this.work_time;
       this.current_break_time = this.break_time;
-      this.data.sessions = this.data.sessions + 1;
-      this._end_listener(this);
-      if (this.data.sessions === this.sessions_long_break) {
+      this._pomodoro_item.set = {sessions: this._pomodoro_item.get.sessions + 1};
+      this.event('end');
+      if (this._pomodoro_item.get.sessions === this.sessions_long_break) {
         this.current_break_time = this.long_break;
-        this.data.sessions = 0;
-        this.data = this._application.data.update(this.data)
+        this._pomodoro_item.set = {sessions: 0};
+        this._pomodoro_item.update();
       }
-      this._application._send_notification({ title: `${_("Pomodoro finished")} - ${this.data.title}`, body: `${_("Description")}: ${this.data.description}\n${_("Created at")}: ${this.data.display_date}` });
+      send_notification({ title: `${_("Pomodoro finished")} - ${this._pomodoro_item.get.title}`, body: `${_("Description")}: ${this._pomodoro_item.get.description}\n${_("Created at")}: ${this._pomodoro_item.get.display_date}` });
+      if (this._settings.get_boolean('autostart')) {
+        this.start();
+        return GLib.SOURCE_CONTINUE
+      }
       this._alarm.play('timer-finish-alarm');
-      if (this._application.settings.get_boolean('autostart')) {
-        setTimeout(() => {
-          if (this.timer_state === 'paused') {
-            this.start();
-          }
-        }, 6000);
-      }
       return GLib.SOURCE_CONTINUE
     })
   };
+
   /**
-  *
-  * Start timer
-  * @param {Db_item} data 
-  *
-  */
-  start(data) {
+   *
+   * Start timer
+   * @param {Db_item} data
+   *
+   */
+  start() {
     if (this.timer_state === 'stopped') {
-      this.work_time = this._application.settings.get_int('work-time-st') * 60;
+      this.work_time = this._settings.get_int('work-time-st') * 60;
+      this.work_time = 5;
       this.current_work_time = this.work_time;
-      this.break_time = this._application.settings.get_int('break-time-st') * 60;
+      this.break_time = this._settings.get_int('break-time-st') * 60;
+      this.break_time = 2;
       this.current_break_time = this.break_time;
-      this.long_break = this._application.settings.get_int('long-break-st') * 60;
-      this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
-      this.data = data
+      this.long_break = this._settings.get_int('long-break-st') * 60;
+      this.sessions_long_break = this._settings.get_int('sessions-long-break');
       this.timer_state = 'running';
+      this._pomodoro_item.save();
       this._run();
-      this._start_listener(this);
+      this.event('start');
     } else if (this.timer_state === 'paused') {
-      this._start_listener(this);
+      this.event('start');
       this.timer_state = 'running';
     } else {
-      this._pause_listener();
+      this.event('pause');
       this.timer_state = 'paused';
     }
   }
@@ -154,103 +174,49 @@ export default class Timer {
   reset() {
     this.current_work_time = this.work_time;
     this.current_break_time = this.break_time;
-    this.data = this._application.data.delete(this.data.id);
     this.timer_state = 'stopped';
-    this._stop_listener(this);
+    this.event('stop');
+    this._pomodoro_item.delete();
   }
+
   /**
    *
    * Stop timer method
    *
    */
   stop() {
-    this.work_time = this._application.settings.get_int('work-time-st') * 60;
-    this.break_time = this._application.settings.get_int('break-time-st') * 60;
-    this.long_break = this._application.settings.get_int('long-break-st') * 60;
-    this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
+    this.work_time = this._settings.get_int('work-time-st') * 60;
+    this.break_time = this._settings.get_int('break-time-st') * 60;
+    this.long_break = this._settings.get_int('long-break-st') * 60;
+    this.sessions_long_break = this._settings.get_int('sessions-long-break');
     this.current_work_time = this.work_time;
     this.current_break_time = this.break_time;
     this.timer_state = 'stopped';
-    this.data = this._application.data.update(this.data);
-    this._stop_listener(this);
-    this.data = {};
+    this._pomodoro_item.update();
+    this._pomodoro_item.default_item();
+    this.event('stop');
   }
+
   /**
    *
-   * Listerners
+   * Invokes timer events
+   * @param {string} event 
+   * @param {Function} callback 
    *
    */
-  $(listener) {
-    this._listeners.push(listener);
+  connect(event, callback) {
+    this._events[event].push(callback)
   }
-  $pause(listener) {
-    this._pause_listeners.push(listener);
-  }
-  $end(listener) {
-    this._end_listeners.push(listener);
-  }
-  $start(listener) {
-    this._start_listeners.push(listener);
-  }
-  $stop(listener) {
-    this._stop_listeners.push(listener);
-  }
-  $settings(listener) {
-    this._setting_listeners.push(listener);
-  }
-  _setup_settings() {
-    this._application.settings.connect("changed::work-time-st", () => {
-      if (this.timer_state === 'stopped') {
-        this.work_time = this._application.settings.get_int('work-time-st') * 60;
-        this.current_work_time = this.work_time;
-        this._setting_listener(this);
-      }
-    });
-    this._application.settings.connect("changed::break-time-st", () => {
-      if (this.timer_state === 'stopped') {
-        this.break_time = this._application.settings.get_int('break-time-st') * 60;
-        this.current_break_time = this.break_time;
-      }
-    });
-    this._application.settings.connect("changed::long-break-st", () => {
-      if (this.timer_state === 'stopped') {
-        this.long_break = this._application.settings.get_int('long-break-st') * 60;
-      }
-    });
-    this._application.settings.connect("changed::sessions-long-break", () => {
-      if (this.timer_state === 'stopped') {
-        this.sessions_long_break = this._application.settings.get_int('sessions-long-break');
-      }
-    });
-  }
-  _start_listener() {
-    for (const listener of this._start_listeners) {
-      listener(this);
-    }
-  }
-  _pause_listener() {
-    for (const listener of this._pause_listeners) {
-      listener(this);
-    }
-  }
-  _stop_listener() {
-    for (const listener of this._stop_listeners) {
-      listener(this);
-    }
-  }
-  _end_listener() {
-    for (const listener of this._end_listeners) {
-      listener(this);
-    }
-  }
-  _setting_listener() {
-    for (const listener of this._setting_listeners) {
-      listener(this);
-    }
-  }
-  listener() {
-    for (const listener of this._listeners) {
-      listener(this);
+
+  /**
+   *
+   * Event listener
+   * @param {string} event
+   *
+   */
+  event(event) {
+    for(const listener of this._events[event]) {
+      listener(this._pomodoro_item.get);
     }
   }
   /**

@@ -137,7 +137,8 @@
           ]
         }
       ]
-    },    {
+    },
+    {
       "name": "pomodoro",
       "builddir": true,
       "buildsystem": "meson",

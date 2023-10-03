@@ -84,16 +84,14 @@ template $Gjs_History : Adw.PreferencesWindow {
         hexpand: true;
         orientation: vertical;
         Adw.HeaderBar {
-          show-end-title-buttons: bind leaflet.folded;
-          [start]
-          Gtk.Button {
-            icon-name: 'left-symbolic';
-            clicked => $_leaflet_navigate_back();
-          }
+            show-end-title-buttons: bind leaflet.folded;
+            [start]
+            Gtk.Button {
+              icon-name: 'left-symbolic';
+              clicked => $_leaflet_navigate_back();
+            }
         }
-        ListBox details_page {
-          $HistoryDetails history_details {}
-        }
+        Adw.Bin details_page {}
       };
     }
   }

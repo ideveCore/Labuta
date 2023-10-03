@@ -1,11 +1,11 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $HistoryDetails : Gtk.ListBoxRow {
-  activatable: false;
-  selectable: false;
+template $HistoryDetails : Gtk.Box {
   margin-start: 12;
   margin-end: 12;
+  hexpand: true;
+  vexpand: true;
   Gtk.Box {
     orientation: vertical;
     Adw.ActionRow {

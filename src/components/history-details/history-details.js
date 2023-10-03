@@ -32,7 +32,7 @@ import { create_timestamp, format_time } from '../../utils.js';
  * @class
  *
  */
-export default class HistoryDetails extends Gtk.ListBoxRow {
+export default class HistoryDetails extends Gtk.Box {
   static {
     GObject.registerClass({
       Template,
@@ -48,27 +48,22 @@ export default class HistoryDetails extends Gtk.ListBoxRow {
       ],
     }, this);
   }
-  constructor() {
-    super();
-    this._application = Gtk.Application.get_default();
-    this._id = null;
-    this._parent = null;
-  }
-
   /**
-   * update details
+   * create history details
    * @param {Object} history_data
    * @param {Gtk.ListBox} history_data.parent
-   * @param {number} history_data.id 
-   * @param {string} history_data.title 
-   * @param {string} history_data.subtitle 
-   * @param {number} history_data.work_time 
-   * @param {number} history_data.break_time 
-   * @param {string} history_data.description 
+   * @param {number} history_data.id
+   * @param {string} history_data.title
+   * @param {string} history_data.subtitle
+   * @param {number} history_data.work_time
+   * @param {number} history_data.break_time
+   * @param {string} history_data.description
    * @param {number} history_data.sessions
    *
    */
-  update_details({ parent, id, title, subtitle, work_time, break_time, description, sessions }) {
+  constructor({ parent, id, title, subtitle, work_time, break_time, description, sessions }) {
+    super();
+    this._application = Gtk.Application.get_default();
     this.title = title;
     this.description = description;
     this._id = id;

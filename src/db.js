@@ -21,6 +21,7 @@
 import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
 import Gda from 'gi://Gda';
+import GSettings from './gsettings.js';
 
 /**
  *
@@ -28,7 +29,6 @@ import Gda from 'gi://Gda';
  * @class
  *
  */
-
 export class Db_item {
   /**
    *
@@ -73,6 +73,7 @@ export class Db_item {
  */
 export class Pomodoro_query {
   /**
+   *
    * Create new instatece of pomodoro query statement 
    * @param {*} statement
    *
@@ -128,6 +129,7 @@ export class Query_builder {
   get_all() {
     return this
   }
+
   /**
    * returns querybuilder cond id
    * @param {*} [id=null] 
@@ -147,6 +149,7 @@ export class Query_builder {
     }
     return this
   }
+
   /**
    * return instance of Pomodoro_query
    * @returns {Pomodoro_query}
@@ -198,8 +201,8 @@ export class Database {
     this._connection.execute_non_select_command(`
       create unique index if not exists pomodoro_id_uindex on history (id);
     `);
-    const application = Gtk.Application.get_default();
-    const history_duration = application.settings.get_int('history-duration');
+    const settings = new GSettings();
+    const history_duration = settings.get_int('history-duration');
     this._connection.execute_non_select_command(`
       DELETE FROM history WHERE timestamp < strftime('%s', 'now', '-${history_duration} months');
     `);

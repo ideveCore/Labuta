@@ -22,6 +22,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import { Alarm } from '../../utils.js';
+import GSettings from '../../gsettings.js';
 import Template from './alarm-preferences.blp' assert { type: 'uri' };
 
 /**
@@ -52,7 +53,7 @@ export default class AlarmPreferences extends Adw.Window {
     super({
       transient_for: application,
     });
-    this._application = Gtk.Application.get_default();
+    this._settings = new GSettings();
     this._setup_timer_alarms();
     this._alarm = new Alarm();
   }
@@ -63,9 +64,9 @@ export default class AlarmPreferences extends Adw.Window {
    *
    */
   _setup_timer_alarms() {
-    const timer_start_alarm = JSON.parse(this._application.settings.get_string('timer-start-alarm'));
-    const timer_break_alarm = JSON.parse(this._application.settings.get_string('timer-break-alarm'));
-    const timer_finish_alarm = JSON.parse(this._application.settings.get_string('timer-finish-alarm'));
+    const timer_start_alarm = JSON.parse(this._settings.get_string('timer-start-alarm'));
+    const timer_break_alarm = JSON.parse(this._settings.get_string('timer-break-alarm'));
+    const timer_finish_alarm = JSON.parse(this._settings.get_string('timer-finish-alarm'));
     this._repeat_timer_start_alarm.set_value(timer_start_alarm.repeat);
     this._timer_start_alarm.set_subtitle(timer_start_alarm.type);
     this._uri_timer_start_alarm.set_title(timer_start_alarm.uri);
@@ -85,7 +86,7 @@ export default class AlarmPreferences extends Adw.Window {
   }
 
   _reset_timer_start_settings() {
-    this._application.settings.set_string('timer-start-alarm', JSON.stringify({ type: 'freedesktop', uri: 'message-new-instant', repeat: 1 }));
+    this._settings.set_string('timer-start-alarm', JSON.stringify({ type: 'freedesktop', uri: 'message-new-instant', repeat: 1 }));
     this._setup_timer_alarms();
   }
 
@@ -93,10 +94,10 @@ export default class AlarmPreferences extends Adw.Window {
     const dialog = Gtk.FileDialog.new();
     dialog.open(this, null, (_dialog, _task) => {
       try {
-        const settings = JSON.parse(this._application.settings.get_string('timer-start-alarm'));
+        const settings = JSON.parse(this._settings.get_string('timer-start-alarm'));
         settings.uri = _dialog.open_finish(_task).get_uri();
         settings.type = 'file';
-        this._application.settings.set_string('timer-start-alarm', JSON.stringify(settings));
+        this._settings.set_string('timer-start-alarm', JSON.stringify(settings));
         this._setup_timer_alarms();
       } catch (error) {
         console.log(error);
@@ -105,13 +106,13 @@ export default class AlarmPreferences extends Adw.Window {
   }
 
   _on_repeat_timer_start_alarm_changed(_target) {
-    const value = JSON.parse(this._application.settings.get_string('timer-start-alarm'));
+    const value = JSON.parse(this._settings.get_string('timer-start-alarm'));
     value.repeat = _target.get_value();
-    this._application.settings.set_string('timer-start-alarm', JSON.stringify(value));
+    this._settings.set_string('timer-start-alarm', JSON.stringify(value));
   }
 
   _setup_break_time_alarm() {
-    const settings = JSON.parse(this._application.settings.get_string('break-time-sound'))
+    const settings = JSON.parse(this._settings.get_string('break-time-sound'))
     this._break_time_repeat_sound.set_value(settings.repeat)
     this._break_time_uri_sound.set_subtitle(settings.type)
     this._break_time_sound.set_subtitle(settings.type)
@@ -123,7 +124,7 @@ export default class AlarmPreferences extends Adw.Window {
   }
 
   _reset_timer_break_settings() {
-    this._application.settings.set_string('timer-break-alarm', JSON.stringify({ type: 'freedesktop', uri: 'complete', repeat: 1 }));
+    this._settings.set_string('timer-break-alarm', JSON.stringify({ type: 'freedesktop', uri: 'complete', repeat: 1 }));
     this._setup_timer_alarms();
   }
 
@@ -131,10 +132,10 @@ export default class AlarmPreferences extends Adw.Window {
     const dialog = Gtk.FileDialog.new();
     dialog.open(this, null, (_dialog, _task) => {
       try {
-        const settings = JSON.parse(this._application.settings.get_string('timer-break-alarm'));
+        const settings = JSON.parse(this._settings.get_string('timer-break-alarm'));
         settings.uri = _dialog.open_finish(_task).get_uri();
         settings.type = 'file';
-        this._application.settings.set_string('timer-break-alarm', JSON.stringify(settings));
+        this._settings.set_string('timer-break-alarm', JSON.stringify(settings));
         this._setup_timer_alarms();
       } catch (error) {
         console.log(error);
@@ -143,13 +144,13 @@ export default class AlarmPreferences extends Adw.Window {
   }
 
   _on_repeat_timer_break_alarm_changed(_target) {
-    const value = JSON.parse(this._application.settings.get_string('timer-break-alarm'));
+    const value = JSON.parse(this._settings.get_string('timer-break-alarm'));
     value.repeat = _target.get_value();
-    this._application.settings.set_string('timer-break-alarm', JSON.stringify(value));
+    this._settings.set_string('timer-break-alarm', JSON.stringify(value));
   }
 
   _setup_finish_time_alarm() {
-    const settings = JSON.parse(this._application.settings.get_string('finish-time-sound'))
+    const settings = JSON.parse(this._settings.get_string('finish-time-sound'))
     this._finish_time_repeat_sound.set_value(settings.repeat)
     this._finish_time_sound.set_subtitle(settings.type)
     this._finish_time_uri_sound.set_subtitle(settings.type)
@@ -161,7 +162,7 @@ export default class AlarmPreferences extends Adw.Window {
   }
 
   _reset_timer_finish_settings() {
-    this._application.settings.set_string('timer-finish-alarm', JSON.stringify({ type: 'freedesktop', uri: 'alarm-clock-elapsed', repeat: 1 }));
+    this._settings.set_string('timer-finish-alarm', JSON.stringify({ type: 'freedesktop', uri: 'alarm-clock-elapsed', repeat: 1 }));
     this._setup_timer_alarms();
   }
 
@@ -169,10 +170,10 @@ export default class AlarmPreferences extends Adw.Window {
     const dialog = Gtk.FileDialog.new();
     dialog.open(this, null, (_dialog, _task) => {
       try {
-        const settings = JSON.parse(this._application.settings.get_string('timer-finish-alarm'));
+        const settings = JSON.parse(this._settings.get_string('timer-finish-alarm'));
         settings.uri = _dialog.open_finish(_task).get_uri();
         settings.type = 'file';
-        this._application.settings.set_string('timer-finish-alarm', JSON.stringify(settings));
+        this._settings.set_string('timer-finish-alarm', JSON.stringify(settings));
         this._setup_timer_alarms();
       } catch (error) {
         console.log(error);
@@ -181,9 +182,9 @@ export default class AlarmPreferences extends Adw.Window {
   }
 
   _on_repeat_timer_finish_alarm_changed(_target) {
-    const value = JSON.parse(this._application.settings.get_string('timer-finish-alarm'));
+    const value = JSON.parse(this._settings.get_string('timer-finish-alarm'));
     value.repeat = _target.get_value();
-    this._application.settings.set_string('timer-finish-alarm', JSON.stringify(value));
+    this._settings.set_string('timer-finish-alarm', JSON.stringify(value));
   }
 }
 

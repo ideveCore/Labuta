@@ -25,7 +25,11 @@ import Gdk from 'gi://Gdk';
 import GLib from 'gi://GLib';
 import Template from './timer.blp' assert { type: 'uri' };
 import { Db_item } from '../../db.js';
+import PomodoroItem from '../../pomodoro-item.js';
 import { create_timestamp } from '../../utils.js';
+import TimerControls from '../../components/timer-controls/timer-controls.js';
+import GSettings from '../../gsettings.js';
+import timer from '../../Timer.js';
 
 /**
  *
@@ -39,164 +43,109 @@ export default class Timer extends Adw.Bin {
       Template,
       GTypeName: 'Timer',
       InternalChildren: [
+        'timer_display',
         "tag_label",
         "tag_area",
         "pomodoro_counts",
         'title_entry',
         'description_entry',
         'timer_label',
-        'stack_timer_controls',
       ]
     }, this);
   }
   constructor() {
     super();
+    this._application = Gtk.Application.get_default();
     var size_group = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
     size_group.add_widget(this._tag_area);
     size_group.add_widget(this._tag_label);
     this._tag_area.set_draw_func(this._draw_tag);
+    this._timer = new timer();
+    this._pomodoro_item = new PomodoroItem();
+    this._settings = new GSettings();
 
-    this.application = Gtk.Application.get_default();
-    this.application.Timer.$start((timer) => {
-      this._stack_timer_controls.visible_child_name = 'running_timer';
-      this._title_entry.set_text(timer.data.title);
-      this._description_entry.set_text(timer.data.description);
+    this._timer.connect('start', (pomodoro_item) => {
+      this._title_entry.set_text(pomodoro_item.title);
+      this._description_entry.set_text(pomodoro_item.description);
       this._title_entry.editable = false;
       this._description_entry.editable = false;
-      this._load_time(timer);
-    })
-    this.application.Timer.$((timer) => {
-      this._load_time(timer);
+      this._load_time(pomodoro_item);
     });
-    this.application.Timer.$pause((timer) => {
-      this._stack_timer_controls.visible_child_name = 'paused_timer';
-      this._load_time(timer);
+    this._timer.connect('run', (pomodoro_item) => {
+      this._load_time(pomodoro_item);
     });
-    this.application.Timer.$start((timer) => {
-      this._stack_timer_controls.visible_child_name = 'running_timer';
-      this._load_time(timer);
+    this._timer.connect('pause', (pomodoro_item) => {
+      this._load_time(pomodoro_item);
     });
-    this.application.Timer.$stop((timer) => {
-      this._stack_timer_controls.visible_child_name = 'init_timer';
+    this._timer.connect('stop', (pomodoro_item) => {
       this._pomodoro_counts.set_visible(false);
       this._title_entry.editable = true;
       this._description_entry.editable = true;
       this._title_entry.set_text('');
       this._description_entry.set_text('');
-      this._load_time(timer);
       this._pomodoro_counts.set_visible(false);
+      this._load_time(pomodoro_item);
     });
-    this.application.Timer.$end((timer) => {
-      this._stack_timer_controls.visible_child_name = 'paused_timer';
-      this._load_time(timer);
+    this._timer.connect('end', (pomodoro_item) => {
+      this._load_time(pomodoro_item);
     });
-    this.application.Timer.$settings((timer) => {
-      this._load_time(timer);
-    });
-    this._load_time(this.application.Timer);
+    this._settings.change('timer_customization', () => {
+      if(this._timer.timer_state === 'stopped') {
+        this._load_time(this._pomodoro_item.get)
+      }
+    })
+    this._load_time(this._pomodoro_item.get);
+    this._timer_display.append(new TimerControls());
   }
+
   /**
    *
    * Load time method
+   * @param {Db_item} pomodoro_item
+   *
    */
-  _load_time(timer) {
-    if (timer.current_work_time === timer.work_time) {
+  _load_time(pomodoro_item) {
+    if (this._timer.current_work_time === this._timer.work_time) {
       this._timer_label.get_style_context().remove_class('error');
-    } else if (timer.current_work_time === 0) {
+    } else if (this._timer.current_work_time === 0) {
       this._timer_label.get_style_context().add_class('error');
     }
 
-    this._timer_label.set_text(timer.format_time());
+    this._timer_label.set_text(this._timer.format_time());
 
-    if (timer.data.sessions > 0) {
-      this._tag_label.set_label(`<span weight="bold" size="9pt">${timer.data.sessions}</span>`);
+    if (pomodoro_item.sessions > 0) {
+      this._tag_label.set_label(`<span weight="bold" size="9pt">${pomodoro_item.sessions}</span>`);
       this._pomodoro_counts.set_visible(true);
     }
   }
 
   /**
    *
-   * Get current date formatted method
+   * Title changes listener
+   * @param {Adw.EntryRow} target 
    *
    */
-  _get_date() {
-    const current_date = GLib.DateTime.new_now_local();
-    const day_of_week = current_date.format('%A');
-    const day_of_month = current_date.get_day_of_month();
-    const month_of_year = current_date.format('%B');
-    const year = current_date.get_year();
-    return `${day_of_week}, ${day_of_month} ${_("of")} ${month_of_year} ${_("of")} ${year}`
+  _on_title_changed(target) {
+    this._pomodoro_item.set = {title: target.get_text()};
   }
 
   /**
    *
-   * Get current time method
+   * Description changes listener
+   * @param {Adw.EntryRow} target 
    *
    */
-  _get_time() {
-    const hour = new GLib.DateTime().get_hour();
-    const minute = new GLib.DateTime().get_minute();
-    const second = new GLib.DateTime().get_second();
-    return `${hour > 9 ? hour : '0' + hour}:${minute > 9 ? minute : '0' + minute}:${second > 9 ? second : '0' + second}`
-  }
-
-  /**
-   *
-   * Create pause or start timer method
-   *
-   */
-  _on_start_pause_timer() {
-    const title = this._title_entry.get_text();
-    const description = this._description_entry.get_text();
-    if (this.application.Timer.timer_state === 'stopped') {
-      const current_date = GLib.DateTime.new_now_local()
-      const db_item = new Db_item({
-        id: null,
-        title: title ? title : `${_('Started at')} ${this._get_time()}`,
-        description,
-        work_time: 0,
-        break_time: 0,
-        day: current_date.get_day_of_year(),
-        day_of_month: current_date.get_day_of_month(),
-        year: current_date.get_year(),
-        week: current_date.get_week_of_year(),
-        month: current_date.get_month(),
-        display_date: this._get_date(),
-        timestamp: Math.floor(create_timestamp(null, null, null) / 1000),
-        sessions: 0,
-      })
-      this.data = this.application.data.save(db_item);
-      this.timer_running = true;
-      this.application.Timer.start(this.data);
-    } else if (this.application.Timer.timer_state === 'running') {
-      this.application.Timer.start(this.data);
-      this._stack_timer_controls.visible_child_name = 'paused_timer';
-    } else {
-      this.application.Timer.start(this.data);
-      this._stack_timer_controls.visible_child_name = 'running_timer';
-    }
-  }
-
-  /**
-   *
-   * Reset timer method
-   */
-  _on_reset_timer() {
-    this.application.Timer.reset();
-  }
-
-  /**
-   *
-   * Stop timer method
-   *
-   */
-  _on_stop_timer() {
-    this.application.Timer.stop();
+  _on_description_changed(target) {
+    this._pomodoro_item.set = {description: target.get_text()};
   }
 
   /**
    *
    * Draw pomodoro sessions element
+   * @param {Gtk.DrawingArea} area
+   * @param {any} cr
+   * @param {number} width
+   * @param {number} height
    *
    */
   _draw_tag(area, cr, width, height) {

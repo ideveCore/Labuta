@@ -22,8 +22,12 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
-import Template from './small-window.blp' assert { type: 'uri' };
 import { format_time } from '../../utils.js';
+import { Db_item } from '../../db.js';
+import PomodoroItem from '../../pomodoro-item.js';
+import TimerControls from '../timer-controls/timer-controls.js';
+import Timer from '../../Timer.js';
+import Template from './small-window.blp' assert { type: 'uri' };
 
 /**
  * 
@@ -40,7 +44,6 @@ export class SmallWindow extends Adw.Window {
         'overlay',
         'header_bar',
         'timer_controls',
-        'stack_timer_controls',
         'timer_label',
         'tag_label',
         'tag_area',
@@ -56,54 +59,49 @@ export class SmallWindow extends Adw.Window {
   constructor() {
     super();
     this._application = Gtk.Application.get_default();
+    this._timer = new Timer();
+    this._pomodoro_item = new PomodoroItem();
     const size_group = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
     size_group.add_widget(this._tag_area);
     size_group.add_widget(this._tag_label);
     this._tag_area.set_draw_func(this._draw_tag);
+    this._timer_controls.append(new TimerControls());
 
-    this._load_timer(this._application.Timer);
-    this._application.Timer.$((timer) => {
-      this._load_timer(timer);
-    });
-    this._application.Timer.$pause((timer) => {
-      this._stack_timer_controls.visible_child_name = 'paused_timer';
-    });
-    this._application.Timer.$start((timer) => {
-      this._stack_timer_controls.visible_child_name = 'running_timer';
-    });
-    this._application.Timer.$stop((timer) => {
-      this._stack_timer_controls.visible_child_name = 'init_timer';
+    this._timer.connect('stop', () => {
       this._pomodoro_counts.set_visible(false);
-      this._stack_timer_controls.visible_child_name = 'init_timer';
       this._timer_label.get_style_context().remove_class('error');
-      this._timer_label.set_text(this._application.Timer.format_time());
+      this._timer_label.set_text(this._timer.format_time());
       this._application.get_active_window().present();
       this.hide();
     });
-    this._application.Timer.$end((timer) => {
-      this._stack_timer_controls.visible_child_name = 'paused_timer';
-      this._load_timer(timer);
+    this._timer.connect('end', (pomodoro_item) => {
+      this._load_timer(pomodoro_item);
+    });
+    this._timer.connect('run', (pomodoro_item) => {
+      this._load_timer(pomodoro_item);
     });
     this._setup_event_controller();
+    this._load_timer(this._pomodoro_item.get);
   }
   /**
    *
    * Load timer data
+   * @param {Db_item} pomodoro_item
    *
    */
-  _load_timer(timer) {
-    if (timer.current_work_time === timer.work_time) {
+  _load_timer(pomodoro_item) {
+    if (this._timer.current_work_time === this._timer.work_time) {
       this._timer_label.get_style_context().remove_class('error');
-    } else if (timer.current_work_time === 0) {
+    } else if (this._timer.current_work_time === 0) {
       this._timer_label.get_style_context().add_class('error');
     }
-    this._timer_label.set_text(timer.format_time());
 
-    if (timer.data.sessions > 0) {
-      this._tag_label.set_label(`<span weight="bold" size="9pt">${timer.data.sessions}</span>`);
+    this._timer_label.set_text(this._timer.format_time());
+
+    if (pomodoro_item.sessions > 0) {
+      this._tag_label.set_label(`<span weight="bold" size="9pt">${pomodoro_item.sessions}</span>`);
       this._pomodoro_counts.set_visible(true);
     }
-
   }
 
   /**
@@ -146,5 +144,4 @@ export class SmallWindow extends Adw.Window {
     cr.closePath();
     cr.fill();
   }
-
 }

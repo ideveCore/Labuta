@@ -26,6 +26,7 @@ import Template from './window.blp' assert { type: 'uri' };
 import ThemeSelector from './components/theme-selector/theme-selector.js';
 import Shortcuts from './components/shortcuts/shortcuts.js';
 import { SmallWindow } from './components/small-window/small-window.js';
+import Timer from './Timer.js';
 
 /**
  *
@@ -46,6 +47,13 @@ export default class Window extends Adw.ApplicationWindow {
       ],
     }, this);
   }
+
+  /**
+   *
+   * Create a instance of pomodoro main window
+   * @param {Adw.ApplicationWindow} application
+   *
+   */
   constructor(application) {
     super({ application });
 
@@ -53,15 +61,16 @@ export default class Window extends Adw.ApplicationWindow {
     this._menu_button.get_popover().add_child(theme_selector, 'theme');
     this.set_help_overlay(new Shortcuts(application));
     this._small_window = new SmallWindow();
+    this._timer = new Timer();
 
     this._setup_actions();
 
     this._small_window.insert_action_group("window", this.window_group);
 
-    application.Timer.$start(() => {
+    this._timer.connect('start', () => {
       this._shorten_window.set_sensitive(true);
     });
-    application.Timer.$stop(() => {
+    this._timer.connect('stop', () => {
       this._shorten_window.set_sensitive(false);
     });
 
@@ -78,6 +87,7 @@ export default class Window extends Adw.ApplicationWindow {
     });
 
   }
+
   /**
    *
    * Setup actions
