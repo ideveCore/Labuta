@@ -22,7 +22,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
-import AlarmPreferences from '../alarm-preferences/alarm-preferences.js';
+import SoundPreferences from '../sound-preferences/sound-preferences.js';
 import Template from './preferences.blp' assert { type: 'uri' };
 import GSettings from '../../gsettings.js';
 
@@ -111,6 +111,6 @@ export default class Preferences extends Adw.PreferencesWindow {
     );
   }
   _open_sound_preferences(_target) {
-    new AlarmPreferences(this).present();
+    new SoundPreferences(this).present();
   }
 }

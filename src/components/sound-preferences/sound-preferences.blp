@@ -1,10 +1,10 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $AlarmPreferences : Adw.Window {
+template $SoundPreferences : Adw.Window {
   default-width: 350;
   modal: true;
-  title: _('Alarm preferences');
+  title: _('Sound preferences');
   resizable: false;
 
   content: Gtk.Box {
@@ -19,8 +19,8 @@ template $AlarmPreferences : Adw.Window {
       margin-end: 10; 
       margin-bottom: 10; 
       margin-top: 10; 
-      Adw.ExpanderRow timer_start_alarm {
-        title: _('Timer start alarm');
+      Adw.ExpanderRow timer_start_sound {
+        title: _('Timer start sound');
         subtitle: 'freedesktop';
         [prefix]
         Gtk.Button {
@@ -28,7 +28,7 @@ template $AlarmPreferences : Adw.Window {
           valign: center;
           icon-name: 'media-playback-start-symbolic';
           tooltip-text: _("Play sound");
-          clicked => $_play_timer_start_alarm();
+          clicked => $_play_timer_start_sound();
         }
         [prefix]
         Gtk.Button {
@@ -38,7 +38,7 @@ template $AlarmPreferences : Adw.Window {
           tooltip-text: _("Reset settings");
           clicked => $_reset_timer_start_settings();
         }
-        Adw.ActionRow uri_timer_start_alarm {
+        Adw.ActionRow uri_timer_start_sound {
           title: 'message-new-instant';
           subtitle: 'freedesktop';
           [suffix]
@@ -47,28 +47,26 @@ template $AlarmPreferences : Adw.Window {
             valign: center;
             icon-name: 'folder-open-symbolic';
             tooltip-text: _("Select sound file");
-            clicked => $_select_timer_start_alarm();
+            clicked => $_select_timer_start_sound();
           }
         }
-        Adw.ActionRow {
-          title: _('Repeat alarm');
-          SpinButton repeat_timer_start_alarm {
-            valign: center;
-            numeric: true;
-            adjustment:
-              Adjustment {
-                lower: 1;
-                upper: 10;
-                value: 1;
-                page-increment: 1;
-                step-increment: 1;
-              };
-              value-changed => $_on_repeat_timer_start_alarm_changed();
-          }
+        Adw.SpinRow repeat_timer_start_sound {
+          title: _('Repeat sound');
+          valign: center;
+          numeric: true;
+          adjustment:
+          Adjustment {
+            lower: 1;
+            upper: 10;
+            value: 1;
+            page-increment: 1;
+            step-increment: 1;
+          };
+          output => $_on_repeat_timer_start_sound_changed();
         }
       }
-      Adw.ExpanderRow timer_break_alarm {
-        title: _('Timer break alarm');
+      Adw.ExpanderRow timer_break_sound {
+        title: _('Timer break sound');
         subtitle: 'freedesktop';
         [prefix]
         Gtk.Button {
@@ -76,7 +74,7 @@ template $AlarmPreferences : Adw.Window {
           valign: center;
           icon-name: 'media-playback-start-symbolic';
           tooltip-text: _("Play sound");
-          clicked => $_play_timer_break_alarm();
+          clicked => $_play_timer_break_sound();
         }
         [prefix]
         Gtk.Button {
@@ -86,7 +84,7 @@ template $AlarmPreferences : Adw.Window {
           tooltip-text: _("Reset settings");
           clicked => $_reset_timer_break_settings();
         }
-        Adw.ActionRow uri_timer_break_alarm {
+        Adw.ActionRow uri_timer_break_sound {
           title: 'complete';
           subtitle: 'freedesktop';
           [suffix]
@@ -95,28 +93,26 @@ template $AlarmPreferences : Adw.Window {
             valign: center;
             icon-name: 'folder-open-symbolic';
             tooltip-text: _("Select sound file");
-            clicked => $_select_timer_break_alarm();
+            clicked => $_select_timer_break_sound();
           }
         }
-        Adw.ActionRow {
-          title: _('Repeat alarm');
-          SpinButton repeat_timer_break_alarm {
-            valign: center;
-            numeric: true;
-            adjustment:
-              Adjustment {
-                lower: 1;
-                upper: 10;
-                value: 1;
-                page-increment: 1;
-                step-increment: 1;
-              };
-              value-changed => $_on_repeat_timer_break_alarm_changed();
-          }
+        Adw.SpinRow repeat_timer_break_sound {
+          title: _('Repeat sound');
+          valign: center;
+          numeric: true;
+          adjustment:
+          Adjustment {
+            lower: 1;
+            upper: 10;
+            value: 1;
+            page-increment: 1;
+            step-increment: 1;
+          };
+          output => $_on_repeat_timer_break_sound_changed();
         }
       }
-      Adw.ExpanderRow timer_finish_alarm {
-        title: _('Timer finish alarm');
+      Adw.ExpanderRow timer_finish_sound {
+        title: _('Timer finish sound');
         subtitle: 'freedesktop';
         [prefix]
         Gtk.Button {
@@ -124,7 +120,7 @@ template $AlarmPreferences : Adw.Window {
           valign: center;
           icon-name: 'media-playback-start-symbolic';
           tooltip-text: _("Play sound");
-          clicked => $_play_timer_finish_alarm();
+          clicked => $_play_timer_finish_sound();
         }
         [prefix]
         Gtk.Button {
@@ -134,8 +130,8 @@ template $AlarmPreferences : Adw.Window {
           tooltip-text: _("Reset settings");
           clicked => $_reset_timer_finish_settings();
         }
-        Adw.ActionRow uri_timer_finish_alarm {
-          title: 'alarm-clock-elapsed';
+        Adw.ActionRow uri_timer_finish_sound {
+          title: 'sound-clock-elapsed';
           subtitle: 'freedesktop';
           [suffix]
           Gtk.Button {
@@ -143,24 +139,22 @@ template $AlarmPreferences : Adw.Window {
             valign: center;
             icon-name: 'folder-open-symbolic';
             tooltip-text: _("Select sound file");
-            clicked => $_select_timer_finish_alarm();
+            clicked => $_select_timer_finish_sound();
           }
         }
-        Adw.ActionRow {
-          title: _('Repeat alarm');
-          SpinButton repeat_timer_finish_alarm {
-            valign: center;
-            numeric: true;
-            adjustment:
-              Adjustment {
-                lower: 1;
-                upper: 10;
-                value: 1;
-                page-increment: 1;
-                step-increment: 1;
-              };
-              value-changed => $_on_repeat_timer_finish_alarm_changed();
-          }
+        Adw.SpinRow repeat_timer_finish_sound {
+          title: _('Repeat sound');
+          valign: center;
+          numeric: true;
+          adjustment:
+          Adjustment {
+            lower: 1;
+            upper: 10;
+            value: 1;
+            page-increment: 1;
+            step-increment: 1;
+          };
+          output => $_on_repeat_timer_finish_sound_changed();
         }
       }
     }

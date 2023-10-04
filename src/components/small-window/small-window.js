@@ -44,6 +44,7 @@ export class SmallWindow extends Adw.Window {
         'overlay',
         'header_bar',
         'timer_controls',
+        'timer_controls_box',
         'timer_label',
         'tag_label',
         'tag_area',
@@ -112,12 +113,14 @@ export class SmallWindow extends Adw.Window {
   _setup_event_controller() {
     const controller = new Gtk.EventControllerMotion();
     controller.connect("enter", () => {
-      this._header_bar.set_opacity(1);
-      this._timer_controls.set_opacity(1);
+      // this._header_bar.set_opacity(1);
+      // this._timer_controls.set_opacity(1);
+      this._timer_controls_box.set_opacity(1);
     })
     controller.connect("leave", () => {
-      this._header_bar.set_opacity(0);
-      this._timer_controls.set_opacity(0);
+      // this._header_bar.set_opacity(0);
+      // this._timer_controls.set_opacity(0);
+      this._timer_controls_box.set_opacity(0);
     })
     this._overlay.add_controller(controller)
   }

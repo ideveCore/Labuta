@@ -92,12 +92,12 @@ export function get_flatpak_info() {
  * @class
  *
  */
-export class Alarm {
+export class Sound {
   constructor() {
-    if (Alarm.instance) {
-      return Alarm.instance;
+    if (Sound.instance) {
+      return Sound.instance;
     }
-    Alarm.instance = this;
+    Sound.instance = this;
     this._application = Gtk.Application.get_default();
     this._settings = new GSettings();
     this._gsound = new GSound.Context();

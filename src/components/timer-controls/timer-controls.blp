@@ -18,6 +18,10 @@ template $TimerControls : Gtk.Stack {
   StackPage {
     name: "running_timer";
     child:
+    Gtk.Grid {
+      halign: center;
+      column-spacing: 18;
+      column-homogeneous: true;
       Button {
         styles ["circular", "large-button"]
         halign: center;
@@ -25,7 +29,16 @@ template $TimerControls : Gtk.Stack {
         icon-name: "media-playback-pause-symbolic";
         tooltip-text: _("Pause timer");
         clicked => $_on_start_pause_timer();
-      };
+      }
+      Button {
+        styles ["circular", "large-button"]
+        halign: center;
+        valign: center;
+        icon-name: "media-skip-forward-symbolic";
+        tooltip-text: _("Skip timer");
+        clicked => $_on_skip_timer();
+      }
+    };
   }
   StackPage {
     name: "paused_timer";

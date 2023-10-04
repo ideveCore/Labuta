@@ -42,6 +42,8 @@ import './pages/statistics/statistics.js';
 import './components/history-details/history-details.js';
 
 let provider;
+const menuModel = new Gio.Menu();
+menuModel.append('See full menu', 'pizza.full-menu');
 
 /**
  *
@@ -185,7 +187,7 @@ Blueprint 0.10.0
         }, 1000)
       }
     })
-    if (this._timer.timer_state === 'running' || this.Timer.timer_state == 'paused') {
+    if (this._timer.timer_state === 'running' || this._timer.timer_state == 'paused') {
       return dialog.present()
     }
     this.quit()

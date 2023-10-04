@@ -90,5 +90,14 @@ export default class TimerControls extends Gtk.Stack {
     this._timer.stop();
   }
 
+  /**
+   *
+   * Skip timer method
+   *
+   */
+  _on_skip_timer() {
+    this._timer.skip();
+  }
+
 }
 

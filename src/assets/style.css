@@ -35,20 +35,3 @@
 .text-light {
   color: rgb(255, 255, 255);
 }
-
-/* spinbutton styles */
-spinbutton {
-  background-color: transparent;
-  outline: none;
-}
-spinbutton > button {
-  background-color: alpha(currentColor,.1);
-  border: none;
-  border-radius: 50%;
-  margin-left: 0.5em;
-}
-spinbutton > button:hover {
-  background-color: alpha(currentColor,.15);
-}
-
-
