@@ -26,7 +26,6 @@ template $Gjs_History : Adw.PreferencesWindow {
             active: true;
           }
           [start]
-
           Gtk.Button delete_button {
             styles ["error"]
             valign: center;
@@ -42,6 +41,14 @@ template $Gjs_History : Adw.PreferencesWindow {
             icon-name: "open-menu-symbolic";
             tooltip-text: _("History menu");
           }
+          [end]
+          MenuButton {
+            styles ["flat"]
+            halign: center;
+            valign: center;
+            icon-name: "month-symbolic";
+            menu-model: history_view_menu;
+          }
         }
         Adw.PreferencesGroup {
           Gtk.Box {
@@ -51,13 +58,13 @@ template $Gjs_History : Adw.PreferencesWindow {
               Gtk.StackPage {
                 name: "empty_history";
                 child:
-                  Adw.StatusPage {
-                    icon-name: "history-undo-symbolic";
-                    Gtk.Label {
-                      styles ["title-1"]
-                      label: _("Empty history");
-                    }
-                  };
+                Adw.StatusPage {
+                  icon-name: "history-undo-symbolic";
+                  Gtk.Label empty_history_message {
+                    styles ["title-1"]
+                    label: _("Empty history");
+                  }
+                };
               }
               Gtk.StackPage {
                 name: "history";
@@ -84,12 +91,12 @@ template $Gjs_History : Adw.PreferencesWindow {
         hexpand: true;
         orientation: vertical;
         Adw.HeaderBar {
-            show-end-title-buttons: bind leaflet.folded;
-            [start]
-            Gtk.Button {
-              icon-name: 'left-symbolic';
-              clicked => $_leaflet_navigate_back();
-            }
+          show-end-title-buttons: bind leaflet.folded;
+          [start]
+          Gtk.Button {
+            icon-name: 'left-symbolic';
+            clicked => $_leaflet_navigate_back();
+          }
         }
         Adw.Bin details_page {}
       };
@@ -104,24 +111,24 @@ menu primary_menu {
       section {
         item {
           label: _("Name");
-          action: 'search.sorting';
+          action: 'history.sort';
           target: 'name';
         }
         item {
           label: _("Date");
-          action: 'search.sorting';
+          action: 'history.sort';
           target: 'date';
         }
       }
       section {
         item {
           label: _('Ascending');
-          action: 'search.order';
+          action: 'history.order';
           target: 'ascending';
         }
         item {
           label: _('Descending');
-          action: 'search.order';
+          action: 'history.order';
           target: 'descending';
         }
       }
@@ -130,5 +137,28 @@ menu primary_menu {
       label: _("Clear history");
       action: "history.clear";
     }
+  }
+}
+
+menu history_view_menu {
+  item {
+    label: _('Today');
+    action: 'history.view';
+    target: 'today';
+  }
+  item {
+    label: _('This Week');
+    action: 'history.view';
+    target: 'week';
+  }
+  item {
+    label: _('This Month');
+    action: 'history.view';
+    target: 'month';
+  }
+  item {
+    label: _('All');
+    action: 'history.view';
+    target: 'all';
   }
 }

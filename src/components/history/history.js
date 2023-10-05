@@ -25,8 +25,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import { format_time } from '../../utils.js';
 import { Db_item } from '../../db.js';
-import ApplicationData from  '../../application_data.js';
-import GSettings from '../../gsettings.js';
+import Settings from '../../settings.js';
 import HistoryDetails from '../history-details/history-details.js';
 import Template from './history.blp' assert { type: 'uri' };
 
@@ -48,18 +47,26 @@ export class History extends Adw.PreferencesWindow {
         'details_page',
         'primary_menu',
         'delete_button',
+        'empty_history_message',
       ]
     }, this);
   }
-  constructor(application) {
+  /**
+   *
+   * Create a instance of History
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   *
+   */
+  constructor({ application }) {
     super({
       transient_for: application.get_active_window(),
     });
     this._application = application;
-    this._data = new ApplicationData();
+    this._utils = application.utils;
     this._selected_rows = [];
     this._view_work_time = true;
-    this._settings = new GSettings();
+    this._settings = new Settings({ schema_id: `${pkg.name}.History`});
 
     this._toggle_view_work_break_time_button.connect('clicked', () => {
       this._view_work_time = this._toggle_view_work_break_time_button.get_active();
@@ -74,32 +81,30 @@ export class History extends Adw.PreferencesWindow {
    *
    */
   _setup_gactions() {
-    this.search_action_group = new Gio.SimpleActionGroup();
     this.history_action_group = new Gio.SimpleActionGroup();
-    this.insert_action_group("search", this.search_action_group);
     this.insert_action_group("history", this.history_action_group);
 
-    const sorting_action = new Gio.SimpleAction({ name: 'sorting', parameter_type: new GLib.Variant('s', '').get_type() });
-    const order_action = new Gio.SimpleAction({ name: 'order', parameter_type: new GLib.Variant('s', '').get_type() });
     const clear_action = new Gio.SimpleAction({ name: 'clear' });
-    sorting_action.connect('activate', (simple_action, parameter) => {
-      const sort = parameter.get_string()[0];
-      this._settings.set_string('sort-by', sort);
-      this._list_box.set_sort_func(this._sort_history.bind(this))
-    });
-    order_action.connect('activate', (simple_action, parameter) => {
-      const order = parameter.get_string()[0];
-      this._settings.set_string('order-by', order);
-      this._list_box.set_sort_func(this._sort_history.bind(this))
-    });
     clear_action.connect('activate', (simple_action) => {
-      this._data.delete_all();
-      this._stack.visible_child_name = "empty_history";
+      this._application_db_manager.delete_all();
+      this._load_history_list();
     })
 
-    this.search_action_group.add_action(sorting_action);
-    this.search_action_group.add_action(order_action);
     this.history_action_group.add_action(clear_action);
+    this.history_action_group.add_action(this._settings.create_action('view'));
+    this.history_action_group.add_action(this._settings.create_action('order'));
+    this.history_action_group.add_action(this._settings.create_action('sort'));
+    this._settings.connect('changed::view', () => {
+      this._load_history_list();
+    });
+    this._settings.connect('changed::order', () => {
+      this._load_history_list();
+      this._list_box.set_sort_func(this._sort_history.bind(this))
+    });
+    this._settings.connect('changed::sort', () => {
+      this._load_history_list();
+      this._list_box.set_sort_func(this._sort_history.bind(this))
+    });
   }
 
   /**
@@ -168,7 +173,7 @@ export class History extends Adw.PreferencesWindow {
   }
 
   /**
-   * 
+   *
    * Leaflet navigate back method
    *
    */
@@ -177,8 +182,8 @@ export class History extends Adw.PreferencesWindow {
   }
 
   /**
-   * 
-   * Leaflet navigate forward method 
+   *
+   * Leaflet navigate forward method
    *
    */
   _leaflet_navigate_forward() {
@@ -187,25 +192,44 @@ export class History extends Adw.PreferencesWindow {
 
   /**
    *
-   * Load history 
+   * Load history
    *
    */
   _load_history_list() {
-    if (this._data.get().length === 0) return;
+    this._stack.visible_child_name = "empty_history";
+    this._list_box.remove_all();
+    const application_db_manager = this._utils.application_db_manager;
+    const pomodoro_utils = this._utils.pomodoro_time_utils;
+    const get_history = {
+      today: () => (application_db_manager.get_by_day(pomodoro_utils.day)),
+      week: () => (application_db_manager.get_by_week(pomodoro_utils.week)),
+      month: () => (application_db_manager.get_by_month(pomodoro_utils.month)),
+      all: () => (application_db_manager.get()),
+    };
+
+    let settings = this._settings.get_string('view');
+
+    this.data = get_history[settings]();
+
+    const message = settings === 'all' ? _('Empty history') : `${settings !== 'today' ? _('This') : ''} ${settings.charAt(0).toUpperCase() + settings.slice(1)} ${_('no pomodoro')}`;
+    this._empty_history_message.set_label(message);
+    this._selected_rows = [];
+    this._load_display_total_time();
+
+
+    if(this.data.length === 0) return;
     this._stack.visible_child_name = "history";
     this._list_box.set_sort_func(this._sort_history.bind(this));
-    const data = this._data.get();
     const history_group = {};
     const history_data = [];
 
-    data.forEach((data) => {
+    this.data.forEach((data) => {
       const id = `${data.title}${data.description}`;
       if (!history_group[id]) {
         history_group[id] = [];
       }
       history_group[id].push(data);
     });
-
     Object.values(history_group).map((data) => {
       if(data.length > 1) {
         history_data.push(data.reduce((accumulator, object) => {
@@ -230,8 +254,6 @@ export class History extends Adw.PreferencesWindow {
     history_data.forEach((item) => {
       this._list_box.append(this._create_row(item));
     });
-    this._selected_rows = [];
-    this._load_display_total_time();
   }
 
   /**
@@ -239,7 +261,7 @@ export class History extends Adw.PreferencesWindow {
    * Set sort function in Gtk.ListBox
    * @param {this._create_row} history_a
    * @param {this._create_row} history_b
-   * @param {*} _data 
+   * @param {*} _data
    * @returns {*}
    * @example Return sort function
    *
@@ -247,10 +269,10 @@ export class History extends Adw.PreferencesWindow {
   _sort_history(history_a, history_b, _data) {
     const a = history_a
     const b = history_b
-    if (this._settings.get_string('sort-by') === 'name') {
-      return this._settings.get_string('order-by') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+    if (this._settings.get_string('sort') === 'name') {
+      return this._settings.get_string('order') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
-    return this._settings.get_string('order-by') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
+    return this._settings.get_string('order') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
   }
 
   /**
@@ -265,8 +287,8 @@ export class History extends Adw.PreferencesWindow {
       total_work_timer = this._selected_rows.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
       total_break_timer = this._selected_rows.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     } else {
-      total_work_timer = this._data.get().reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
-      total_break_timer = this._data.get().reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+      total_work_timer = this.data.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
+      total_break_timer = this.data.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     }
 
     if (this._view_work_time) {
@@ -301,7 +323,7 @@ export class History extends Adw.PreferencesWindow {
   /**
    *
    * Called when history row selected
-   * @param {ths._create_row} row 
+   * @param {ths._create_row} row
    *
    */
   _on_select_row(row) {
@@ -320,4 +342,3 @@ export class History extends Adw.PreferencesWindow {
     }
   }
 }
-
