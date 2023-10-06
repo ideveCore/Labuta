@@ -23,6 +23,7 @@ import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import { Timer } from './pages/timer/timer.js';
+import { Statistics } from './pages/statistics/statistics.js';
 import { ThemeSelector } from './components/theme-selector/theme-selector.js';
 import Shortcuts from './components/shortcuts/shortcuts.js';
 import { SmallWindow } from './components/small-window/small-window.js';
@@ -64,6 +65,8 @@ export class Window extends Adw.ApplicationWindow {
     this._menu_button.get_popover().add_child(theme_selector, 'theme');
     this.set_help_overlay(new Shortcuts(application));
     this._timer_page.set_child(new Timer({ application }));
+    this._statistics_page_component = new Statistics({ application });
+    this._statistics_page.set_child(this._statistics_page_component);
     this._small_window = new SmallWindow({ application });
     this._timer = application.utils.timer;
 
@@ -79,7 +82,7 @@ export class Window extends Adw.ApplicationWindow {
     });
     this._stack.connect('notify::visible-child', () => {
       if (this._stack.visible_child_name == 'statistics') {
-        this._stack.visible_child._load_statistics_data();
+        this._statistics_page_component.load_statistics_data();
       }
     });
 

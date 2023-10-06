@@ -40,6 +40,17 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         }
       }
       Adw.ActionRow  {
+        title: _("High priority to notify");
+        subtitle: _("If enabled, the application will display notifications even if the system notifications are muted.");
+        icon-name: "permissions-notifications-symbolic";
+        activatable-widget: switch_high_priority_notify;
+        [suffix]
+        Switch switch_high_priority_notify {
+          name: "high-priority-notify";
+          valign: center;
+        }
+      }
+      Adw.ActionRow  {
         title: _("Autostart");
         subtitle: _("Automatically start the timer after break time");
         icon-name: "system-restart-symbolic";

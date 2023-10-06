@@ -37,6 +37,7 @@ export class Preferences extends Adw.PreferencesWindow {
       Template,
       InternalChildren: [
         'switch_run_in_background',
+        'switch_high_priority_notify',
         'switch_play_sounds',
         'switch_autostart',
         'set_history_duration',
@@ -78,6 +79,12 @@ export class Preferences extends Adw.PreferencesWindow {
     this._settings.bind(
       "play-sounds",
       this._switch_play_sounds,
+      "active",
+      Gio.SettingsBindFlags.DEFAULT,
+    );
+    this._settings.bind(
+      "high-priority-notify",
+      this._switch_high_priority_notify,
       "active",
       Gio.SettingsBindFlags.DEFAULT,
     );

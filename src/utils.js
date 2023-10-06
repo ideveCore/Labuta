@@ -58,7 +58,7 @@ export const create_timestamp = (item_year, item_month, item_day) => {
  * @returns {string}
  *
  */
-export const format_time = (time) => {
+const format_time = (time) => {
   let hours = Math.floor(time / 60 / 60)
   let minutes = Math.floor(time / 60) % 60;
   let seconds = time % 60;
@@ -244,12 +244,13 @@ export const pomodoro_time_utils = () => {
  * Send notification
  * @param {object} params
  * @param {Adw.Application} params.application
+ * @param {Gio.Settings} params.settings
  *
  * @typered {object}
  * @property {Function} send
  *
  */
-export const notification = ({ application }) => {
+export const notification = ({ application, settings }) => {
   const notification = new Gio.Notification();
 
   /**
@@ -263,7 +264,8 @@ export const notification = ({ application }) => {
   const send = ({ title, body }) => {
     notification.set_title(title);
     notification.set_body(body);
-    notification.set_priority(Gio.NotificationPriority.URGENT);
+    const high_priority_notify = settings.get_boolean('high-priority-notify');
+    notification.set_priority(high_priority_notify ? Gio.NotificationPriority.URGENT : Gio.NotificationPriority.NORMAL);
     notification.set_default_action("app.open");
     application.send_notification("lunch-is-ready", notification);
   }
@@ -356,7 +358,7 @@ export const utils = ({ application  }) => {
   const settings = new Settings({ schema_id: pkg.name });
   const db_manager = new ApplicationDbManager({ settings });
   const sound = sound_player({ application, settings });
-  const notify = notification({ application });
+  const notify = notification({ application, settings });
   const item = new PomodoroItem({ db_manager, time_utils });
   const timer_instance = timer({ application, pomodoro_item: item, settings, sound, notification: notify });
   return {
@@ -369,5 +371,6 @@ export const utils = ({ application  }) => {
     timer: timer_instance,
     background_status: set_background_status(),
     quit_request_dialog: quit_request_dialog({application, timer: timer_instance.get_data}),
+    format_time,
   }
 }

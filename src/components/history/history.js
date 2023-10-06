@@ -23,10 +23,9 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import { format_time } from '../../utils.js';
 import { Db_item } from '../../db.js';
 import Settings from '../../settings.js';
-import HistoryDetails from '../history-details/history-details.js';
+import { HistoryDetails } from '../history-details/history-details.js';
 import Template from './history.blp' assert { type: 'uri' };
 
 /**
@@ -65,6 +64,7 @@ export class History extends Adw.Window {
     });
     this._application = application;
     this._utils = application.utils;
+    this._format_time = application.utils.format_time;
     this._selected_rows = [];
     this._view_work_time = true;
     this._settings = new Settings({ schema_id: `${pkg.name}.History`});
@@ -162,6 +162,7 @@ export class History extends Adw.Window {
     this._details_page.set_title(item.title);
     this._details_page.set_description(item.description || _('No description'));
     const history_details = new HistoryDetails({
+      application: this._application,
       id: item.id,
       title: item.title,
       parent: this,
@@ -218,7 +219,6 @@ export class History extends Adw.Window {
     this._empty_history_message.set_label(message);
     this._selected_rows = [];
     this._load_display_total_time();
-
 
     if(this.data.length === 0) return;
     this._stack.visible_child_name = "history";
@@ -298,12 +298,12 @@ export class History extends Adw.Window {
       this._toggle_view_work_break_time_button.get_style_context().remove_class('error');
       this._toggle_view_work_break_time_button.get_style_context().add_class('accent');
       this._toggle_view_work_break_time_button.set_tooltip_text(_('Work time'));
-      this._toggle_view_work_break_time_button.set_label(format_time(total_work_timer));
+      this._toggle_view_work_break_time_button.set_label(this._format_time(total_work_timer));
     } else {
       this._toggle_view_work_break_time_button.get_style_context().remove_class('accent');
       this._toggle_view_work_break_time_button.get_style_context().add_class('error');
       this._toggle_view_work_break_time_button.set_tooltip_text(_('Break time'));
-      this._toggle_view_work_break_time_button.set_label(format_time(total_break_timer));
+      this._toggle_view_work_break_time_button.set_label(this._format_time(total_break_timer));
     }
   }
 

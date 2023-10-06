@@ -20,19 +20,17 @@
 
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
-import GLib from 'gi://GLib';
 import Adw from 'gi://Adw';
 import Template from './history-details.blp' assert { type: 'uri' };
-import { Db_item } from '../../db.js';
-import { create_timestamp, format_time } from '../../utils.js';
 
 /**
  * 
  * Create HistoryDetails element
  * @class
+ * @extends {Gtk.Boxc}
  *
  */
-export default class HistoryDetails extends Gtk.Box {
+export class HistoryDetails extends Gtk.Box {
   static {
     GObject.registerClass({
       Template,
@@ -49,6 +47,7 @@ export default class HistoryDetails extends Gtk.Box {
   /**
    * create history details
    * @param {Object} history_data
+   * @param {Adw.Application} history_data.application
    * @param {Gtk.ListBox} history_data.parent
    * @param {number} history_data.id
    * @param {string} history_data.title
@@ -59,16 +58,19 @@ export default class HistoryDetails extends Gtk.Box {
    * @param {number} history_data.sessions
    *
    */
-  constructor({ parent, id, subtitle, work_time, break_time, sessions, title, description }) {
+  constructor({ application, parent, id, subtitle, work_time, break_time, sessions, title, description }) {
     super();
-    this._application = Gtk.Application.get_default();
+    this._application = application;
+    this._format_time = application.utils.format_time;
+    this._pomodoro_item = application.utils.pomodoro_item;
+    this._timer = application.utils.timer;
     this.title = title;
     this.description = description;
     this._id = id;
     this._parent = parent
     this._date.set_text(subtitle);
-    this._work_time.set_text(format_time(work_time).toString());
-    this._break_time.set_text(format_time(break_time).toString())
+    this._work_time.set_text(this._format_time(work_time).toString());
+    this._break_time.set_text(this._format_time(break_time).toString())
     this._sessions.set_text(sessions.toString());
   }
 
@@ -78,42 +80,14 @@ export default class HistoryDetails extends Gtk.Box {
    *
    */
   _on_continue_timer() {
-    if (this._application.Timer.timer_state !== 'running' && this._application.Timer.timer_state !== 'paused') {
-      const current_date = GLib.DateTime.new_now_local()
-      const db_item = new Db_item({
-        id: null,
-        title: this.title,
-        description: this.description,
-        work_time: 0,
-        break_time: 0,
-        day: current_date.get_day_of_year(),
-        day_of_month: current_date.get_day_of_month(),
-        year: current_date.get_year(),
-        week: current_date.get_week_of_year(),
-        month: current_date.get_month(),
-        display_date: this._get_date(),
-        timestamp: Math.floor(create_timestamp(null, null, null) / 1000),
-        sessions: 0,
-      })
-      this._application.Timer.start(this._application.data.save(db_item));
+    if (this._timer.timer_state !== 'running' && this._timer_state !== 'paused') {
+      this._pomodoro_item.set = { title: this.title, description: this.description }
+      this._timer.start();
       this._parent.close();
     } else {
       this._toast_overlay.add_toast(new Adw.Toast({
         title: _("Timer already in progress"),
       }));
     }
-  }
-  /**
-   *
-   * @returns {string} // Return the formated current date
-   *
-   */
-  _get_date() {
-    const current_date = GLib.DateTime.new_now_local();
-    const day_of_week = current_date.format('%A');
-    const day_of_month = current_date.get_day_of_month();
-    const month_of_year = current_date.format('%B');
-    const year = current_date.get_year();
-    return `${day_of_week}, ${day_of_month} ${_("of")} ${month_of_year} ${_("of")} ${year}`
   }
 }

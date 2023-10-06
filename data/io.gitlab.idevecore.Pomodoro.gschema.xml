@@ -33,6 +33,9 @@
     <key name="is-fullscreen" type="b">
       <default>false</default>
     </key>
+    <key name="high-priority-notify" type="b">
+      <default>true</default>
+    </key>
     <key type="i" name="work-time-st">
       <default>25</default>
     </key>
