@@ -65,6 +65,7 @@ export class History extends Adw.Window {
     this._application = application;
     this._utils = application.utils;
     this._format_time = application.utils.format_time;
+    this._application_db_manager = application.utils.application_db_manager;
     this._selected_rows = [];
     this._view_work_time = true;
     this._settings = new Settings({ schema_id: `${pkg.name}.History`});
@@ -215,7 +216,14 @@ export class History extends Adw.Window {
 
     this.data = get_history[settings]();
 
-    const message = settings === 'all' ? _('Empty history') : `${settings !== 'today' ? _('This') : ''} ${settings.charAt(0).toUpperCase() + settings.slice(1)} ${_('no pomodoro')}`;
+    // for translations
+    const dates = {
+      today: _('today'),
+      week: _('this week'),
+      month: _('this month'),
+    }
+
+    const message = settings === 'all' ? _('Empty history') : `${_('No pomodoro')} ${dates[settings]}`;
     this._empty_history_message.set_label(message);
     this._selected_rows = [];
     this._load_display_total_time();

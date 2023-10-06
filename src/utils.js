@@ -319,11 +319,11 @@ const quit_request_dialog = ({ application, timer }) => {
     dialog.set_transient_for(application.get_active_window());
     dialog.set_body(_('There is a running timer, wants to stop and exit the application?'));
     dialog.add_response('continue', _('Continue'));
-    dialog.add_response('exit', _('Exit'));
-    dialog.set_response_appearance('exit', Adw.ResponseAppearance.DESTRUCTIVE);
+    dialog.add_response('quit', _('Quit'));
+    dialog.set_response_appearance('quit', Adw.ResponseAppearance.DESTRUCTIVE);
 
     dialog.connect('response', (dialog, id) => {
-      if (id === 'exit') {
+      if (id === 'quit') {
         timer_data.timer_state = 'stopped';
         setTimeout(() => {
           application.quit()

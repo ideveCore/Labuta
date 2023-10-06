@@ -35,3 +35,17 @@
 .text-light {
   color: rgb(255, 255, 255);
 }
+
+.animation-pause {
+  animation: animation-paused 700ms ease-in-out infinite alternate forwards;
+}
+
+@keyframes animation-paused {
+  from {
+    color: @accent_color;
+  }
+
+  to {
+    color: @error_color;
+  }
+}

@@ -63,23 +63,28 @@ export class DisplayTimer extends Gtk.Box {
 
     this._timer.connect('start', ({ data, pomodoro_item }) => {
       this._load_time({ data, pomodoro_item });
+      this._timer_label.get_style_context().remove_class('animation-pause');
     });
     this._timer.connect('run', ({ data, pomodoro_item }) => {
       this._load_time({ data, pomodoro_item });
+      this._timer_label.get_style_context().remove_class('animation-pause');
     });
     this._timer.connect('pause', ({ data, pomodoro_item }) => {
       this._load_time({ data, pomodoro_item });
+      this._timer_label.get_style_context().add_class('animation-pause');
     });
     this._timer.connect('stop', ({ data, pomodoro_item }) => {
       this._pomodoro_counts.set_visible(false);
       this._pomodoro_counts.set_visible(false);
+      this._timer_label.get_style_context().remove_class('animation-pause');
       this._load_time({ data, pomodoro_item });
     });
     this._timer.connect('end', ({ data, pomodoro_item }) => {
+      this._timer_label.get_style_context().remove_class('animation-pause');
       this._load_time({ data, pomodoro_item });
     });
     this._settings.change('timer_customization', () => {
-      if(this._timer.timer_state === 'stopped') {
+      if(this._timer.get_data().timer_state === 'stopped') {
         this._load_time({ data: this._timer.get_data(), pomodoro_item: this._pomodoro_item })
       }
     })

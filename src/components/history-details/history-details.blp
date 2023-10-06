@@ -44,6 +44,8 @@ template $HistoryDetails : Gtk.Box {
         ellipsize: end;
       }
     }
+
+    Adw.ToastOverlay toast_overlay {}
     Gtk.Button  {
       styles ["suggested-action"]
       hexpand: true;
@@ -51,8 +53,8 @@ template $HistoryDetails : Gtk.Box {
       margin-end: 5;
       label: _("Continue");
       clicked => $_on_continue_timer();
+      tooltip-text: _("Continue pomodoro");
     } 
-    Adw.ToastOverlay toast_overlay {}
   }
 }
 

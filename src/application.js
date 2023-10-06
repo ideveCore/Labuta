@@ -50,7 +50,7 @@ application.quit_request = () => {
     application.utils.quit_request_dialog.open();
     return;
   }
-  if (application.utils.timer.timer_state === 'stopped') {
+  if (application.utils.timer.get_data().timer_state === 'stopped') {
     application.quit();
     return;
   }

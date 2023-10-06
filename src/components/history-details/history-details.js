@@ -80,7 +80,8 @@ export class HistoryDetails extends Gtk.Box {
    *
    */
   _on_continue_timer() {
-    if (this._timer.timer_state !== 'running' && this._timer_state !== 'paused') {
+    const timer_state = this._timer.get_data().timer_state;
+    if (timer_state !== 'running' && timer_state !== 'paused') {
       this._pomodoro_item.set = { title: this.title, description: this.description }
       this._timer.start();
       this._parent.close();
