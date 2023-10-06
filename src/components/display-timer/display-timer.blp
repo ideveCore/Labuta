@@ -1,0 +1,28 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $DisplayTimer : Gtk.Box {
+  hexpand: true;
+  halign: center;
+  Label timer_label {
+    styles ["accent", "fs-1"]
+    label: "00:25:00";
+  }
+  [suffix]
+  Gtk.Overlay pomodoro_counts {
+    valign: start;
+    visible: false;
+    child: Gtk.DrawingArea tag_area {
+      height-request: 25;
+      width-request: 25;
+      tooltip-text: _("Pomodoro sessions");
+    };
+
+    [overlay]
+    Gtk.Label tag_label {
+      styles ['text-light']
+      use-markup: true;
+      tooltip-text: _("Pomodoro sessions");
+    }
+  }
+}
