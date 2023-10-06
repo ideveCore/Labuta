@@ -19,104 +19,58 @@
  */
 
 import GObject from 'gi://GObject';
-import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import Gdk from 'gi://Gdk';
-import GLib from 'gi://GLib';
+import { TimerControls } from '../../components/timer-controls/timer-controls.js';
+import { DisplayTimer } from  '../../components/display-timer/display-timer.js';
 import Template from './timer.blp' assert { type: 'uri' };
-import { Db_item } from '../../db.js';
-import PomodoroItem from '../../pomodoro-item.js';
-import { create_timestamp } from '../../utils.js';
-import TimerControls from '../../components/timer-controls/timer-controls.js';
-import GSettings from '../../gsettings.js';
-import timer from '../../Timer.js';
 
 /**
  *
  * Create timer page
+ * @extends {Adw.Bin}
  * @class
  *
  */
-export default class Timer extends Adw.Bin {
+export class Timer extends Adw.Bin {
   static {
     GObject.registerClass({
       Template,
       GTypeName: 'Timer',
       InternalChildren: [
-        'timer_display',
-        "tag_label",
-        "tag_area",
-        "pomodoro_counts",
+        'timer_container',
+        'display_timer',
         'title_entry',
         'description_entry',
-        'timer_label',
       ]
     }, this);
-  }
-  constructor() {
-    super();
-    this._application = Gtk.Application.get_default();
-    var size_group = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
-    size_group.add_widget(this._tag_area);
-    size_group.add_widget(this._tag_label);
-    this._tag_area.set_draw_func(this._draw_tag);
-    this._timer = new timer();
-    this._pomodoro_item = new PomodoroItem();
-    this._settings = new GSettings();
-
-    this._timer.connect('start', (pomodoro_item) => {
-      this._title_entry.set_text(pomodoro_item.title);
-      this._description_entry.set_text(pomodoro_item.description);
-      this._title_entry.editable = false;
-      this._description_entry.editable = false;
-      this._load_time(pomodoro_item);
-    });
-    this._timer.connect('run', (pomodoro_item) => {
-      this._load_time(pomodoro_item);
-    });
-    this._timer.connect('pause', (pomodoro_item) => {
-      this._load_time(pomodoro_item);
-    });
-    this._timer.connect('stop', (pomodoro_item) => {
-      this._pomodoro_counts.set_visible(false);
-      this._title_entry.editable = true;
-      this._description_entry.editable = true;
-      this._title_entry.set_text('');
-      this._description_entry.set_text('');
-      this._pomodoro_counts.set_visible(false);
-      this._load_time(pomodoro_item);
-    });
-    this._timer.connect('end', (pomodoro_item) => {
-      this._load_time(pomodoro_item);
-    });
-    this._settings.change('timer_customization', () => {
-      if(this._timer.timer_state === 'stopped') {
-        this._load_time(this._pomodoro_item.get)
-      }
-    })
-    this._load_time(this._pomodoro_item.get);
-    this._timer_display.append(new TimerControls());
   }
 
   /**
    *
-   * Load time method
-   * @param {Db_item} pomodoro_item
+   * Create a instance of Timer
+   * @param { object } params
+   * @param { Adw.Application  } params.application
    *
    */
-  _load_time(pomodoro_item) {
-    if (this._timer.current_work_time === this._timer.work_time) {
-      this._timer_label.get_style_context().remove_class('error');
-    } else if (this._timer.current_work_time === 0) {
-      this._timer_label.get_style_context().add_class('error');
-    }
+  constructor({ application }) {
+    super();
+    this._timer = application.utils.timer;
+    this._pomodoro_item = application.utils.pomodoro_item;
 
-    this._timer_label.set_text(this._timer.format_time());
-
-    if (pomodoro_item.sessions > 0) {
-      this._tag_label.set_label(`<span weight="bold" size="9pt">${pomodoro_item.sessions}</span>`);
-      this._pomodoro_counts.set_visible(true);
-    }
+    this._timer.connect('start', ({ data, pomodoro_item }) => {
+      this._title_entry.set_text(pomodoro_item.title);
+      this._description_entry.set_text(pomodoro_item.description);
+      this._title_entry.editable = false;
+      this._description_entry.editable = false;
+    });
+    this._timer.connect('stop', ({ data, pomodoro_item }) => {
+      this._title_entry.editable = true;
+      this._description_entry.editable = true;
+      this._title_entry.set_text('');
+      this._description_entry.set_text('');
+    });
+    this._timer_container.append(new TimerControls({ application }));
+    this._display_timer.append(new DisplayTimer({ application }));
   }
 
   /**
@@ -138,24 +92,4 @@ export default class Timer extends Adw.Bin {
   _on_description_changed(target) {
     this._pomodoro_item.set = {description: target.get_text()};
   }
-
-  /**
-   *
-   * Draw pomodoro sessions element
-   * @param {Gtk.DrawingArea} area
-   * @param {any} cr
-   * @param {number} width
-   * @param {number} height
-   *
-   */
-  _draw_tag(area, cr, width, height) {
-    const color = new Gdk.RGBA();
-    color.parse('rgba(220 ,20 ,60 , 1)');
-    Gdk.cairo_set_source_rgba(cr, color);
-    cr.arc(height / 2, height / 2, height / 2, 0.5 * Math.PI, 1.5 * Math.PI);
-    cr.arc(width - height / 2, height / 2, height / 2, -0.5 * Math.PI, 0.5 * Math.PI);
-    cr.closePath();
-    cr.fill();
-  }
 }
-

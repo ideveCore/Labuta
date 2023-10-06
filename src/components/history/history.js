@@ -35,10 +35,11 @@ import Template from './history.blp' assert { type: 'uri' };
  * @class
  *
  */
-export class History extends Adw.PreferencesWindow {
+export class History extends Adw.Window {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: 'History',
       InternalChildren: [
         'toggle_view_work_break_time_button',
         'stack',
@@ -158,6 +159,8 @@ export class History extends Adw.PreferencesWindow {
    *
    */
   _create_lealflet_deatails_page(item) {
+    this._details_page.set_title(item.title);
+    this._details_page.set_description(item.description || _('No description'));
     const history_details = new HistoryDetails({
       id: item.id,
       title: item.title,

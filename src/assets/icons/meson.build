@@ -14,6 +14,7 @@ install_data(
     'left-symbolic.svg',
     'system-restart-symbolic.svg',
     'settings-symbolic.svg',
+    'month-symbolic.svg',
   ],
   install_dir: datadir / 'icons/hicolor/scalable/status',
 )

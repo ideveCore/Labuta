@@ -22,19 +22,20 @@ import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import Template from './window.blp' assert { type: 'uri' };
-import ThemeSelector from './components/theme-selector/theme-selector.js';
+import { Timer } from './pages/timer/timer.js';
+import { ThemeSelector } from './components/theme-selector/theme-selector.js';
 import Shortcuts from './components/shortcuts/shortcuts.js';
 import { SmallWindow } from './components/small-window/small-window.js';
-import Timer from './Timer.js';
+import Template from './window.blp' assert { type: 'uri' };
 
 /**
  *
  * Create Window page
  * @class
+ * @extends {Adw.ApplicationWindow}
  *
  */
-export default class Window extends Adw.ApplicationWindow {
+export class Window extends Adw.ApplicationWindow {
   static {
     GObject.registerClass({
       Template,
@@ -44,6 +45,8 @@ export default class Window extends Adw.ApplicationWindow {
         'shorten_window',
         'menu_button',
         'toast_overlay',
+        'statistics_page',
+        'timer_page',
       ],
     }, this);
   }
@@ -57,15 +60,12 @@ export default class Window extends Adw.ApplicationWindow {
   constructor(application) {
     super({ application });
 
-    const theme_selector = new ThemeSelector();
+    const theme_selector = new ThemeSelector({ application });
     this._menu_button.get_popover().add_child(theme_selector, 'theme');
     this.set_help_overlay(new Shortcuts(application));
-    this._small_window = new SmallWindow();
-    this._timer = new Timer();
-
-    this._setup_actions();
-
-    this._small_window.insert_action_group("window", this.window_group);
+    this._timer_page.set_child(new Timer({ application }));
+    this._small_window = new SmallWindow({ application });
+    this._timer = application.utils.timer;
 
     this._timer.connect('start', () => {
       this._shorten_window.set_sensitive(true);
@@ -73,19 +73,19 @@ export default class Window extends Adw.ApplicationWindow {
     this._timer.connect('stop', () => {
       this._shorten_window.set_sensitive(false);
     });
-
-    this._shorten_window.set_sensitive(false);
-
     this.connect('close-request', () => {
-      application._request_quit()
-      return true
-    })
+      application.quit_request();
+      return true;
+    });
     this._stack.connect('notify::visible-child', () => {
       if (this._stack.visible_child_name == 'statistics') {
         this._stack.visible_child._load_statistics_data();
       }
     });
 
+    this._setup_actions();
+    this._small_window.insert_action_group("window", this.window_group);
+    this._shorten_window.set_sensitive(false);
   }
 
   /**

@@ -13,7 +13,7 @@ template $SmallWindow : Adw.Window {
   content: Gtk.WindowHandle {
     Gtk.Overlay overlay {
       [overlay]
-      Gtk.Overlay timer_controls_box {
+      Gtk.Overlay overlay_controls {
         styles ['osd', 'darken']
         opacity: 0;
         Adw.HeaderBar header_bar {
@@ -37,7 +37,7 @@ template $SmallWindow : Adw.Window {
           vexpand: true;
           halign: center;
           valign: center;
-          Gtk.Box timer_controls {
+          Gtk.Box timer_controls_container {
             styles ['padding-default', 'osd', 'darken', 'toolbar']
             valign: center;
             halign: center;
@@ -58,28 +58,7 @@ template $SmallWindow : Adw.Window {
             hexpand: true;
             halign: center;
             valign: center;
-            Gtk.Box {
-              Label timer_label {
-                styles ["accent", "fs-1"]
-                label: "00:25:00";
-              }
-              [suffix]
-              Gtk.Overlay pomodoro_counts {
-                valign: start;
-                visible: false;
-                child: Gtk.DrawingArea tag_area {
-                  height-request: 25;
-                  width-request: 25;
-                  tooltip-text: _("Pomodoro sessions");
-                };
-                [overlay]
-                Gtk.Label tag_label {
-                  styles ['text-light']
-                  use-markup: true;
-                  tooltip-text: _("Pomodoro sessions");
-                }
-              }
-            }
+            Gtk.Box display_timer_container {}
           }
         }
       }

@@ -21,18 +21,15 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import Gdk from 'gi://Gdk';
-import { format_time } from '../../utils.js';
-import { Db_item } from '../../db.js';
-import PomodoroItem from '../../pomodoro-item.js';
-import TimerControls from '../timer-controls/timer-controls.js';
-import Timer from '../../Timer.js';
+import { TimerControls } from '../timer-controls/timer-controls.js';
+import { DisplayTimer } from '../display-timer/display-timer.js';
 import Template from './small-window.blp' assert { type: 'uri' };
 
 /**
  * 
  * Create HistoryRow element
  * @class
+ * @extends {Adw.Window}
  *
  */
 export class SmallWindow extends Adw.Window {
@@ -42,67 +39,30 @@ export class SmallWindow extends Adw.Window {
       GTypeName: 'SmallWindow',
       InternalChildren: [
         'overlay',
-        'header_bar',
-        'timer_controls',
-        'timer_controls_box',
-        'timer_label',
-        'tag_label',
-        'tag_area',
-        'pomodoro_counts',
+        'overlay_controls',
+        'timer_controls_container',
+        'display_timer_container',
       ],
     }, this);
   }
+
   /**
    *
    * Create SmallWindow element
-   *
+   * @param {object} params
+   * @param {Adw.Applicatioon} params.application
    */
-  constructor() {
+  constructor({ application  }) {
     super();
-    this._application = Gtk.Application.get_default();
-    this._timer = new Timer();
-    this._pomodoro_item = new PomodoroItem();
-    const size_group = new Gtk.SizeGroup(Gtk.SizeGroupMode.Horizontal);
-    size_group.add_widget(this._tag_area);
-    size_group.add_widget(this._tag_label);
-    this._tag_area.set_draw_func(this._draw_tag);
-    this._timer_controls.append(new TimerControls());
+    this._timer = application.utils.timer;
+    this._timer_controls_container.append(new TimerControls({application}));
+    this._display_timer_container.append(new DisplayTimer({ application }));
 
     this._timer.connect('stop', () => {
-      this._pomodoro_counts.set_visible(false);
-      this._timer_label.get_style_context().remove_class('error');
-      this._timer_label.set_text(this._timer.format_time());
-      this._application.get_active_window().present();
+      application.get_active_window().present();
       this.hide();
     });
-    this._timer.connect('end', (pomodoro_item) => {
-      this._load_timer(pomodoro_item);
-    });
-    this._timer.connect('run', (pomodoro_item) => {
-      this._load_timer(pomodoro_item);
-    });
     this._setup_event_controller();
-    this._load_timer(this._pomodoro_item.get);
-  }
-  /**
-   *
-   * Load timer data
-   * @param {Db_item} pomodoro_item
-   *
-   */
-  _load_timer(pomodoro_item) {
-    if (this._timer.current_work_time === this._timer.work_time) {
-      this._timer_label.get_style_context().remove_class('error');
-    } else if (this._timer.current_work_time === 0) {
-      this._timer_label.get_style_context().add_class('error');
-    }
-
-    this._timer_label.set_text(this._timer.format_time());
-
-    if (pomodoro_item.sessions > 0) {
-      this._tag_label.set_label(`<span weight="bold" size="9pt">${pomodoro_item.sessions}</span>`);
-      this._pomodoro_counts.set_visible(true);
-    }
   }
 
   /**
@@ -113,38 +73,11 @@ export class SmallWindow extends Adw.Window {
   _setup_event_controller() {
     const controller = new Gtk.EventControllerMotion();
     controller.connect("enter", () => {
-      // this._header_bar.set_opacity(1);
-      // this._timer_controls.set_opacity(1);
-      this._timer_controls_box.set_opacity(1);
+      this._overlay_controls.set_opacity(1);
     })
     controller.connect("leave", () => {
-      // this._header_bar.set_opacity(0);
-      // this._timer_controls.set_opacity(0);
-      this._timer_controls_box.set_opacity(0);
+      this._overlay_controls.set_opacity(0);
     })
     this._overlay.add_controller(controller)
-  }
-  _on_start_pause_timer() {
-    this._application.Timer.start();
-  }
-  _on_reset_timer() {
-    this._application.Timer.reset();
-  }
-  _on_stop_timer() {
-    this._application.Timer.stop();
-  }
-
-  /**
-   *
-   * Create and add styles in Pomodoro session element
-   */
-  _draw_tag(area, cr, width, height) {
-    const color = new Gdk.RGBA();
-    color.parse('rgba(220 ,20 ,60 , 1)');
-    Gdk.cairo_set_source_rgba(cr, color);
-    cr.arc(height / 2, height / 2, height / 2, 0.5 * Math.PI, 1.5 * Math.PI);
-    cr.arc(width - height / 2, height / 2, height / 2, -0.5 * Math.PI, 0.5 * Math.PI);
-    cr.closePath();
-    cr.fill();
   }
 }

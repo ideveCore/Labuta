@@ -9,6 +9,4 @@ Type=Application
 Categories=GNOME;GTK;Timer;Clock;StopWatch;
 Keywords=timer;clocks;stopwatch;
 StartupNotify=true
-X-SingleMainWindow=true
 X-Purism-FormFactor=Workstation;Mobile;
-

@@ -19,13 +19,12 @@
  */
 
 import GLib from 'gi://GLib?version=2.0'
-import Application from "./application.js";
+import { application } from './application.js';
 
 pkg.initGettext();
 GLib.set_application_name('Pomodoro');
 
 export const main = (argv) => {
-  const application = new Application();
   return application.runAsync(argv);
 }
 

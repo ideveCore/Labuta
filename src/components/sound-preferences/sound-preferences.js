@@ -21,17 +21,16 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import { Sound } from '../../utils.js';
-import GSettings from '../../gsettings.js';
 import Template from './sound-preferences.blp' assert { type: 'uri' };
 
 /**
  *
  * Create Sound Preferences page
  * @class
+ * @extends {Adw.Window}
  *
  */
-export default class SoundPreferences extends Adw.Window {
+export class SoundPreferences extends Adw.Window {
   static {
     GObject.registerClass({
       GTypeName: 'SoundPreferences',
@@ -49,13 +48,22 @@ export default class SoundPreferences extends Adw.Window {
       ],
     }, this);
   }
-  constructor(application) {
+
+  /**
+   *
+   * Create Sound Preferences instance
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   * @param {Adw.PreferencesWindow} params.parent
+   *
+   */
+  constructor({ application, parent }) {
     super({
-      transient_for: application,
+      transient_for: parent,
     });
-    this._settings = new GSettings();
+    this._settings = application.utils.settings;
     this._setup_timer_sounds();
-    this._sound = new Sound();
+    this._sound = application.utils.sound;
   }
 
   /**
@@ -67,7 +75,6 @@ export default class SoundPreferences extends Adw.Window {
     const timer_start_sound = JSON.parse(this._settings.get_string('timer-start-sound'));
     const timer_break_sound = JSON.parse(this._settings.get_string('timer-break-sound'));
     const timer_finish_sound = JSON.parse(this._settings.get_string('timer-finish-sound'));
-    console.log(timer_start_sound.uri);
     this._repeat_timer_start_sound.set_value(timer_start_sound.repeat);
     this._timer_start_sound.set_subtitle(timer_start_sound.type);
     this._uri_timer_start_sound.set_title(timer_start_sound.uri);
@@ -82,15 +89,30 @@ export default class SoundPreferences extends Adw.Window {
     this._uri_timer_finish_sound.set_subtitle(timer_finish_sound.type)
   }
 
+  /**
+   *
+   * Play the timer start sound
+   *
+   */
   _play_timer_start_sound() {
-    this._sound.play('timer-start-sound');
+    this._sound.play({ sound_settings: 'timer-start-sound' });
   }
 
+  /**
+   *
+   * Reset timer start settings
+   *
+   */
   _reset_timer_start_settings() {
     this._settings.set_string('timer-start-sound', JSON.stringify({ type: 'freedesktop', uri: 'message-new-instant', repeat: 1 }));
     this._setup_timer_sounds();
   }
 
+  /**
+   *
+   * Select the sound file
+   *
+   */
   _select_timer_start_sound() {
     const dialog = Gtk.FileDialog.new();
     dialog.open(this, null, (_dialog, _task) => {
@@ -106,29 +128,41 @@ export default class SoundPreferences extends Adw.Window {
     })
   }
 
+  /**
+   *
+   * Listen to changes in repeat time settings
+   *
+   */
   _on_repeat_timer_start_sound_changed(_target) {
     const value = JSON.parse(this._settings.get_string('timer-start-sound'));
     value.repeat = _target.get_value();
     this._settings.set_string('timer-start-sound', JSON.stringify(value));
   }
 
-  _setup_break_time_sound() {
-    const settings = JSON.parse(this._settings.get_string('break-time-sound'))
-    this._break_time_repeat_sound.set_value(settings.repeat)
-    this._break_time_uri_sound.set_subtitle(settings.type)
-    this._break_time_sound.set_subtitle(settings.type)
-    this._break_time_uri_sound.set_title(settings.uri)
-  }
-
+  /**
+   *
+   * Play the timer break sound
+   *
+   */
   _play_timer_break_sound() {
-    this._sound.play('timer-break-sound');
+    this._sound.play({ sound_settings: 'timer-break-sound' });
   }
 
+  /**
+   *
+   * Reset timer break settings
+   *
+   */
   _reset_timer_break_settings() {
     this._settings.set_string('timer-break-sound', JSON.stringify({ type: 'freedesktop', uri: 'complete', repeat: 1 }));
     this._setup_timer_sounds();
   }
 
+  /**
+   *
+   * Select the sound file
+   *
+   */
   _select_timer_break_sound() {
     const dialog = Gtk.FileDialog.new();
     dialog.open(this, null, (_dialog, _task) => {
@@ -144,29 +178,41 @@ export default class SoundPreferences extends Adw.Window {
     })
   }
 
+  /**
+   *
+   * Listen to changes in repeat break time settings
+   *
+   */
   _on_repeat_timer_break_sound_changed(_target) {
     const value = JSON.parse(this._settings.get_string('timer-break-sound'));
     value.repeat = _target.get_value();
     this._settings.set_string('timer-break-sound', JSON.stringify(value));
   }
 
-  _setup_finish_time_sound() {
-    const settings = JSON.parse(this._settings.get_string('finish-time-sound'))
-    this._finish_time_repeat_sound.set_value(settings.repeat)
-    this._finish_time_sound.set_subtitle(settings.type)
-    this._finish_time_uri_sound.set_subtitle(settings.type)
-    this._finish_time_uri_sound.set_title(settings.uri)
-  }
-
+  /**
+   *
+   * Play the timer finish sound
+   *
+   */
   _play_timer_finish_sound() {
-    this._sound.play('timer-finish-sound');
+    this._sound.play({ sound_settings: 'timer-finish-sound' });
   }
 
+  /**
+   *
+   * Reset timer finish settings
+   *
+   */
   _reset_timer_finish_settings() {
     this._settings.set_string('timer-finish-sound', JSON.stringify({ type: 'freedesktop', uri: 'alarm-clock-elapsed', repeat: 1 }));
     this._setup_timer_sounds();
   }
 
+  /**
+   *
+   * Select the sound file
+   *
+   */
   _select_timer_finish_sound() {
     const dialog = Gtk.FileDialog.new();
     dialog.open(this, null, (_dialog, _task) => {
@@ -182,10 +228,14 @@ export default class SoundPreferences extends Adw.Window {
     })
   }
 
+  /**
+   *
+   * Listen to changes in repeat finish time settings
+   *
+   */
   _on_repeat_timer_finish_sound_changed(_target) {
     const value = JSON.parse(this._settings.get_string('timer-finish-sound'));
     value.repeat = _target.get_value();
     this._settings.set_string('timer-finish-sound', JSON.stringify(value));
   }
 }
-

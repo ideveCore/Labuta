@@ -21,9 +21,16 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
+import Adw from 'gi://Adw';
 import GSound from 'gi://GSound';
 import Gst from 'gi://Gst';
-import GSettings from './gsettings.js';
+import Xdp from 'gi://Xdp';
+import XdpGtk4 from 'gi://XdpGtk4';
+import Settings from './settings.js';
+import { ApplicationDbManager } from './application-db-manager.js';
+import { PomodoroItem } from './pomodoro-item.js';
+import { timer } from './timer.js';
+import { gettext as _ } from 'gettext';
 
 /**
  *
@@ -67,78 +74,35 @@ export const format_time = (time) => {
   return `${hours}:${minutes}:${seconds}`
 }
 
-/**
- *
- * Get Flatpak info
- *
- */
-export function get_flatpak_info() {
-  const keyFile = new GLib.KeyFile();
-  try {
-    keyFile.load_from_file("/.flatpak-info", GLib.KeyFileFlags.NONE);
-  } catch (err) {
-    if (err.code !== GLib.FileError.NOENT) {
-      logError(err);
-    }
-    return null;
-  }
-  return keyFile;
-}
-
 
 /**
  *
  * Sound Player
- * @class
+ * @param {object} params
+ * @param {Adw.Applicatin} params.application
+ * @param {Settings} params.settings
  *
  */
-export class Sound {
-  constructor() {
-    if (Sound.instance) {
-      return Sound.instance;
-    }
-    Sound.instance = this;
-    this._application = Gtk.Application.get_default();
-    this._settings = new GSettings();
-    this._gsound = new GSound.Context();
-    this._gsound.init(null);
-    Gst.init(null);
-    this.playbin = Gst.ElementFactory.make('playbin', 'playbin');
-    this.playbin.set_property('volume', 1);
-    this.playbin.set_property('mute', false);
-    this.playbin.set_state(Gst.State.READY);
-  }
 
-  /**
-   *
-   * Play the sound
-   * @param {string} settings 
-   *
-   */
-  play(settings) {
-    const song_data = JSON.parse(this._settings.get_string(settings))
+const sound_player = ({ application, settings }) => {
+  const gsound = new GSound.Context();
+  gsound.init(null);
+  Gst.init(null);
 
-    if (this._settings.get_boolean('play-sounds')) {
-      if (song_data.type === 'freedesktop') {
-        this._gsound_play(song_data.uri, song_data.repeat)
-      } else {
-        this._gst_play(song_data.uri, song_data.repeat)
-      }
-    }
-  }
 
   /**
    *
    * Play sound using libgsound
    *
-   * @param {string} name - name of sound
-   * @param {number} repeat - counts for repeat sound
+   * @param {object} params
+   * @param {string} params.uri - name of sound
+   * @param {number} params.repeat - counts for repeat sound
    *
    */
-  _gsound_play(name, repeat) {
+  const gsound_player = ({ uri, repeat }) => {
     new Promise((resolve, reject) => {
-      this._gsound.play_full(
-        { 'event.id': name },
+      gsound.play_full(
+        { 'event.id': uri },
         null,
         (source, res) => {
           try {
@@ -150,7 +114,7 @@ export class Sound {
       );
     }).then((res) => {
       if (repeat > 1) {
-        this._gsound_play(name, --repeat)
+        gsound_player({uri, repeat: --repeat})
       }
     }).catch((error) => {
       console.log(error)
@@ -160,24 +124,56 @@ export class Sound {
   /**
    * Play sound using libgst
    *
-   * @param {string} uri - uri for sound file
-   * @param {number} repeat - counts for repeat sound
+   * @param {object} params
+   * @param {string} params.uri - uri for sound file
+   * @param {number} params.repeat - counts for repeat sound
    *
    */
-  _gst_play(uri, repeat) {
-    this.playbin.set_property('uri', uri);
-    this.bus = this.playbin.get_bus()
-    this.bus.add_signal_watch()
-    this.bus.connect('message::error', (error, message) => {
+  const gst_player = ({ uri, repeat }) => {
+    const playbin = Gst.ElementFactory.make('playbin', 'playbin');
+    playbin.set_property('volume', 1);
+    playbin.set_property('mute', false);
+    playbin.set_state(Gst.State.READY);
+    playbin.set_property('uri', uri);
+    const bus = playbin.get_bus()
+    bus.add_signal_watch()
+    bus.connect('message::error', (error, message) => {
       log('Bus error:', message.parse_error())
     })
-    this.bus.connect('message::eos', () => {
-      this.playbin.set_state(Gst.State.READY)
+    bus.connect('message::eos', () => {
+      playbin.set_state(Gst.State.READY)
       if (repeat > 1) {
-        this._gst_play(uri, --repeat)
+        gst_player({uri, repeat: --repeat});
       }
     })
-    this.playbin.set_state(Gst.State.PLAYING)
+    playbin.set_state(Gst.State.PLAYING)
+  }
+
+  /**
+   *
+   * Play the sound
+   * @param {object} params
+   * @param {string} params.sound_settings
+   *
+   */
+  const play = ({ sound_settings  }) => {
+    const sound_data = JSON.parse(settings.get_string(sound_settings));
+
+    if (settings.get_boolean('play-sounds')) {
+      const player_params = {
+        uri: sound_data.uri,
+        repeat: sound_data.repeat,
+      };
+      if (sound_data.type === 'freedesktop') {
+        gsound_player(player_params);
+      } else {
+        gst_player(player_params);
+      }
+    }
+  }
+
+  return {
+    play,
   }
 }
 
@@ -246,51 +242,132 @@ export const pomodoro_time_utils = () => {
 /**
  *
  * Send notification
- * @param {Object} notification
- * @param {string} notification.title
- * @param {string} notification.body
+ * @param {object} params
+ * @param {Adw.Application} params.application
+ *
+ * @typered {object}
+ * @property {Function} send
  *
  */
-export const send_notification = ({ title, body }) => {
+export const notification = ({ application }) => {
   const notification = new Gio.Notification();
-  const application = Gtk.Application.get_default();
-  notification.set_title(title);
-  notification.set_body(body);
-  notification.set_priority(Gio.NotificationPriority.URGENT);
-  notification.set_default_action("app.open");
-  application.send_notification("lunch-is-ready", notification);
+
+  /**
+   *
+   * Send notification
+   *  @param {object} params
+   * @param {string} params.title
+   * @param {string} params.body
+   *
+   */
+  const send = ({ title, body }) => {
+    notification.set_title(title);
+    notification.set_body(body);
+    notification.set_priority(Gio.NotificationPriority.URGENT);
+    notification.set_default_action("app.open");
+    application.send_notification("lunch-is-ready", notification);
+  }
+
+  return {
+    send,
+  }
 }
 
 /**
  *
  * Load timer status in background mode using portal
- * @param {string} message
+ * @typeref {object}
+ * @property {Function} set_status
  *
  */
-export const load_timer_status_in_bg_mode = (message) => {
-  const connection = Gio.DBus.session;
-  const messageVariant = new GLib.Variant('(a{sv})', [{
-    'message': new GLib.Variant('s', message)
-  }]);
-  connection.call(
-    'org.freedesktop.portal.Desktop',
-    '/org/freedesktop/portal/desktop',
-    'org.freedesktop.portal.Background',
-    'SetStatus',
-    messageVariant,
-    null,
-    Gio.DBusCallFlags.NONE,
-    -1,
-    null,
-    (connection, res) => {
-      try {
-        connection.call_finish(res);
-      } catch (e) {
-        if (e instanceof Gio.DBusError)
-          Gio.DBusError.strip_remote_error(e);
+const set_background_status = () => {
+  const portal = new Xdp.Portal();
 
-        logError(e);
+  /**
+   * Set Background status
+   * @param {object} params
+   * @param {string} params.message
+   *
+   */
+  const set_status = ({ message  }) => {
+    portal.set_background_status(message, null, (portal, result) => {
+      portal.set_background_status_finish(result);
+    });
+
+  }
+
+  return {
+    set_status,
+  }
+}
+
+/**
+ *
+ * Quit request dialog
+ * @param {object} params
+ * @param {Adw.Application} params.application
+ * @param {timer} params.timer
+ *
+ */
+const quit_request_dialog = ({ application, timer }) => {
+  const open = () => {
+    let dialog = new Adw.MessageDialog();
+    const timer_data = timer();
+    dialog.set_heading(_('Stop timer?'));
+    dialog.set_transient_for(application.get_active_window());
+    dialog.set_body(_('There is a running timer, wants to stop and exit the application?'));
+    dialog.add_response('continue', _('Continue'));
+    dialog.add_response('exit', _('Exit'));
+    dialog.set_response_appearance('exit', Adw.ResponseAppearance.DESTRUCTIVE);
+
+    dialog.connect('response', (dialog, id) => {
+      if (id === 'exit') {
+        timer_data.timer_state = 'stopped';
+        setTimeout(() => {
+          application.quit()
+        }, 1000)
       }
+    })
+
+    if (timer_data.timer_state === 'running' || timer_data.timer_state == 'paused') {
+      return dialog.present()
     }
-  );
+    application.quit();
+  }
+  return {
+    open,
+  }
+}
+
+/**
+ *
+ * Load all utils methods
+ * This function is using factory design pattern
+ * @param {object} params
+ * @param {Adw.Application} params.application
+ * @typeref {object}
+ * @property {ApplicationDbManager} application_db_manager
+ * @property {Gio.Settings} setings
+ * @property { pomodoro_time_utils } pomodoro_time_utils
+ *
+ */
+export const utils = ({ application  }) => {
+  const time_utils = pomodoro_time_utils();
+  const settings = new Settings({ schema_id: pkg.name });
+  const db_manager = new ApplicationDbManager({ settings });
+  const sound = sound_player({ application, settings });
+  const notify = notification({ application });
+  const item = new PomodoroItem({ db_manager, time_utils });
+  const timer_instance = timer({ application, pomodoro_item: item, settings, sound, notification: notify });
+  return {
+    application_db_manager: db_manager,
+    settings,
+    pomodoro_time_utils: time_utils,
+    pomodoro_item: item,
+    sound,
+    notification: notify,
+    timer: timer_instance,
+    background_status: set_background_status(),
+    quit_request_dialog: quit_request_dialog({application, timer: timer_instance.get_data}),
+  }
 }

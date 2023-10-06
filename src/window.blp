@@ -47,16 +47,15 @@ template $Window : Adw.ApplicationWindow {
             title: _("_Timer");
             use-underline: true;
             icon-name: "hourglass-symbolic";
-            child:
-              $Timer {};
+            child: Adw.Bin timer_page {};
           }
+
           Adw.ViewStackPage {
             name: "statistics";
             title: _("_Statistics");
             use-underline: true;
             icon-name: "profit-symbolic";
-            child:
-              $Statistics {};
+            child: Adw.Bin statistics_page {};
           }
         }
         Adw.ViewSwitcherBar {

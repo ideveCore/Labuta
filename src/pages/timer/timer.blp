@@ -16,7 +16,7 @@ template $Timer : Adw.Bin {
       ListBoxRow {
         activatable: false;
         hexpand: true;
-        Box timer_display {
+        Box timer_container {
           styles ["vertical"]
           hexpand: true;
           valign: start;
@@ -26,31 +26,7 @@ template $Timer : Adw.Bin {
           margin-top: 20;
           margin-bottom: 20;
           orientation: vertical;
-          Box {
-            hexpand: true;
-            halign: center;
-            Label timer_label {
-              styles ["accent", "fs-1"]
-              label: "00:25:00";
-            }
-            [suffix]
-              Gtk.Overlay pomodoro_counts {
-                valign: start;
-                visible: false;
-                child: Gtk.DrawingArea tag_area {
-                  height-request: 25;
-                  width-request: 25;
-                  tooltip-text: _("Pomodoro sessions");
-                };
-
-                [overlay]
-                Gtk.Label tag_label {
-                  styles ['text-light']
-                  use-markup: true;
-                  tooltip-text: _("Pomodoro sessions");
-                }
-              }
-          }
+          Box display_timer {}
           ListBox list_box {
             styles ["boxed-list"]
             selection-mode: none;

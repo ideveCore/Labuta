@@ -21,7 +21,7 @@
 import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
 import Gda from 'gi://Gda';
-import GSettings from './gsettings.js';
+import Gio from 'gi://Gio';
 
 /**
  *
@@ -131,7 +131,8 @@ export class Query_builder {
   }
 
   /**
-   * returns querybuilder cond id
+   *
+   * Returns querybuilder cond id
    * @param {*} [id=null] 
    * @returns {Query_builder}
    *
@@ -143,6 +144,69 @@ export class Query_builder {
           Gda.SqlOperatorType.EQ,
           this._builder.add_field_id('id', 'history'),
           add_expr_value(this._builder, id),
+          0,
+        )
+      )
+    }
+    return this
+  }
+
+  /**
+   *
+   * Returns querybuilder cond day
+   * @param {number|null} day
+   * @returns {Query_builder}
+   *
+   */
+  with_day(day) {
+    if (day) {
+      return this._conditions.push(
+        this._builder.add_cond(
+          Gda.SqlOperatorType.EQ,
+          this._builder.add_field_id('day', 'history'),
+          add_expr_value(this._builder, day),
+          0,
+        )
+      )
+    }
+    return this
+  }
+
+  /**
+   *
+   * Returns querybuilder cond week
+   * @param {number|null} week
+   * @returns {Query_builder}
+   *
+   */
+  with_week(week) {
+    if (week) {
+      return this._conditions.push(
+        this._builder.add_cond(
+          Gda.SqlOperatorType.EQ,
+          this._builder.add_field_id('week', 'history'),
+          add_expr_value(this._builder, week),
+          0,
+        )
+      )
+    }
+    return this
+  }
+
+  /**
+   *
+   * Returns querybuilder cond month
+   * @param {number|null} month
+   * @returns {Query_builder}
+   *
+   */
+  with_month(month) {
+    if (month) {
+      return this._conditions.push(
+        this._builder.add_cond(
+          Gda.SqlOperatorType.EQ,
+          this._builder.add_field_id('month', 'history'),
+          add_expr_value(this._builder, month),
           0,
         )
       )
@@ -169,7 +233,16 @@ export class Query_builder {
  *
  */
 export class Database {
-  constructor() {
+
+  /**
+   *
+   * Create Database instance
+   * @param {object} params
+   * @param {Gio.Settings} params.settings
+   *
+   */
+  constructor({ settings }) {
+    this._settings = settings;
     this.data_dir = GLib.get_user_config_dir();
     this._connection = new Gda.Connection({
       provider: Gda.Config.get_provider('SQLite'),
@@ -201,8 +274,7 @@ export class Database {
     this._connection.execute_non_select_command(`
       create unique index if not exists pomodoro_id_uindex on history (id);
     `);
-    const settings = new GSettings();
-    const history_duration = settings.get_int('history-duration');
+    const history_duration = this._settings.get_int('history-duration');
     this._connection.execute_non_select_command(`
       DELETE FROM history WHERE timestamp < strftime('%s', 'now', '-${history_duration} months');
     `);

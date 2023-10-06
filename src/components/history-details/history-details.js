@@ -38,11 +38,9 @@ export default class HistoryDetails extends Gtk.Box {
       Template,
       GTypeName: 'HistoryDetails',
       InternalChildren: [
-        'title',
         'date',
         'work_time',
         'break_time',
-        'description',
         'sessions',
         'toast_overlay',
       ],
@@ -61,18 +59,16 @@ export default class HistoryDetails extends Gtk.Box {
    * @param {number} history_data.sessions
    *
    */
-  constructor({ parent, id, title, subtitle, work_time, break_time, description, sessions }) {
+  constructor({ parent, id, subtitle, work_time, break_time, sessions, title, description }) {
     super();
     this._application = Gtk.Application.get_default();
     this.title = title;
     this.description = description;
     this._id = id;
     this._parent = parent
-    this._title.set_text(title);
     this._date.set_text(subtitle);
     this._work_time.set_text(format_time(work_time).toString());
     this._break_time.set_text(format_time(break_time).toString())
-    this._description.set_subtitle(description);
     this._sessions.set_text(sessions.toString());
   }
 

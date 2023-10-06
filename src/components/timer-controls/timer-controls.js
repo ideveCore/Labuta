@@ -22,11 +22,6 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import Template from './timer-controls.blp' assert { type: 'uri' };
-import Application_data from '../../application_data.js';
-import { Db_item } from '../../db.js';
-import { create_timestamp } from '../../utils.js';
-import PomodoroItem from '../../pomodoro-item.js';
-import Timer from '../../Timer.js';
 
 /**
  * Timer controls component
@@ -35,7 +30,7 @@ import Timer from '../../Timer.js';
  * @extends {Gtk.Stack}
  *
  */
-export default class TimerControls extends Gtk.Stack {
+export  class TimerControls extends Gtk.Stack {
   static {
     GObject.registerClass({
       GTypeName: 'TimerControls',
@@ -43,11 +38,17 @@ export default class TimerControls extends Gtk.Stack {
       InternalChildren: [],
     }, this)
   }
-
-  constructor() {
+  /**
+   *
+   * Create a instance of Timer Controls
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   *
+   */
+  constructor({ application }) {
     super();
-    this._timer = new Timer();
-    this._pomodoro_item = new PomodoroItem();
+    this._timer = application.utils.timer;
+    this._pomodoro_item = application.utils.pomodoro_item;
 
     this._timer.connect('start', () => {
       this.visible_child_name = 'running_timer';

@@ -22,9 +22,8 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
-import SoundPreferences from '../sound-preferences/sound-preferences.js';
+import { SoundPreferences } from '../sound-preferences/sound-preferences.js';
 import Template from './preferences.blp' assert { type: 'uri' };
-import GSettings from '../../gsettings.js';
 
 /**
  *
@@ -32,7 +31,7 @@ import GSettings from '../../gsettings.js';
  * @class
  *
  */
-export default class Preferences extends Adw.PreferencesWindow {
+export class Preferences extends Adw.PreferencesWindow {
   static {
     GObject.registerClass({
       Template,
@@ -48,11 +47,20 @@ export default class Preferences extends Adw.PreferencesWindow {
       ],
     }, this);
   }
-  constructor(application) {
+
+  /**
+   *
+   * Create preferences page instance
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   *
+   */
+  constructor({ application }) {
     super({
       transient_for: application.get_active_window(),
     });
-    this._settings = new GSettings();
+    this._application = application;
+    this._settings = application.utils.settings;
     this._set_settings_bind_states();
   }
   /**
@@ -111,6 +119,6 @@ export default class Preferences extends Adw.PreferencesWindow {
     );
   }
   _open_sound_preferences(_target) {
-    new SoundPreferences(this).present();
+    new SoundPreferences({ application: this._application, parent: this }).present();
   }
 }
