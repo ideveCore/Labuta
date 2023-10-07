@@ -219,6 +219,8 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
       }
 
       if (timer_state === 'paused') {
+        if(!application.get_active_window().visible)
+          application.utils.background_status.set_status({ message: `${_('Paused')}` });
         return GLib.SOURCE_CONTINUE
       }
 
