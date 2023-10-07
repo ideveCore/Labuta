@@ -204,11 +204,11 @@ export class History extends Adw.Window {
     this._stack.visible_child_name = "empty_history";
     this._list_box.remove_all();
     const application_db_manager = this._utils.application_db_manager;
-    const pomodoro_utils = this._utils.pomodoro_time_utils;
+    const time_utils = this._utils.time_utils;
     const get_history = {
-      today: () => (application_db_manager.get_by_day(pomodoro_utils.day)),
-      week: () => (application_db_manager.get_by_week(pomodoro_utils.week)),
-      month: () => (application_db_manager.get_by_month(pomodoro_utils.month)),
+      today: () => (application_db_manager.get_by_day(time_utils.day)),
+      week: () => (application_db_manager.get_by_week(time_utils.week)),
+      month: () => (application_db_manager.get_by_month(time_utils.month)),
       all: () => (application_db_manager.get()),
     };
 
@@ -326,7 +326,7 @@ export class History extends Adw.Window {
       this._list_box.remove(item);
     });
     this._selected_rows = [];
-    this._load_display_total_time();
+    this._load_history_list();
     this._delete_button.set_sensitive(false);
     this._delete_button.set_icon_name('user-trash-symbolic');
   }

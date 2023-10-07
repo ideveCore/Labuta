@@ -18,6 +18,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import GLib from 'gi://GLib';
+import { gettext as _ } from 'gettext';
 import { Db_item } from "./db.js";
 
 export class PomodoroItem {
@@ -26,7 +28,7 @@ export class PomodoroItem {
    * Create a instance of Pomodoro item
    * @param {object} params
    * @param {application_db_manager} params.db_manager
-   * @param {pomodoro_time_utils} params.time_utils
+   * @param {object} params.time_utils
    *
    */
   constructor({ db_manager, time_utils }) {
@@ -67,15 +69,15 @@ export class PomodoroItem {
   save() {
     const current_item = this.get;
     if(this._item.title === '') {
-      this._item.title = current_item.title ? current_item.title : `${_('Started at')} ${this._time_utils.time}`;
+      this._item.title = current_item.title ? current_item.title : `${_('Started at')} ${this._time_utils.time()}`;
     }
     this._item.day = this._time_utils.day;
     this._item.day_of_month = this._time_utils.day_of_month;
     this._item.year = this._time_utils.year;
     this._item.week = this._time_utils.week;
     this._item.month = this._time_utils.month;
-    this._item.display_date = this._time_utils.display_date;
-    this._item.timestamp = this._time_utils.timestamp;
+    this._item.display_date = `${this._time_utils.day_of_week}, ${this._time_utils.day_of_month} ${_("of")} ${this._time_utils.month_of_year} ${_("of")} ${this._time_utils.year}`;
+    this._item.timestamp = this._time_utils.timestamp();
     this._item = this._data.save(this._item);
     return this._item;
   }

@@ -34,24 +34,6 @@ import { gettext as _ } from 'gettext';
 
 /**
  *
- * Create timestap for pomodoro
- * @param {null|number} item_day
- * @param {null|number} item_year
- * @returns {number} return sum of current date hour, minutes, microseconds, year and day.
- *
- */
-export const create_timestamp = (item_year, item_month, item_day) => {
-  let time = new Date();
-  const current_time = `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
-  if (item_year && item_month && item_day) {
-    time = new Date(`${item_year < 10 ? '0' + item_year : item_year}-${item_month < 10 ? '0' + item_month : item_month}-${item_day < 10 ? '0' + item_day : item_day}T${current_time}`);
-  }
-  return time.getTime();
-};
-
-
-/**
- *
  *
  * Return time formatted
  * @param {number} time
@@ -83,12 +65,10 @@ const format_time = (time) => {
  * @param {Settings} params.settings
  *
  */
-
 const sound_player = ({ application, settings }) => {
   const gsound = new GSound.Context();
   gsound.init(null);
   Gst.init(null);
-
 
   /**
    *
@@ -176,68 +156,6 @@ const sound_player = ({ application, settings }) => {
     play,
   }
 }
-
-/**
- *
- * Get current date formatted
- * @returns {string}
- *
- */
-export const get_date = () => {
-  const current_date = GLib.DateTime.new_now_local();
-  const day_of_week = current_date.format('%A');
-  const day_of_month = current_date.get_day_of_month();
-  const month_of_year = current_date.format('%B');
-  const year = current_date.get_year();
-  return `${day_of_week}, ${day_of_month} ${_("of")} ${month_of_year} ${_("of")} ${year}`
-}
-
-/**
- *
- * Get pomodoro time utils
- *
- * @typedef {Object} time_utils
- * @property {string} time - current time
- * @property {number} day - current day
- * @property {number} day_of_month - current day of month
- * @property {number} year - current year
- * @property {number} week - current week
- * @property {number} month - current month
- * @property {string} display_date - display date
- * @property {number} timestamp - current timestamp
- *
- */
-export const pomodoro_time_utils = () => {
-  const current_date = GLib.DateTime.new_now_local();
-
-  const hour = new GLib.DateTime().get_hour();
-  const minute = new GLib.DateTime().get_minute();
-  const second = new GLib.DateTime().get_second();
-  const time = `${hour > 9 ? hour : '0' + hour}:${minute > 9 ? minute : '0' + minute}:${second > 9 ? second : '0' + second}`;
-
-  const day = current_date.get_day_of_year();
-  const day_of_month = current_date.get_day_of_month();
-  const year = current_date.get_year();
-  const week = current_date.get_week_of_year();
-  const month = current_date.get_month();
-
-  const day_of_week = current_date.format('%A');
-  const month_of_year = current_date.format('%B');
-  const display_date =  `${day_of_week}, ${day_of_month} ${_("of")} ${month_of_year} ${_("of")} ${year}`
-  const timestamp = Math.floor(create_timestamp(null, null, null) / 1000);
-
-  return {
-    time,
-    day,
-    day_of_month,
-    year,
-    week,
-    month,
-    display_date,
-    timestamp,
-  }
-}
-
 
 /**
  *
@@ -341,6 +259,73 @@ const quit_request_dialog = ({ application, timer }) => {
   }
 }
 
+
+/**
+ *
+ * Get time utils
+ *
+ * @typedef {Object} time_utils
+ * @property {string} time - current time
+ * @property {number} day - current day
+ * @property {number} day_of_month - current day of month
+ * @property {string} day_of_week - current day of week
+ * @property {number} year - current year
+ * @property {number} week - current week
+ * @property {number} month - current month
+ * @property {string} month_of_year - current month of year
+ * @property {number} timestamp - current timestamp
+ *
+ */
+
+// TODO: This function needs attention
+const time_utils = () => {
+  const current_date = GLib.DateTime.new_now_local();
+
+  const time = () => {
+    const hour = new GLib.DateTime().get_hour();
+    const minute = new GLib.DateTime().get_minute();
+    const second = new GLib.DateTime().get_second();
+
+    return `${hour > 9 ? hour : '0' + hour}:${minute > 9 ? minute : '0' + minute}:${second > 9 ? second : '0' + second}`;
+  };
+
+  const day = current_date.get_day_of_year();
+  const day_of_month = current_date.get_day_of_month();
+  const year = current_date.get_year();
+  const week = current_date.get_week_of_year();
+  const month = current_date.get_month();
+
+  const day_of_week = current_date.format('%A');
+  const month_of_year = current_date.format('%B');
+
+  /**
+   *
+   * Create timestap for pomodoro
+   * @param {null|number} item_day
+   * @param {null|number} item_year
+   * @returns {number} return sum of current date hour, minutes, microseconds, year and day.
+   *
+   */
+ const create_timestamp = () => {
+    let time = new Date();
+    const current_time = `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
+    return Math.floor(time.getTime() / 1000);
+  };
+
+  return {
+    time,
+    day,
+    day_of_month,
+    day_of_week,
+    year,
+    week,
+    month,
+    month_of_year,
+    timestamp: create_timestamp,
+  }
+}
+
+
 /**
  *
  * Load all utils methods
@@ -353,18 +338,19 @@ const quit_request_dialog = ({ application, timer }) => {
  * @property { pomodoro_time_utils } pomodoro_time_utils
  *
  */
+// TODO: this function needs attention
 export const utils = ({ application  }) => {
-  const time_utils = pomodoro_time_utils();
+  const time_utils_instance = time_utils();
   const settings = new Settings({ schema_id: pkg.name });
   const db_manager = new ApplicationDbManager({ settings });
   const sound = sound_player({ application, settings });
   const notify = notification({ application, settings });
-  const item = new PomodoroItem({ db_manager, time_utils });
+  const item = new PomodoroItem({ db_manager, time_utils: time_utils_instance });
   const timer_instance = timer({ application, pomodoro_item: item, settings, sound, notification: notify });
   return {
+    time_utils: time_utils_instance,
     application_db_manager: db_manager,
     settings,
-    pomodoro_time_utils: time_utils,
     pomodoro_item: item,
     sound,
     notification: notify,
