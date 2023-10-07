@@ -21,17 +21,17 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import GLib from 'gi://GLib';
+ import GLib from 'gi://GLib';
 import Template from './statistics.blp' assert { type: 'uri' };
-import { format_time } from '../../utils.js';
 
 /**
  *
  * Create statistics page
  * @class
+ * @extends {Adw.Bin}
  *
  */
-export default class Statistics extends Adw.Bin {
+export class Statistics extends Adw.Bin {
   static {
     GObject.registerClass({
       Template,
@@ -49,11 +49,20 @@ export default class Statistics extends Adw.Bin {
       ]
     }, this);
   }
-  constructor() {
+
+  /**
+   *
+   * Create a instance of Statistics page
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   *
+   */
+  constructor({ application }) {
     super();
-    this.application = Gtk.Application.get_default();
     this._current_date = GLib.DateTime.new_now_local();
-    this._load_statistics_data();
+    this._data = application.utils.application_db_manager;
+    this._format_time = application.utils.format_time;
+    this.load_statistics_data();
   }
 
   /**
@@ -61,7 +70,7 @@ export default class Statistics extends Adw.Bin {
    * Load statistics mehtod
    *
    */
-  _load_statistics_data() {
+  load_statistics_data() {
     this._load_work_time();
     this._load_break_time();
   }
@@ -74,18 +83,19 @@ export default class Statistics extends Adw.Bin {
   _get_month() {
     return this._current_date.get_month();
   }
+
   /**
    *
-   * Load work time times
+   * Load work time
    *
    */
   _load_work_time() {
-    const today = this.application.data.get().filter((item) => item.day === this._get_day())
-    const yesterday = this.application.data.get().filter((item) => item.day === this._get_day() - 1);
-    const week = this.application.data.get().filter((item) => item.week === this._get_week());
-    const last_week = this.application.data.get().filter((item) => item.week === this._get_week() - 1);
-    const month = this.application.data.get().filter((item) => item.month === this._get_month());
-    const last_month = this.application.data.get().filter((item) => item.month === this._get_month() - 1);
+    const today = this._data.get().filter((item) => item.day === this._get_day())
+    const yesterday = this._data.get().filter((item) => item.day === this._get_day() - 1);
+    const week = this._data.get().filter((item) => item.week === this._get_week());
+    const last_week = this._data.get().filter((item) => item.week === this._get_week() - 1);
+    const month = this._data.get().filter((item) => item.month === this._get_month());
+    const last_month = this._data.get().filter((item) => item.month === this._get_month() - 1);
     const work_time_today = today.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const work_timer_yesterday = yesterday.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
     const work_time_week = week.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
@@ -121,29 +131,30 @@ export default class Statistics extends Adw.Bin {
         adjective = _('less');
       return `${Math.abs(value).toFixed(0)}% ${adjective} ${_("than last month")}`
     }
-    this._work_time_today_label.set_text(format_time(work_time_today))
+    this._work_time_today_label.set_text(this._format_time(work_time_today))
     this._work_time_today.set_subtitle(percentage_work_time_today_yesterday())
-    this._work_time_week_label.set_text(format_time(work_time_week))
+    this._work_time_week_label.set_text(this._format_time(work_time_week))
     this._work_time_week.set_subtitle(percentage_work_time_week_last_week())
-    this._work_time_month_label.set_text(format_time(work_time_month));
+    this._work_time_month_label.set_text(this._format_time(work_time_month));
     this._work_time_month.set_subtitle(percentage_work_time_month_last_month())
   }
+
   /**
    *
-   * Load brean time times
+   * Load break time
    *
    */
   _load_break_time() {
-    const today = this.application.data.get().filter((item) => item.day === this._get_day())
-    const week = this.application.data.get().filter((item) => item.week === this._get_week());
-    const month = this.application.data.get().filter((item) => item.month === this._get_month());
+    const today = this._data.get().filter((item) => item.day === this._get_day())
+    const week = this._data.get().filter((item) => item.week === this._get_week());
+    const month = this._data.get().filter((item) => item.month === this._get_month());
 
     const break_time_today = today.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     const break_time_week = week.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     const break_time_month = month.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
 
-    this._break_time_today_label.set_text(format_time(break_time_today))
-    this._break_time_week_label.set_text(format_time(break_time_week))
-    this._break_time_month_label.set_text(format_time(break_time_month))
+    this._break_time_today_label.set_text(this._format_time(break_time_today))
+    this._break_time_week_label.set_text(this._format_time(break_time_week))
+    this._break_time_month_label.set_text(this._format_time(break_time_month))
   }
 }

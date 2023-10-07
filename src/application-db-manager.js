@@ -1,4 +1,4 @@
-/* application_data.js
+/* application-db-manager.js
  *
  * Copyright 2023 Ideve Core
  *
@@ -18,67 +18,34 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import GLib from 'gi://GLib';
+import { Database, Query_builder, Db_item, Pomodoro_query } from './db.js';
 import Gio from 'gi://Gio';
-import { Database, Query_builder, Db_item, Pomodoro_query } from './db.js'
-import { create_timestamp } from './utils.js';
 
 /**
  *
- * Manage application data
+ * Manage application database
  * @class
  *
  */
-export default class Application_data {
-  constructor() {
-    this._db = new Database();
-    this.data = null;
-  }
+export class ApplicationDbManager {
 
   /**
    *
-   * Setup database
-   * @returns {Application_data}
+   * Create ApplicationDbManager instance
+   * @param {object} params
+   * @param {Gio.Settings} params.settings
    *
    */
-  setup() {
+  constructor({ settings }) {
+    this._db = new Database({ settings });
+    this.data = null;
     this._db.setup();
-    try {
-      const data_dir = GLib.get_user_config_dir();
-      const destination = GLib.build_filenamev([data_dir, 'data.json'])
-      const destination_file = Gio.File.new_for_path(destination)
-      const [, contents] = destination_file.load_contents(null);
-      const decoder = new TextDecoder('utf-8');
-      const data = JSON.parse(decoder.decode(contents));
-      data.forEach((item) => {
-        const db_item = new Db_item({
-          id: null,
-          title: item.title,
-          description: item.description,
-          work_time: item.work_time,
-          break_time: item.break_time,
-          day: item.date.day,
-          day_of_month: item.date.day_of_month,
-          week: item.date.week,
-          year: item.date.year,
-          month: item.date.month,
-          display_date: item.date.display_date,
-          timestamp: Math.floor(create_timestamp(item.date.year, item.date.month, item.date.day_of_month) / 1000),
-          sessions: item.counts,
-        });
-        this.save(db_item)
-      })
-      destination_file.delete(null);
-    } catch (error) {
-      console.log('Error migrating the JSON file to the database or the data has already been migrated')
-    }
-    return this
   }
 
   /**
    *
    * Save data in database
-   * @param {Db_item} data 
+   * @param {Db_item} data
    * @returns {*}
    * @example
    * returns Db_item or null
@@ -104,13 +71,49 @@ export default class Application_data {
   /**
    *
    * Get db item by id
-   * @param {number} id 
+   * @param {number} id
    * @returns {null|Db_item}
    *
    */
   get_by_id(id) {
     if (!id) return null;
     return this._db.query(this._get_by_id_query(id));
+  }
+
+  /**
+   *
+   * Get db item by day
+   * @param {number} day
+   * @returns {null|Db_item}
+   *
+   */
+  get_by_day(day) {
+    if (!day) return null;
+    return this._db.query(this._get_by_day_query(day));
+  }
+
+  /**
+   *
+   * Get db item by week
+   * @param {number} week
+   * @returns {null|Db_item}
+   *
+   */
+  get_by_week(week) {
+    if (!week) return null;
+    return this._db.query(this._get_by_week_query(week));
+  }
+
+  /**
+   *
+   * Get db item by month
+   * @param {number} month
+   * @returns {null|Db_item}
+   *
+   */
+  get_by_month(month) {
+    if (!month) return null;
+    return this._db.query(this._get_by_month_query(month));
   }
 
   /**
@@ -162,13 +165,52 @@ export default class Application_data {
   /**
    *
    * Return the query for search by id in database
-   * @param {number} id 
+   * @param {number} id
    * return {null|Pomodoro_query}
    *
    */
   _get_by_id_query(id) {
     const query = new Query_builder();
     query.with_id(id);
+    return query.build();
+  }
+
+  /**
+   *
+   * Return the query for search by day in database
+   * @param {number} day
+   * return {null|Pomodoro_query}
+   *
+   */
+  _get_by_day_query(day) {
+    const query = new Query_builder();
+    query.with_day(day);
+    return query.build();
+  }
+
+  /**
+   *
+   * Return the query for search by week in database
+   * @param {number} week
+   * return {null|Pomodoro_query}
+   *
+   */
+  _get_by_week_query(week) {
+    const query = new Query_builder();
+    query.with_week(week);
+    return query.build();
+  }
+
+  /**
+   *
+   * Return the query for search by month in database
+   * @param {number} month
+   * return {null|Pomodoro_query}
+   *
+   */
+  _get_by_month_query(month) {
+    const query = new Query_builder();
+    query.with_month(month);
     return query.build();
   }
 }

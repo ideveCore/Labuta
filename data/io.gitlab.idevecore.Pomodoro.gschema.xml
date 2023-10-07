@@ -21,20 +21,6 @@
     <key type="i" name="history-duration">
       <default>2</default>
     </key>
-    <key type="s" name="sort-by">
-      <choices>
-        <choice value="name" />
-        <choice value="date" />
-      </choices>
-      <default>"date"</default>
-    </key>
-    <key type="s" name="order-by">
-      <choices>
-        <choice value="ascending" />
-        <choice value="descending" />
-      </choices>
-      <default>"descending"</default>
-    </key>
     <key name="width" type="i">
       <default>420</default>
     </key>
@@ -46,6 +32,9 @@
     </key>
     <key name="is-fullscreen" type="b">
       <default>false</default>
+    </key>
+    <key name="high-priority-notify" type="b">
+      <default>true</default>
     </key>
     <key type="i" name="work-time-st">
       <default>25</default>
@@ -59,6 +48,44 @@
     <key type="i" name="sessions-long-break">
       <default>4</default>
     </key>
+    <key type="s" name="timer-start-sound">
+      <default>'{"type":"freedesktop", "uri": "message-new-instant", "repeat":1}'</default>
+    </key>
+    <key type="s" name="timer-break-sound">
+      <default>'{"type":"freedesktop", "uri": "complete", "repeat":1}'</default>
+    </key>
+    <key type="s" name="timer-finish-sound">
+      <default>'{"type":"freedesktop", "uri": "alarm-clock-elapsed", "repeat":1}'</default>
+    </key>
+  </schema>
+  <schema id="@app_id@.History" path="/io/gitlab/idevecore/Pomodoro/">
+    <key name="view" type="s">
+      <default>"today"</default>
+    </key>
+    <key name="week" type="b">
+      <default>false</default>
+    </key>
+    <key name="month" type="b">
+      <default>false</default>
+    </key>
+    <key name="all" type="b">
+      <default>false</default>
+    </key>
+    <key type="s" name="sort">
+      <choices>
+        <choice value="name" />
+        <choice value="date" />
+      </choices>
+      <default>"date"</default>
+    </key>
+    <key type="s" name="order">
+      <choices>
+        <choice value="ascending" />
+        <choice value="descending" />
+      </choices>
+      <default>"descending"</default>
+    </key>
   </schema>
 </schemalist>
+
 

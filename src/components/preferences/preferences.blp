@@ -26,14 +26,33 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
         icon-name: "sound-wave-symbolic";
         activatable-widget: switch_play_sounds;
         [suffix]
+        Gtk.Button {
+          halign: center;
+          valign: center;
+          icon-name: 'settings-symbolic';
+          sensitive: bind switch_play_sounds.active;
+          clicked => $_open_sound_preferences();
+          tooltip-text: _('Open sound preferences');
+        }
         Switch switch_play_sounds {
           name: "play-sounds";
           valign: center;
         }
       }
       Adw.ActionRow  {
-        title: _("Autorstart");
-        subtitle: _("Automatically start the time after break time");
+        title: _("High priority to notify");
+        subtitle: _("If enabled, the application will display notifications even if the system notifications are muted.");
+        icon-name: "permissions-notifications-symbolic";
+        activatable-widget: switch_high_priority_notify;
+        [suffix]
+        Switch switch_high_priority_notify {
+          name: "high-priority-notify";
+          valign: center;
+        }
+      }
+      Adw.ActionRow  {
+        title: _("Autostart");
+        subtitle: _("Automatically start the timer after break time");
         icon-name: "system-restart-symbolic";
         activatable-widget: switch_autostart;
         [suffix]
@@ -42,84 +61,64 @@ template $Gjs_Preferences : Adw.PreferencesWindow {
           valign: center;
         }
       }
-      Adw.ActionRow  {
+      Adw.SpinRow set_history_duration {
         title: _("History duration");
         subtitle: _("The amount of months that history data will be saved");
         icon-name: 'history-undo-symbolic';
-        SpinButton set_history_duration {
-          valign: center;
-          numeric: true;
-          adjustment:
-            Adjustment {
-              lower: 2;
-              upper: 12;
-              page-increment: 1;
-              step-increment: 1;
-            };
-        }
+        adjustment:
+        Adjustment {
+          lower: 2;
+          upper: 12;
+          page-increment: 1;
+          step-increment: 1;
+        };
       }
     }
     Adw.PreferencesGroup {
       title: _("Customize pomodoro");
-      Adw.ActionRow  {
+      Adw.SpinRow set_work_time {
         title: _("Work time - (minutes)");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
-        SpinButton set_work_time {
-          valign: center;
-          numeric: true;
-          adjustment:
-            Adjustment {
-              lower: 5;
-              upper: 300;
-              page-increment: 1;
-              step-increment: 1;
-            };
-        }
+        adjustment:
+        Adjustment {
+          lower: 5;
+          upper: 300;
+          page-increment: 1;
+          step-increment: 1;
+        };
       }
-      Adw.ActionRow  {
+      Adw.SpinRow set_break_time {
         title: _("Break time - (minutes)");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
-        SpinButton set_break_time {
-          valign: center;
-          numeric: true;
-          adjustment:
-            Adjustment {
-              lower: 2;
-              upper: 30;
-              page-increment: 1;
-              step-increment: 1;
-            };
-        }
+        adjustment:
+        Adjustment {
+          lower: 2;
+          upper: 30;
+          page-increment: 1;
+          step-increment: 1;
+        };
       }
-      Adw.ActionRow  {
+      Adw.SpinRow set_long_break {
         title: _("Long break time - (minutes)");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
-        SpinButton set_long_break {
-          valign: center;
-          numeric: true;
-          adjustment:
-            Adjustment {
-              lower: 15;
-              upper: 60;
-              page-increment: 1;
-              step-increment: 1;
-            };
-        }
+        adjustment:
+        Adjustment {
+          lower: 15;
+          upper: 60;
+          page-increment: 1;
+          step-increment: 1;
+        };
       }
-      Adw.ActionRow  {
-        title: _("Sessions until the long break - (minutes)");
+      Adw.SpinRow set_sessions_long_break {
+        title: _("Sessions until the long break");
         subtitle: _("The ideal is to follow the rules of the Pomodoro");
-        SpinButton set_sessions_long_break {
-          valign: center;
-          numeric: true;
-          adjustment:
-            Adjustment {
-              lower: 1;
-              upper: 10;
-              page-increment: 1;
-              step-increment: 1;
-            };
-        }
+        adjustment:
+        Adjustment {
+          lower: 1;
+          upper: 10;
+          page-increment: 1;
+          step-increment: 1;
+        };
       }
     }
   }

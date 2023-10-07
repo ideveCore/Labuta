@@ -22,6 +22,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
+import { SoundPreferences } from '../sound-preferences/sound-preferences.js';
 import Template from './preferences.blp' assert { type: 'uri' };
 
 /**
@@ -30,12 +31,13 @@ import Template from './preferences.blp' assert { type: 'uri' };
  * @class
  *
  */
-export default class Preferences extends Adw.PreferencesWindow {
+export class Preferences extends Adw.PreferencesWindow {
   static {
     GObject.registerClass({
       Template,
       InternalChildren: [
         'switch_run_in_background',
+        'switch_high_priority_notify',
         'switch_play_sounds',
         'switch_autostart',
         'set_history_duration',
@@ -46,11 +48,20 @@ export default class Preferences extends Adw.PreferencesWindow {
       ],
     }, this);
   }
-  constructor(application) {
+
+  /**
+   *
+   * Create preferences page instance
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   *
+   */
+  constructor({ application }) {
     super({
       transient_for: application.get_active_window(),
     });
     this._application = application;
+    this._settings = application.utils.settings;
     this._set_settings_bind_states();
   }
   /**
@@ -59,53 +70,62 @@ export default class Preferences extends Adw.PreferencesWindow {
    *
    */
   _set_settings_bind_states() {
-    this._application.settings.bind(
+    this._settings.bind(
       "run-in-background",
       this._switch_run_in_background,
       "active",
       Gio.SettingsBindFlags.DEFAULT,
     );
-    this._application.settings.bind(
+    this._settings.bind(
       "play-sounds",
       this._switch_play_sounds,
       "active",
       Gio.SettingsBindFlags.DEFAULT,
     );
-    this._application.settings.bind(
+    this._settings.bind(
+      "high-priority-notify",
+      this._switch_high_priority_notify,
+      "active",
+      Gio.SettingsBindFlags.DEFAULT,
+    );
+    this._settings.bind(
       "autostart",
       this._switch_autostart,
       "active",
       Gio.SettingsBindFlags.DEFAULT,
     );
-    this._application.settings.bind(
+    this._settings.bind(
       "history-duration",
       this._set_history_duration,
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
-    this._application.settings.bind(
+    this._settings.bind(
       "work-time-st",
       this._set_work_time,
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
-    this._application.settings.bind(
+    this._settings.bind(
       "break-time-st",
       this._set_break_time,
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
-    this._application.settings.bind(
+    this._settings.bind(
       "long-break-st",
       this._set_long_break,
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
-    this._application.settings.bind(
+    this._settings.bind(
       "sessions-long-break",
       this._set_sessions_long_break,
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
+  }
+  _open_sound_preferences(_target) {
+    new SoundPreferences({ application: this._application, parent: this }).present();
   }
 }

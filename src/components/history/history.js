@@ -23,9 +23,10 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import Template from './history.blp' assert { type: 'uri' };
-import { format_time } from '../../utils.js';
 import { Db_item } from '../../db.js';
+import Settings from '../../settings.js';
+import { HistoryDetails } from '../history-details/history-details.js';
+import Template from './history.blp' assert { type: 'uri' };
 
 /**
  *
@@ -33,32 +34,45 @@ import { Db_item } from '../../db.js';
  * @class
  *
  */
-export class History extends Adw.PreferencesWindow {
+export class History extends Adw.Window {
   static {
     GObject.registerClass({
       Template,
+      GTypeName: 'History',
       InternalChildren: [
         'toggle_view_work_break_time_button',
         'stack',
         'list_box',
         'leaflet',
-        'history_details',
         'details_page',
         'primary_menu',
         'delete_button',
+        'empty_history_message',
       ]
     }, this);
   }
-  constructor(application) {
+  /**
+   *
+   * Create a instance of History
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   *
+   */
+  constructor({ application }) {
     super({
       transient_for: application.get_active_window(),
     });
-    this.Application = application;
+    this._application = application;
+    this._utils = application.utils;
+    this._format_time = application.utils.format_time;
+    this._application_db_manager = application.utils.application_db_manager;
     this._selected_rows = [];
     this._view_work_time = true;
+    this._settings = new Settings({ schema_id: `${pkg.name}.History`});
+
     this._toggle_view_work_break_time_button.connect('clicked', () => {
       this._view_work_time = this._toggle_view_work_break_time_button.get_active();
-      this._load_display_total_time(this.Application.data);
+      this._load_display_total_time(this._application_db_manager);
     });
     this._setup_gactions();
     this._load_history_list();
@@ -69,32 +83,30 @@ export class History extends Adw.PreferencesWindow {
    *
    */
   _setup_gactions() {
-    this.search_action_group = new Gio.SimpleActionGroup();
     this.history_action_group = new Gio.SimpleActionGroup();
-    this.insert_action_group("search", this.search_action_group);
     this.insert_action_group("history", this.history_action_group);
 
-    const sorting_action = new Gio.SimpleAction({ name: 'sorting', parameter_type: new GLib.Variant('s', '').get_type() });
-    const order_action = new Gio.SimpleAction({ name: 'order', parameter_type: new GLib.Variant('s', '').get_type() });
     const clear_action = new Gio.SimpleAction({ name: 'clear' });
-    sorting_action.connect('activate', (simple_action, parameter) => {
-      const sort = parameter.get_string()[0];
-      this.Application.settings.set_string('sort-by', sort);
-      this._list_box.set_sort_func(this._sort_history.bind(this))
-    });
-    order_action.connect('activate', (simple_action, parameter) => {
-      const order = parameter.get_string()[0];
-      this.Application.settings.set_string('order-by', order);
-      this._list_box.set_sort_func(this._sort_history.bind(this))
-    });
     clear_action.connect('activate', (simple_action) => {
-      this.Application.data.delete_all();
-      this._stack.visible_child_name = "empty_history";
+      this._application_db_manager.delete_all();
+      this._load_history_list();
     })
 
-    this.search_action_group.add_action(sorting_action);
-    this.search_action_group.add_action(order_action);
     this.history_action_group.add_action(clear_action);
+    this.history_action_group.add_action(this._settings.create_action('view'));
+    this.history_action_group.add_action(this._settings.create_action('order'));
+    this.history_action_group.add_action(this._settings.create_action('sort'));
+    this._settings.connect('changed::view', () => {
+      this._load_history_list();
+    });
+    this._settings.connect('changed::order', () => {
+      this._load_history_list();
+      this._list_box.set_sort_func(this._sort_history.bind(this))
+    });
+    this._settings.connect('changed::sort', () => {
+      this._load_history_list();
+      this._list_box.set_sort_func(this._sort_history.bind(this))
+    });
   }
 
   /**
@@ -128,14 +140,14 @@ export class History extends Adw.PreferencesWindow {
     row.break_time = item.break_time;
     row.id = item.id;
     row.connect('activated', (action_row) => {
-      this._create_lealflet_deatails_page(item.id);
+      this._create_lealflet_deatails_page(item);
     });
     check_button.connect('toggled', (check_button) => {
       row.selected = check_button.get_active();
       this._on_select_row(row);
     })
     delete_button.connect('clicked', () => {
-      this.Application.data.delete(item.id);
+      this._application_db_manager.delete(item.id);
       this._list_box.remove(row);
     });
     return row
@@ -147,9 +159,11 @@ export class History extends Adw.PreferencesWindow {
    * @param {number} id
    *
    */
-  _create_lealflet_deatails_page(id) {
-    const item = this.Application.data.get_by_id(id)[0];
-    this._history_details.update_details({
+  _create_lealflet_deatails_page(item) {
+    this._details_page.set_title(item.title);
+    this._details_page.set_description(item.description || _('No description'));
+    const history_details = new HistoryDetails({
+      application: this._application,
       id: item.id,
       title: item.title,
       parent: this,
@@ -159,11 +173,12 @@ export class History extends Adw.PreferencesWindow {
       break_time: item.break_time,
       description: item.description,
     });
+    this._details_page.set_child(history_details);
     this._leaflet_navigate_forward();
   }
 
   /**
-   * 
+   *
    * Leaflet navigate back method
    *
    */
@@ -172,8 +187,8 @@ export class History extends Adw.PreferencesWindow {
   }
 
   /**
-   * 
-   * Leaflet navigate forward method 
+   *
+   * Leaflet navigate forward method
    *
    */
   _leaflet_navigate_forward() {
@@ -182,18 +197,75 @@ export class History extends Adw.PreferencesWindow {
 
   /**
    *
-   * Load history 
+   * Load history
    *
    */
   _load_history_list() {
-    if (this.Application.data.get().length === 0) return;
-    this._stack.visible_child_name = "history";
-    this._list_box.set_sort_func(this._sort_history.bind(this));
-    this.Application.data.get().forEach((item) => {
-      this._list_box.append(this._create_row(item));
-    })
+    this._stack.visible_child_name = "empty_history";
+    this._list_box.remove_all();
+    const application_db_manager = this._utils.application_db_manager;
+    const time_utils = this._utils.time_utils();
+
+    const get_history = {
+      today: () => (application_db_manager.get_by_day(time_utils.day)),
+      week: () => (application_db_manager.get_by_week(time_utils.week)),
+      month: () => (application_db_manager.get_by_month(time_utils.month)),
+      all: () => (application_db_manager.get()),
+    };
+
+    let settings = this._settings.get_string('view');
+
+    this.data = get_history[settings]();
+
+    // for translations
+    const dates = {
+      today: _('today'),
+      week: _('this week'),
+      month: _('this month'),
+    }
+
+    const message = settings === 'all' ? _('Empty history') : `${_('No pomodoro')} ${dates[settings]}`;
+    this._empty_history_message.set_label(message);
     this._selected_rows = [];
     this._load_display_total_time();
+
+    if(this.data.length === 0) return;
+    this._stack.visible_child_name = "history";
+    this._list_box.set_sort_func(this._sort_history.bind(this));
+    const history_group = {};
+    const history_data = [];
+
+    this.data.forEach((data) => {
+      const id = `${data.title}${data.description}`;
+      if (!history_group[id]) {
+        history_group[id] = [];
+      }
+      history_group[id].push(data);
+    });
+    Object.values(history_group).map((data) => {
+      if(data.length > 1) {
+        history_data.push(data.reduce((accumulator, object) => {
+          accumulator.sessions += object.sessions
+          accumulator.work_time += object.work_time;
+          accumulator.break_time += object.break_time;
+          if(accumulator.timestamp < object.timestamp) {
+            accumulator.day = object.day;
+            accumulator.day_of_month = object.day_of_month;
+            accumulator.year = object.year;
+            accumulator.week = object.week;
+            accumulator.month = object.month;
+            accumulator.display_date = object.display_date;
+            accumulator.timestamp = object.timestamp;
+          }
+          return accumulator;
+        }));
+      } else {
+        history_data.push(data[0]);
+      }
+    });
+    history_data.forEach((item) => {
+      this._list_box.append(this._create_row(item));
+    });
   }
 
   /**
@@ -201,7 +273,7 @@ export class History extends Adw.PreferencesWindow {
    * Set sort function in Gtk.ListBox
    * @param {this._create_row} history_a
    * @param {this._create_row} history_b
-   * @param {*} _data 
+   * @param {*} _data
    * @returns {*}
    * @example Return sort function
    *
@@ -209,10 +281,10 @@ export class History extends Adw.PreferencesWindow {
   _sort_history(history_a, history_b, _data) {
     const a = history_a
     const b = history_b
-    if (this.Application.settings.get_string('sort-by') === 'name') {
-      return this.Application.settings.get_string('order-by') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+    if (this._settings.get_string('sort') === 'name') {
+      return this._settings.get_string('order') === 'ascending' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
     }
-    return this.Application.settings.get_string('order-by') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
+    return this._settings.get_string('order') === 'ascending' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
   }
 
   /**
@@ -227,20 +299,20 @@ export class History extends Adw.PreferencesWindow {
       total_work_timer = this._selected_rows.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
       total_break_timer = this._selected_rows.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     } else {
-      total_work_timer = this.Application.data.get().reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
-      total_break_timer = this.Application.data.get().reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
+      total_work_timer = this.data.reduce((accumulator, current_value) => accumulator + current_value.work_time, 0);
+      total_break_timer = this.data.reduce((accumulator, current_value) => accumulator + current_value.break_time, 0);
     }
 
     if (this._view_work_time) {
       this._toggle_view_work_break_time_button.get_style_context().remove_class('error');
       this._toggle_view_work_break_time_button.get_style_context().add_class('accent');
       this._toggle_view_work_break_time_button.set_tooltip_text(_('Work time'));
-      this._toggle_view_work_break_time_button.set_label(format_time(total_work_timer));
+      this._toggle_view_work_break_time_button.set_label(this._format_time(total_work_timer));
     } else {
       this._toggle_view_work_break_time_button.get_style_context().remove_class('accent');
       this._toggle_view_work_break_time_button.get_style_context().add_class('error');
       this._toggle_view_work_break_time_button.set_tooltip_text(_('Break time'));
-      this._toggle_view_work_break_time_button.set_label(format_time(total_break_timer));
+      this._toggle_view_work_break_time_button.set_label(this._format_time(total_break_timer));
     }
   }
 
@@ -251,11 +323,11 @@ export class History extends Adw.PreferencesWindow {
    */
   _on_delete() {
     this._selected_rows.forEach((item) => {
-      this.Application.data.delete(item.id);
+      this._application_db_manager.delete(item.id);
       this._list_box.remove(item);
     });
     this._selected_rows = [];
-    this._load_display_total_time();
+    this._load_history_list();
     this._delete_button.set_sensitive(false);
     this._delete_button.set_icon_name('user-trash-symbolic');
   }
@@ -263,7 +335,7 @@ export class History extends Adw.PreferencesWindow {
   /**
    *
    * Called when history row selected
-   * @param {ths._create_row} row 
+   * @param {ths._create_row} row
    *
    */
   _on_select_row(row) {
@@ -282,4 +354,3 @@ export class History extends Adw.PreferencesWindow {
     }
   }
 }
-

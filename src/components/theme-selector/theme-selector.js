@@ -28,13 +28,14 @@ import Style from './theme-selector.css';
 let provider;
 
 /**
+ *
  * Represents a ThemeSelector component.
  *
  * @class
  * @extends {Gtk.Box}
+ *
  */
-
-export default class ThemeSelector extends Gtk.Box {
+export class ThemeSelector extends Gtk.Box {
   static {
     GObject.registerClass({
       GTypeName: 'ThemeSelector',
@@ -65,19 +66,20 @@ export default class ThemeSelector extends Gtk.Box {
   }
 
   /**
+   *
    * Create a instance for application theme handler.
-   * 
-   * @param {Object} _params
+   * @param {object} params
+   * @param {Adw.Application} params.application
+   *
    */
-
-  constructor(params = {}) {
-    super(params = {});
+  constructor({ application }) {
+    super();
     this.color_scheme = 'ligth';
-    this.style_manager = Adw.StyleManager.get_default()
-    this.settings = new Gio.Settings({ schema_id: pkg.name })
-    this.color_scheme = this.settings.get_string('color-scheme')
+    this.style_manager = Adw.StyleManager.get_default();
+    this._settings = application.utils.settings;
+    this.color_scheme = this._settings.get_string('color-scheme');
 
-    this.settings.bind(
+    this._settings.bind(
       'color-scheme',
       this,
       'selected_color_scheme',
@@ -104,7 +106,6 @@ export default class ThemeSelector extends Gtk.Box {
    *
    * @returns {string} light|dark|auto
    */
-
   get selected_color_scheme() {
     return this.color_scheme
   }
@@ -114,7 +115,6 @@ export default class ThemeSelector extends Gtk.Box {
    *
    * @param {string} color_scheme light|dark|auto
    */
-
   set selected_color_scheme(color_scheme) {
     this.color_scheme = color_scheme;
     this.notify('selected_color_scheme');
@@ -139,7 +139,6 @@ export default class ThemeSelector extends Gtk.Box {
    * @param {any} _widget
    * @param {any} _paramspec
    */
-
   _on_color_scheme_changed(_widget, _paramspec) {
     if (this._system.active) {
       this.selected_color_scheme = 'auto'

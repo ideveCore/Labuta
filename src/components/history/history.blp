@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $Gjs_History : Adw.PreferencesWindow {
+  template $History : Adw.Window {
   modal: true;
   default-height: 450;
   default-width: 400;
@@ -13,9 +13,8 @@ template $Gjs_History : Adw.PreferencesWindow {
     can-unfold: false;
     Adw.LeafletPage {
       navigatable: false;
-      child: Box {
-        hexpand: true;
-        orientation: vertical;
+      child: Adw.ToolbarView {
+        [top]
         Adw.HeaderBar {
           show-end-title-buttons: bind leaflet.folded;
           [start]
@@ -26,7 +25,6 @@ template $Gjs_History : Adw.PreferencesWindow {
             active: true;
           }
           [start]
-
           Gtk.Button delete_button {
             styles ["error"]
             valign: center;
@@ -42,47 +40,52 @@ template $Gjs_History : Adw.PreferencesWindow {
             icon-name: "open-menu-symbolic";
             tooltip-text: _("History menu");
           }
+          [end]
+          MenuButton {
+            styles ["flat"]
+            halign: center;
+            valign: center;
+            icon-name: "month-symbolic";
+            menu-model: history_view_menu;
+          }
         }
-        Adw.PreferencesGroup {
-          Gtk.Box {
-            Gtk.Stack stack {
-              transition-type: crossfade;
-              vexpand: true;
-              Gtk.StackPage {
-                name: "empty_history";
-                child:
-                  Adw.StatusPage {
-                    icon-name: "history-undo-symbolic";
-                    Gtk.Label {
-                      styles ["title-1"]
-                      label: _("Empty history");
-                    }
-                  };
-              }
-              Gtk.StackPage {
-                name: "history";
-                child: Gtk.ScrolledWindow {
-                  hexpand: true;
-                  Gtk.ListBox list_box {
-                    styles ["boxed-list"]
-                    valign: start;
-                    margin-top: 12;
-                    margin-bottom: 12;
-                    margin-start: 12;
-                    margin-end: 12;
-                    selection-mode: none;
-                  }
-                };
-              }
+        Gtk.Box {
+          Gtk.Stack stack {
+            transition-type: crossfade;
+            vexpand: true;
+            Gtk.StackPage {
+              name: "empty_history";
+              child:
+              Adw.StatusPage {
+                icon-name: "history-undo-symbolic";
+                Gtk.Label empty_history_message {
+                  styles ["title-1"]
+                  label: _("Empty history");
+                }
+              };
+            }
+            Gtk.StackPage {
+              name: "history";
+              child: Gtk.ScrolledWindow {
+                hexpand: true;
+                Gtk.ListBox list_box {
+                  styles ["boxed-list"]
+                  valign: start;
+                  margin-top: 12;
+                  margin-bottom: 12;
+                  margin-start: 12;
+                  margin-end: 12;
+                  selection-mode: none;
+                }
+              };
             }
           }
         }
       };
     }
     Adw.LeafletPage {
-      child: Box {
-        hexpand: true;
-        orientation: vertical;
+      child: Adw.ToolbarView {
+        [top]
         Adw.HeaderBar {
           show-end-title-buttons: bind leaflet.folded;
           [start]
@@ -91,9 +94,7 @@ template $Gjs_History : Adw.PreferencesWindow {
             clicked => $_leaflet_navigate_back();
           }
         }
-        ListBox details_page {
-          $HistoryDetails history_details {}
-        }
+        content: Adw.StatusPage details_page {};
       };
     }
   }
@@ -106,24 +107,24 @@ menu primary_menu {
       section {
         item {
           label: _("Name");
-          action: 'search.sorting';
+          action: 'history.sort';
           target: 'name';
         }
         item {
           label: _("Date");
-          action: 'search.sorting';
+          action: 'history.sort';
           target: 'date';
         }
       }
       section {
         item {
           label: _('Ascending');
-          action: 'search.order';
+          action: 'history.order';
           target: 'ascending';
         }
         item {
           label: _('Descending');
-          action: 'search.order';
+          action: 'history.order';
           target: 'descending';
         }
       }
@@ -132,5 +133,28 @@ menu primary_menu {
       label: _("Clear history");
       action: "history.clear";
     }
+  }
+}
+
+menu history_view_menu {
+  item {
+    label: _('Today');
+    action: 'history.view';
+    target: 'today';
+  }
+  item {
+    label: _('This week');
+    action: 'history.view';
+    target: 'week';
+  }
+  item {
+    label: _('This month');
+    action: 'history.view';
+    target: 'month';
+  }
+  item {
+    label: _('All');
+    action: 'history.view';
+    target: 'all';
   }
 }

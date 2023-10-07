@@ -19,17 +19,12 @@
  */
 
 import GLib from 'gi://GLib?version=2.0'
-import Application from "./application.js";
-import GSound from 'gi://GSound';
+import { application } from './application.js';
 
 pkg.initGettext();
 GLib.set_application_name('Pomodoro');
 
 export const main = (argv) => {
-  const application = new Application();
-  const gsound = new GSound.Context();
-  gsound.init(null);
-  application.gsound = gsound;
   return application.runAsync(argv);
 }
 

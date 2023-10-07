@@ -36,19 +36,16 @@
   color: rgb(255, 255, 255);
 }
 
-/* spinbutton styles */
-spinbutton {
-  background-color: transparent;
-  outline: none;
-}
-spinbutton > button {
-  background-color: alpha(currentColor,.1);
-  border: none;
-  border-radius: 50%;
-  margin-left: 0.5em;
-}
-spinbutton > button:hover {
-  background-color: alpha(currentColor,.15);
+.animation-pause {
+  animation: animation-paused 700ms ease-in-out infinite alternate forwards;
 }
 
+@keyframes animation-paused {
+  from {
+    color: @accent_color;
+  }
 
+  to {
+    color: @dark_2;
+  }
+}
