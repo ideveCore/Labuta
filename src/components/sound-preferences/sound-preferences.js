@@ -63,7 +63,7 @@ export class SoundPreferences extends Adw.Window {
     });
     this._settings = application.utils.settings;
     this._setup_timer_sounds();
-    this._sound = application.utils.sound;
+    this._sound = application.utils.sound_player;
   }
 
   /**

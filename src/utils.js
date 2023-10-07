@@ -168,10 +168,7 @@ const sound_player = ({ application, settings }) => {
  * @property {Function} send
  *
  */
-// TODO: need add button for open application in notification
 export const notification = ({ application, settings }) => {
-  const notification = new Gio.Notification();
-
   /**
    *
    * Send notification
@@ -181,12 +178,20 @@ export const notification = ({ application, settings }) => {
    *
    */
   const send = ({ title, body }) => {
+    const notification = new Gio.Notification();
     notification.set_title(title);
     notification.set_body(body);
     const high_priority_notify = settings.get_boolean('high-priority-notify');
     notification.set_priority(high_priority_notify ? Gio.NotificationPriority.URGENT : Gio.NotificationPriority.NORMAL);
+    if(!application.get_active_window().visible) {
+      notification.add_button(
+        _("Launch"),
+        "app.open",
+      );
+    }
+
     notification.set_default_action("app.open");
-    application.send_notification("lunch-is-ready", notification);
+    application.send_notification("new-message", notification);
   }
 
   return {

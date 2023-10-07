@@ -77,8 +77,6 @@ export const timer = ({ application, pomodoro_item, settings, sound_player, noti
     if (timer_state === 'stopped') {
       work_time = settings.get_int('work-time-st') * 60;
       break_time = settings.get_int('break-time-st') * 60;
-      work_time = 5;
-      break_time = 3;
       current_time = work_time;
       current_break_time = break_time;
       long_break = settings.get_int('long-break-st') * 60;
@@ -203,7 +201,7 @@ export const timer = ({ application, pomodoro_item, settings, sound_player, noti
     current_break_time = break_time;
     pomodoro_item.set = {sessions: pomodoro_item.get.sessions + 1};
     event('end');
-      if (pomodoro_item.get.sessions === sessions_long_break) {
+    if (pomodoro_item.get.sessions === sessions_long_break) {
       current_break_time = long_break;
       pomodoro_item.set = {sessions: 0};
     }
