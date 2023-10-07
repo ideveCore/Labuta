@@ -27,12 +27,12 @@ export class PomodoroItem {
    *
    * Create a instance of Pomodoro item
    * @param {object} params
-   * @param {application_db_manager} params.db_manager
-   * @param {object} params.time_utils
+   * @param {ApplicationDbManager} params.application_db_manager
+   * @param {Function} params.time_utils
    *
    */
-  constructor({ db_manager, time_utils }) {
-    this._data = db_manager;
+  constructor({ application_db_manager, time_utils }) {
+    this._data = application_db_manager;
     this._time_utils = time_utils;
     this._item = null;
     this.default_item();
@@ -68,16 +68,17 @@ export class PomodoroItem {
    */
   save() {
     const current_item = this.get;
+    const time_utils = this._time_utils();
     if(this._item.title === '') {
-      this._item.title = current_item.title ? current_item.title : `${_('Started at')} ${this._time_utils.time()}`;
+      this._item.title = current_item.title ? current_item.title : `${_('Started at')} ${time_utils.time}`;
     }
-    this._item.day = this._time_utils.day;
-    this._item.day_of_month = this._time_utils.day_of_month;
-    this._item.year = this._time_utils.year;
-    this._item.week = this._time_utils.week;
-    this._item.month = this._time_utils.month;
-    this._item.display_date = `${this._time_utils.day_of_week}, ${this._time_utils.day_of_month} ${_("of")} ${this._time_utils.month_of_year} ${_("of")} ${this._time_utils.year}`;
-    this._item.timestamp = this._time_utils.timestamp();
+    this._item.day = time_utils.day;
+    this._item.day_of_month = time_utils.day_of_month;
+    this._item.year = time_utils.year;
+    this._item.week = time_utils.week;
+    this._item.month = time_utils.month;
+    this._item.display_date = `${time_utils.day_of_week}, ${time_utils.day_of_month} ${_("of")} ${time_utils.month_of_year} ${_("of")} ${time_utils.year}`;
+    this._item.timestamp = time_utils.timestamp;
     this._item = this._data.save(this._item);
     return this._item;
   }

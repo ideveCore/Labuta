@@ -168,6 +168,7 @@ const sound_player = ({ application, settings }) => {
  * @property {Function} send
  *
  */
+// TODO: need add button for open application in notification
 export const notification = ({ application, settings }) => {
   const notification = new Gio.Notification();
 
@@ -200,10 +201,11 @@ export const notification = ({ application, settings }) => {
  * @property {Function} set_status
  *
  */
-const set_background_status = () => {
+const background_status = () => {
   const portal = new Xdp.Portal();
 
   /**
+   *
    * Set Background status
    * @param {object} params
    * @param {string} params.message
@@ -276,16 +278,12 @@ const quit_request_dialog = ({ application, timer }) => {
  * @property {number} timestamp - current timestamp
  *
  */
-
-// TODO: This function needs attention
 const time_utils = () => {
   const current_date = GLib.DateTime.new_now_local();
-
   const time = () => {
     const hour = new GLib.DateTime().get_hour();
     const minute = new GLib.DateTime().get_minute();
     const second = new GLib.DateTime().get_second();
-
     return `${hour > 9 ? hour : '0' + hour}:${minute > 9 ? minute : '0' + minute}:${second > 9 ? second : '0' + second}`;
   };
 
@@ -306,14 +304,14 @@ const time_utils = () => {
    * @returns {number} return sum of current date hour, minutes, microseconds, year and day.
    *
    */
- const create_timestamp = () => {
+  const create_timestamp = () => {
     let time = new Date();
     const current_time = `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
     return Math.floor(time.getTime() / 1000);
   };
 
   return {
-    time,
+    time: time(),
     day,
     day_of_month,
     day_of_week,
@@ -321,7 +319,7 @@ const time_utils = () => {
     week,
     month,
     month_of_year,
-    timestamp: create_timestamp,
+    timestamp: create_timestamp(),
   }
 }
 
@@ -332,30 +330,35 @@ const time_utils = () => {
  * This function is using factory design pattern
  * @param {object} params
  * @param {Adw.Application} params.application
+ *
  * @typeref {object}
+ * @property {Gio.Settings} settings
+ * @property {notification} notification
+ * @property {sound_player} sound_player
  * @property {ApplicationDbManager} application_db_manager
- * @property {Gio.Settings} setings
- * @property { pomodoro_time_utils } pomodoro_time_utils
+ * @property {PomodoroItem} pomodoro_item
+ * @property {Function} time_utils
+ * @property {background_status} background_status
+ * @property {quit_request_dialog} quit_request_dialog
+ * @property {Function} format_time
  *
  */
-// TODO: this function needs attention
 export const utils = ({ application  }) => {
-  const time_utils_instance = time_utils();
   const settings = new Settings({ schema_id: pkg.name });
-  const db_manager = new ApplicationDbManager({ settings });
-  const sound = sound_player({ application, settings });
-  const notify = notification({ application, settings });
-  const item = new PomodoroItem({ db_manager, time_utils: time_utils_instance });
-  const timer_instance = timer({ application, pomodoro_item: item, settings, sound, notification: notify });
+  const notification_instance = notification({ application, settings });
+  const sound_player_instance = sound_player({ application, settings });
+  const application_db_manager_instance = new ApplicationDbManager({ settings });
+  const pomodoro_item_instance = new PomodoroItem({ application_db_manager: application_db_manager_instance, time_utils });
+  const timer_instance = timer({ application, pomodoro_item: pomodoro_item_instance, settings, sound_player: sound_player_instance, notification: notification_instance });
   return {
-    time_utils: time_utils_instance,
-    application_db_manager: db_manager,
     settings,
-    pomodoro_item: item,
-    sound,
-    notification: notify,
+    notification: notification_instance,
+    sound_player: sound_player_instance,
+    application_db_manager: application_db_manager_instance,
+    pomodoro_item: pomodoro_item_instance,
     timer: timer_instance,
-    background_status: set_background_status(),
+    time_utils: time_utils,
+    background_status: background_status(),
     quit_request_dialog: quit_request_dialog({application, timer: timer_instance.get_data}),
     format_time,
   }

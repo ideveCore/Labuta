@@ -29,7 +29,7 @@ import { PomodoroItem } from './pomodoro-item.js';
  * @param {Adw.Application} params.application
  * @param {PomodoroItem} params.pomodoro_item
  * @param {Settings} params.settings
- * @param {object} params.sound
+ * @param {object} params.sound_player
  * @param {object} params.notification
  *
  * @typeref {object}
@@ -41,11 +41,12 @@ import { PomodoroItem } from './pomodoro-item.js';
  * @property {object} data
  *
  */
-export const timer = ({ application, pomodoro_item, settings, sound, notification  }) => {
+export const timer = ({ application, pomodoro_item, settings, sound_player, notification  }) => {
   let timer_state = 'stopped';
   let work_time = settings.get_int('work-time-st') * 60;
-  let current_time = work_time;
   let break_time = settings.get_int('break-time-st') * 60;
+  let current_time = work_time;
+  let current_break_time = break_time;
   let long_break = settings.get_int('long-break-st') * 60;
   let sessions_long_break = settings.get_int('sessions-long-break');
 
@@ -76,7 +77,10 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
     if (timer_state === 'stopped') {
       work_time = settings.get_int('work-time-st') * 60;
       break_time = settings.get_int('break-time-st') * 60;
+      work_time = 5;
+      break_time = 3;
       current_time = work_time;
+      current_break_time = break_time;
       long_break = settings.get_int('long-break-st') * 60;
       sessions_long_break = settings.get_int('sessions-long-break');
       timer_state = 'running';
@@ -99,6 +103,7 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
    */
   const reset = () => {
     current_time = work_time;
+    current_break_time = break_time;
     timer_state = 'stopped';
     pomodoro_item.delete();
     event('stop');
@@ -115,6 +120,7 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
     long_break = settings.get_int('long-break-st') * 60;
     sessions_long_break = settings.get_int('sessions-long-break');
     current_time = work_time;
+    current_break_time = break_time;
     timer_state = 'stopped';
     pomodoro_item.update();
     pomodoro_item.default_item();
@@ -132,6 +138,7 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
       timer_state = 'running';
     } else {
       current_time = work_time;
+      current_break_time = break_time;
       finish_timer();
     }
   }
@@ -166,9 +173,9 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
    *
    */
   const format_time = () => {
-    let hours = Math.floor(Math.abs(current_time < 0 ? current_time + break_time : current_time) / 60 / 60)
-    let minutes = Math.floor(Math.abs(current_time < 0 ? current_time + break_time : current_time) / 60) % 60;
-    let seconds = Math.abs(current_time < 0 ? current_time + break_time : current_time) % 60;
+    let hours = Math.floor(Math.abs(current_time < 0 ? current_time + current_break_time : current_time) / 60 / 60)
+    let minutes = Math.floor(Math.abs(current_time < 0 ? current_time + current_break_time : current_time) / 60) % 60;
+    let seconds = Math.abs(current_time < 0 ? current_time + current_break_time : current_time) % 60;
 
     if (hours.toString().split('').length < 2) {
       hours = `0${hours}`
@@ -193,10 +200,11 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
       application.utils.background_status.set_status({ message: `${_('Paused')}` });
 
     current_time = work_time;
+    current_break_time = break_time;
     pomodoro_item.set = {sessions: pomodoro_item.get.sessions + 1};
     event('end');
-    if (pomodoro_item.get.sessions === sessions_long_break) {
-      break_time = long_break;
+      if (pomodoro_item.get.sessions === sessions_long_break) {
+      current_break_time = long_break;
       pomodoro_item.set = {sessions: 0};
     }
     if (settings.get_boolean('autostart')) {
@@ -204,7 +212,7 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
     }
     pomodoro_item.update();
     notification.send({ title: `${_("Pomodoro finished")} - ${pomodoro_item.get.title}`, body: `${_("Description")}: ${pomodoro_item.get.description}\n${_("Created at")}: ${pomodoro_item.get.display_date}` });
-    sound.play({sound_settings: 'timer-finish-sound'});
+    sound_player.play({sound_settings: 'timer-finish-sound'});
   }
 
   /**
@@ -226,10 +234,10 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
 
       if (current_time === work_time) {
         notification.send({ title: `${_("Pomodoro started")} - ${pomodoro_item.get.title}`, body: `${_("Description")}: ${pomodoro_item.get.description}\n${_("Created at")}: ${pomodoro_item.get.display_date}` })
-        sound.play({sound_settings: 'timer-start-sound'});
+        sound_player.play({sound_settings: 'timer-start-sound'});
       } else if (current_time === 0) {
         notification.send({ title: `${_("Pomodoro break time")} - ${pomodoro_item.get.title}`, body: `${_("Description")}: ${pomodoro_item.get.description}\n${_("Created at")}: ${pomodoro_item.get.display_date}` })
-        sound.play({ sound_settings: 'timer-break-sound'});
+        sound_player.play({ sound_settings: 'timer-break-sound'});
       }
 
       if (current_time > 0) {
@@ -245,7 +253,7 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
       pomodoro_item.update();
       event('run');
 
-      if (current_time > (break_time * -1)) {
+      if (current_time > (current_break_time * -1)) {
         return GLib.SOURCE_CONTINUE
       }
       finish_timer();

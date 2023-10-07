@@ -204,7 +204,8 @@ export class History extends Adw.Window {
     this._stack.visible_child_name = "empty_history";
     this._list_box.remove_all();
     const application_db_manager = this._utils.application_db_manager;
-    const time_utils = this._utils.time_utils;
+    const time_utils = this._utils.time_utils();
+
     const get_history = {
       today: () => (application_db_manager.get_by_day(time_utils.day)),
       week: () => (application_db_manager.get_by_week(time_utils.week)),
