@@ -12,13 +12,26 @@
   </description>
   <url type="homepage">https://gitlab.com/idevecore/pomodoro</url>
   <url type="bugtracker">https://gitlab.com/idevecore/pomodoro/-/issues</url>
+  <url type="translate">https://hosted.weblate.org/engage/pomodoro</url>
   <url type="donation">https://ko-fi.com/idevecore</url>
   <url type="vcs-browser">https://gitlab.com/idevecore/pomodoro</url>
 
   <releases>
-    <release version="1.3.0" date="2023-09-02">
+    <release version="1.4.0" date="2023-10-06">
       <description>
-        <p>In this version, new features, optimizations, layout and design changes have been added.</p>
+        <p>In this version we have updated:</p>
+        <ul>
+          <li>GNOME Runtime for 45</li>
+          <li>History component</li>
+          <li>Preferences component</li>
+          <li>Small window</li>
+          </ul>
+        <p>In this version, the following were added:</p>
+        <ul>
+          <li>High priority in notifications</li>
+          <li>Sound preferences</li>
+          <li>Skip timer button</li>
+        </ul>
       </description>
     </release>
 
@@ -76,6 +89,18 @@
     </screenshot>
     <screenshot>
       <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/05.png</image>
+      </screenshot>
+    <screenshot>
+      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/06.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/07.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/08.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/09.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">

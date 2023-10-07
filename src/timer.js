@@ -100,8 +100,8 @@ export const timer = ({ application, pomodoro_item, settings, sound, notificatio
   const reset = () => {
     current_time = work_time;
     timer_state = 'stopped';
-    event('stop');
     pomodoro_item.delete();
+    event('stop');
   }
 
   /**

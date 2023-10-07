@@ -72,7 +72,7 @@ export class History extends Adw.Window {
 
     this._toggle_view_work_break_time_button.connect('clicked', () => {
       this._view_work_time = this._toggle_view_work_break_time_button.get_active();
-      this._load_display_total_time(this._data);
+      this._load_display_total_time(this._application_db_manager);
     });
     this._setup_gactions();
     this._load_history_list();
@@ -147,7 +147,7 @@ export class History extends Adw.Window {
       this._on_select_row(row);
     })
     delete_button.connect('clicked', () => {
-      this._data.delete(item.id);
+      this._application_db_manager.delete(item.id);
       this._list_box.remove(row);
     });
     return row
@@ -322,7 +322,7 @@ export class History extends Adw.Window {
    */
   _on_delete() {
     this._selected_rows.forEach((item) => {
-      this._data.delete(item.id);
+      this._application_db_manager.delete(item.id);
       this._list_box.remove(item);
     });
     this._selected_rows = [];

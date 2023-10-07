@@ -34,6 +34,18 @@ A simple timer application, its main objective is to be simple, and intuitive.
  sudo ninja -C builddir install 
  ```
 
+## Translations
+
+[![Translation status](https://hosted.weblate.org/widget/pomodoro/pomodoro/svg-badge.svg)](https://hosted.weblate.org/engage/pomodoro/) ✨Powered by [Weblate](https://weblate.org/en/)✨
+
+Pomodoro has been translated into the following languages:
+
+<a href="https://hosted.weblate.org/engage/pomodoro/">
+<img src="https://hosted.weblate.org/widget/pomodoro/pomodoro/multi-auto.svg" alt="Translation status" />
+</a>
+
+Please help translate Pomodoro into more languages through [Weblate](https://hosted.weblate.org/engage/pomodoro/).
+
 ## Donate
 If you like this project and have some spare money left, consider donating:
 
