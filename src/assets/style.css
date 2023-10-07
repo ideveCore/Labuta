@@ -46,6 +46,6 @@
   }
 
   to {
-    color: @error_color;
+    color: @dark_2;
   }
 }
