@@ -1,0 +1,28 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">Pomodoro</name>
+  <shortdesc xml:lang="en">Pomodoro is a productivity-focused timer</shortdesc>
+  <description xml:lang="en">Pomodoro is a timer utility with rules, ideal for better productivity.</description>
+  <homepage rdf:resource="https://gitlab.com/idevecore/pomodoro" />
+  <bug-database rdf:resource="https://gitlab.com/idevecore/pomodoro/issues/" />
+  <programming-language>JavaScript</programming-language>
+  <platform>GTK 4</platform>
+  <platform>Libadwaita</platform>
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Ideve Core</foaf:name>
+      <foaf:mbox rdf:resource="mailto:ideve.core@proton.me" />
+      <foaf:account>
+        <foaf:OnlineAccount>
+            <foaf:accountServiceHomepage rdf:resource="https://gitlab.com/"/>
+            <foaf:accountName>idevecore</foaf:accountName>
+        </foaf:OnlineAccount>
+      </foaf:account>
+    </foaf:Person>
+  </maintainer>
+ </Project>
