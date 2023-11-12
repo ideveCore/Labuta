@@ -1,9 +1,9 @@
 {
-  "app-id": "io.gitlab.idevecore.PomodoroDevel",
+  "app-id": "io.gitlab.idevecore.PlanytimerDevel",
   "runtime": "org.gnome.Platform",
   "runtime-version": "45",
   "sdk": "org.gnome.Sdk",
-  "command": "pomodoro",
+  "command": "planytimer",
   "finish-args": [
     "--share=ipc",
     "--socket=fallback-x11",
@@ -154,7 +154,7 @@
       ]
     },
     {
-      "name": "pomodoro",
+      "name": "planytimer",
       "builddir": true,
       "buildsystem": "meson",
       "config-opts": [
@@ -162,8 +162,8 @@
       ],
       "sources": [
         {
-          "type": "git",
-          "url": "file:///home/francisco/Projetos"
+          "type": "dir",
+          "url": "."
         }
       ]
     }

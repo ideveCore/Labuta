@@ -1,10 +1,10 @@
-<img heigth="128" src="./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Pomodoro.svg" align="left" />
+<img heigth="128" src="./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Planytimer.svg" align="left" />
 
-# Pomodoro
+# Planytimer
 
 A simple timer application, its main objective is to be simple, and intuitive.
 
-![Pomodoro](data/screenshots/01.png)
+![Planytimer](data/screenshots/01.png)
 
 ## Features
 - History
@@ -38,13 +38,13 @@ A simple timer application, its main objective is to be simple, and intuitive.
 
 [![Translation status](https://hosted.weblate.org/widget/pomodoro/pomodoro/svg-badge.svg)](https://hosted.weblate.org/engage/pomodoro/) ✨Powered by [Weblate](https://weblate.org/en/)✨
 
-Pomodoro has been translated into the following languages:
+Planytimer has been translated into the following languages:
 
 <a href="https://hosted.weblate.org/engage/pomodoro/">
 <img src="https://hosted.weblate.org/widget/pomodoro/pomodoro/multi-auto.svg" alt="Translation status" />
 </a>
 
-Please help translate Pomodoro into more languages through [Weblate](https://hosted.weblate.org/engage/pomodoro/).
+Please help translate Planytimer into more languages through [Weblate](https://hosted.weblate.org/engage/pomodoro/).
 
 ## Donate
 If you like this project and have some spare money left, consider donating:

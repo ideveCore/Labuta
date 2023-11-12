@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="pomodoro">
-  <schema id="@app_id@" path="/io/gitlab/idevecore/Pomodoro/" gettext-domain="@app_id@">
+  <schema id="@app_id@" path="/io/gitlab/idevecore/Planytimer/" gettext-domain="@app_id@">
     <key type="s" name="color-scheme">
       <choices>
         <choice value="auto" />
@@ -58,7 +58,7 @@
       <default>'{"type":"freedesktop", "uri": "alarm-clock-elapsed", "repeat":1}'</default>
     </key>
   </schema>
-  <schema id="@app_id@.History" path="/io/gitlab/idevecore/Pomodoro/">
+  <schema id="@app_id@.History" path="/io/gitlab/idevecore/Planytimer/">
     <key name="view" type="s">
       <default>"today"</default>
     </key>

@@ -94,7 +94,7 @@ const sound_player = ({ application, settings }) => {
       );
     }).then((res) => {
       if (repeat > 1) {
-        gsound_player({uri, repeat: --repeat})
+        gsound_player({ uri, repeat: --repeat })
       }
     }).catch((error) => {
       console.log(error)
@@ -123,7 +123,7 @@ const sound_player = ({ application, settings }) => {
     bus.connect('message::eos', () => {
       playbin.set_state(Gst.State.READY)
       if (repeat > 1) {
-        gst_player({uri, repeat: --repeat});
+        gst_player({ uri, repeat: --repeat });
       }
     })
     playbin.set_state(Gst.State.PLAYING)
@@ -136,7 +136,7 @@ const sound_player = ({ application, settings }) => {
    * @param {string} params.sound_settings
    *
    */
-  const play = ({ sound_settings  }) => {
+  const play = ({ sound_settings }) => {
     const sound_data = JSON.parse(settings.get_string(sound_settings));
 
     if (settings.get_boolean('play-sounds')) {
@@ -183,7 +183,7 @@ export const notification = ({ application, settings }) => {
     notification.set_body(body);
     const high_priority_notify = settings.get_boolean('high-priority-notify');
     notification.set_priority(high_priority_notify ? Gio.NotificationPriority.URGENT : Gio.NotificationPriority.NORMAL);
-    if(!application.get_active_window().visible) {
+    if (!application.get_active_window().visible) {
       notification.add_button(
         _("Launch"),
         "app.open",
@@ -216,7 +216,7 @@ const background_status = () => {
    * @param {string} params.message
    *
    */
-  const set_status = ({ message  }) => {
+  const set_status = ({ message }) => {
     portal.set_background_status(message, null, (portal, result) => {
       portal.set_background_status_finish(result);
     });
@@ -332,7 +332,6 @@ const time_utils = () => {
 /**
  *
  * Load all utils methods
- * This function is using factory design pattern
  * @param {object} params
  * @param {Adw.Application} params.application
  *
@@ -348,7 +347,7 @@ const time_utils = () => {
  * @property {Function} format_time
  *
  */
-export const utils = ({ application  }) => {
+export const utils = ({ application }) => {
   const settings = new Settings({ schema_id: pkg.name });
   const notification_instance = notification({ application, settings });
   const sound_player_instance = sound_player({ application, settings });
@@ -364,7 +363,7 @@ export const utils = ({ application  }) => {
     timer: timer_instance,
     time_utils: time_utils,
     background_status: background_status(),
-    quit_request_dialog: quit_request_dialog({application, timer: timer_instance.get_data}),
+    quit_request_dialog: quit_request_dialog({ application, timer: timer_instance.get_data }),
     format_time,
   }
 }

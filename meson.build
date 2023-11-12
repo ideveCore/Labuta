@@ -1,4 +1,4 @@
-project('pomodoro',
+project('planytimer',
   version: '1.4.0',
   meson_version: '>= 0.63.0',
   default_options: [ 'warning_level=2', 'werror=false', ],
@@ -20,7 +20,7 @@ else
   version_suffix = ''
 endif
 
-application_id = 'io.gitlab.idevecore.Pomodoro@0@'.format(profile)
+application_id = 'io.gitlab.idevecore.Planytimer@0@'.format(profile)
 version =  meson.project_version() + version_suffix
 prefix = get_option('prefix')
 bindir = prefix / get_option('bindir')

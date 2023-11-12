@@ -22,7 +22,7 @@ import GLib from 'gi://GLib?version=2.0'
 import { application } from './application.js';
 
 pkg.initGettext();
-GLib.set_application_name('Pomodoro');
+GLib.set_application_name('Planytimer');
 
 export const main = (argv) => {
   return application.runAsync(argv);

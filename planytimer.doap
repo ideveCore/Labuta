@@ -4,9 +4,9 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name xml:lang="en">Pomodoro</name>
-  <shortdesc xml:lang="en">Pomodoro is a productivity-focused timer</shortdesc>
-  <description xml:lang="en">Pomodoro is a timer utility with rules, ideal for better productivity.</description>
+  <name xml:lang="en">Planytimer</name>
+  <shortdesc xml:lang="en">Planytimer is a productivity-focused timer</shortdesc>
+  <description xml:lang="en">Planytimer is a timer utility with rules, ideal for better productivity.</description>
   <homepage rdf:resource="https://gitlab.com/idevecore/pomodoro" />
   <bug-database rdf:resource="https://gitlab.com/idevecore/pomodoro/issues/" />
   <programming-language>JavaScript</programming-language>

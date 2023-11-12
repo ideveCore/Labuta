@@ -29,7 +29,7 @@ bin_conf.set('libdir', libdir)
 bin_conf.set('datadir', datadir)
 
 configure_file(
-  input: 'io.gitlab.idevecore.Pomodoro',
+  input: 'io.gitlab.idevecore.Planytimer',
   output: application_id,
   configuration: bin_conf,
   install: true,

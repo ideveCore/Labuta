@@ -5,10 +5,10 @@
   <translation type="gettext">@app_id@</translation>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <name>Pomodoro</name>
-  <summary>Pomodoro is a productivity-focused timer</summary>
+  <name>Planytimer</name>
+  <summary>Planytimer is a productivity-focused timer</summary>
   <description>
-    <p>Pomodoro is a timer utility with rules, ideal for better productivity.</p>
+    <p>Planytimer is a timer utility with rules, ideal for better productivity.</p>
   </description>
   <url type="homepage">https://gitlab.com/idevecore/pomodoro</url>
   <url type="bugtracker">https://gitlab.com/idevecore/pomodoro/-/issues</url>
@@ -25,7 +25,7 @@
           <li>History component</li>
           <li>Preferences component</li>
           <li>Small window</li>
-          </ul>
+        </ul>
         <p>In this version, the following were added:</p>
         <ul>
           <li>High priority in notifications</li>
@@ -89,7 +89,7 @@
     </screenshot>
     <screenshot>
       <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/05.png</image>
-      </screenshot>
+    </screenshot>
     <screenshot>
       <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/06.png</image>
     </screenshot>

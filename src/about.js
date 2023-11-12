@@ -50,7 +50,7 @@ import {
  * @property {string} license_type
  *
  */
-export const create_about_params = ({ application  }) => {
+export const create_about_params = ({ application }) => {
   const flatpak_info = get_flatpak_info();
   const debug_info = `
 ${pkg.name} ${pkg.version}
@@ -64,11 +64,11 @@ Blueprint 0.10.0
     `.trim();
   return {
     transient_for: application.active_window,
-    application_name: 'Pomodoro',
+    application_name: 'Planytimer',
     application_icon: pkg.name,
     developer_name: 'Ideve Core',
     version: pkg.version,
-    comments: _("Pomodoro is a timer utility with rules, ideal for better productivity."),
+    comments: _("Planytimer is a timer utility with rules, ideal for better productivity."),
     website: "https://gitlab.com/idevecore/pomodoro",
     support_url: "https://gitlab.com/idevecore/pomodoro",
     developers: [

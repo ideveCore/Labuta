@@ -15,12 +15,12 @@ imports.package.init({
 setConsoleLogDomain(pkg.name);
 
 const resource = Gio.resource_load(
-  "@datadir@/@app_id@/io.gitlab.idevecore.Pomodoro@profile@.src.gresource",
+  "@datadir@/@app_id@/io.gitlab.idevecore.Planytimer@profile@.src.gresource",
 );
 
 Gio.resources_register(resource);
 
 
-const { main } = await import("resource://io/gitlab/idevecore/Pomodoro@profile@/main.js");
+const { main } = await import("resource://io/gitlab/idevecore/Planytimer@profile@/main.js");
 const exit_code = await main([programInvocationName, ...programArgs]);
 exit(exit_code);

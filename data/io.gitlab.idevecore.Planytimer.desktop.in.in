@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Pomodoro
+Name=Planytimer
 GenericName=StopWatch
-TryExec=pomodoro
-Exec=pomodoro
+TryExec=planytimer
+Exec=planytimer
 Icon=@app_id@
 Terminal=false
 Type=Application
