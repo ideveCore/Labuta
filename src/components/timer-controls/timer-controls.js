@@ -21,6 +21,7 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
+import { start_timer } from '../start-timer/main.js';
 import Template from './timer-controls.blp' assert { type: 'uri' };
 
 /**
@@ -30,7 +31,7 @@ import Template from './timer-controls.blp' assert { type: 'uri' };
  * @extends {Gtk.Stack}
  *
  */
-export  class TimerControls extends Gtk.Stack {
+export class TimerControls extends Gtk.Stack {
   static {
     GObject.registerClass({
       GTypeName: 'TimerControls',
@@ -47,6 +48,7 @@ export  class TimerControls extends Gtk.Stack {
    */
   constructor({ application }) {
     super();
+    this._application = application;
     this._timer = application.utils.timer;
     this._pomodoro_item = application.utils.pomodoro_item;
 
@@ -70,7 +72,8 @@ export  class TimerControls extends Gtk.Stack {
    *
    */
   _on_start_pause_timer() {
-    this._timer.start();
+    //this._timer.start();
+    start_timer({ application: this._application }).present();
   }
 
   /**

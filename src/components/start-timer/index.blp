@@ -1,0 +1,137 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.Window component {
+  default-width: 400;
+  default-height: 500;
+  modal: true;
+  title: _('Start timer');
+
+  content: Gtk.Box {
+    hexpand: true;
+    vexpand: true;
+    orientation: vertical;
+    Adw.HeaderBar {
+      styles ["flat"]
+    }
+    Adw.StatusPage {
+      hexpand: true;
+      title: _("Start timer");
+      child: Gtk.Box {
+        orientation: vertical;
+        Gtk.ListBox {
+          styles ["boxed-list"]
+          selection-mode: none;
+          margin-bottom: 4;
+          Adw.ComboRow technique {
+            title: _("Technique");
+            model: Gtk.StringList {
+              strings [_("Pomodoro"), _("Flow time")]
+            };
+            selected: 0;
+          }
+          Adw.EntryRow title_entry {
+            title: _("Title (optional)");
+          }
+          Adw.EntryRow description_entry {
+            title: _("Description (optional)");
+          }
+        }
+        Adw.Bin techniques {
+          margin-bottom: 4;
+        }
+
+        Gtk.Button {
+          styles ["suggested-action", "pill"]
+          margin-start: 4;
+          margin-end: 4;
+          margin-top: 4;
+          margin-bottom: 4;
+          label: _("Start");
+        }
+      };
+    }
+  };
+}
+
+Adw.PreferencesGroup pomodoro {
+  title: _("Pomodoro");
+  header-suffix: Gtk.Box {
+    orientation: horizontal;
+    spacing: 6;
+    
+    Gtk.LinkButton {
+      styles ["flat"]
+      valign: center;
+      child: Adw.ButtonContent {
+        icon-name: "question-round-symbolic";
+      };
+      uri: "https://en.wikipedia.org/wiki/Pomodoro_Technique";
+    }
+  };
+
+  Adw.SpinRow set_work_time {
+    title: _("Work time - (minutes)");
+    adjustment: Adjustment {
+      lower: 5;
+      upper: 300;
+      step-increment: 1;
+      value: 25;
+    };
+  }
+  Adw.SpinRow set_break_time {
+    title: _("Break time - (minutes)");
+    adjustment: Adjustment {
+      lower: 2;
+      upper: 30;
+      step-increment: 1;
+      value: 5;
+    };
+  }
+  Adw.SpinRow set_long_break {
+    title: _("Long break time - (minutes)");
+    adjustment: Adjustment {
+      lower: 15;
+      upper: 60;
+      step-increment: 1;
+      value: 15;
+    };
+  }
+  Adw.SpinRow set_sessions_long_break {
+    title: _("Sessions until the long break");
+    adjustment: Adjustment {
+      lower: 1;
+      upper: 10;
+      step-increment: 1;
+      value: 4;
+    };
+  }
+}
+
+Adw.PreferencesGroup flowtime {
+  title: _("Flow time");
+  header-suffix: Gtk.Box {
+    orientation: horizontal;
+    spacing: 6;
+    
+    Gtk.LinkButton {
+      styles ["flat"]
+      valign: center;
+      child: Adw.ButtonContent {
+        icon-name: "question-round-symbolic";
+      };
+      uri: "https://zapier.com/blog/flowtime-technique/";
+    }
+  };
+
+  Adw.SpinRow set_break_time_relation {
+    title: _("Break time - (percentage)");
+    subtitle: _("Break time in relation to working time");
+    adjustment: Adjustment {
+      lower: 2;
+      upper: 30;
+      step-increment: 1;
+      value: 15;
+    };
+  }
+}
