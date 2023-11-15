@@ -13,43 +13,50 @@ Adw.Window component {
     orientation: vertical;
     Adw.HeaderBar {
       styles ["flat"]
+      show-end-title-buttons: false;
+      [start]
+      Gtk.Button close_card {
+        margin-start: 4;
+        margin-end: 4;
+        margin-top: 4;
+        margin-bottom: 4;
+        label: _("Cancel");
+        action-name: "window.close";
+      }
+      [end]
+      Gtk.Button start_timer_button {
+        styles ["suggested-action"]
+        margin-start: 4;
+        margin-end: 4;
+        margin-top: 4;
+        margin-bottom: 4;
+        label: _("Start");
+      }
     }
-    Adw.StatusPage {
-      hexpand: true;
-      title: _("Start timer");
-      child: Gtk.Box {
-        orientation: vertical;
-        Gtk.ListBox {
-          styles ["boxed-list"]
-          selection-mode: none;
-          margin-bottom: 4;
-          Adw.ComboRow technique {
-            title: _("Technique");
-            model: Gtk.StringList {
-              strings [_("Pomodoro"), _("Flow time")]
-            };
-            selected: 0;
-          }
-          Adw.EntryRow title_entry {
-            title: _("Title (optional)");
-          }
-          Adw.EntryRow description_entry {
-            title: _("Description (optional)");
-          }
+    Gtk.Box {
+      orientation: vertical;
+      halign: center;
+      Gtk.ListBox {
+        styles ["boxed-list"]
+        selection-mode: none;
+        margin-bottom: 4;
+        Adw.ComboRow technique {
+          title: _("Technique");
+          model: Gtk.StringList {
+            strings [_("Pomodoro"), _("Flow time")]
+          };
+          selected: 0;
         }
-        Adw.Bin techniques {
-          margin-bottom: 4;
+        Adw.EntryRow title_timer {
+          title: _("Title (optional)");
         }
-
-        Gtk.Button {
-          styles ["suggested-action", "pill"]
-          margin-start: 4;
-          margin-end: 4;
-          margin-top: 4;
-          margin-bottom: 4;
-          label: _("Start");
+        Adw.EntryRow description_timer {
+          title: _("Description (optional)");
         }
-      };
+      }
+      Adw.Bin techniques {
+        margin-bottom: 4;
+      }
     }
   };
 }

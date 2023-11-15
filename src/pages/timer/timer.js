@@ -21,7 +21,6 @@
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
 import { TimerControls } from '../../components/timer-controls/timer-controls.js';
-import { DisplayTimer } from  '../../components/display-timer/display-timer.js';
 import Template from './timer.blp' assert { type: 'uri' };
 
 /**
@@ -50,9 +49,10 @@ export class Timer extends Adw.Bin {
    * Create a instance of Timer
    * @param { object } params
    * @param { Adw.Application  } params.application
+   * @param {Gtk.Box} params.display_timer
    *
    */
-  constructor({ application }) {
+  constructor({ application, display_timer }) {
     super();
     this._timer = application.utils.timer;
     this._pomodoro_item = application.utils.pomodoro_item;
@@ -70,7 +70,7 @@ export class Timer extends Adw.Bin {
       this._description_entry.set_text('');
     });
     this._timer_container.append(new TimerControls({ application }));
-    this._display_timer.append(new DisplayTimer({ application }));
+    this._display_timer.append(display_timer);
   }
 
   /**
@@ -80,7 +80,7 @@ export class Timer extends Adw.Bin {
    *
    */
   _on_title_changed(target) {
-    this._pomodoro_item.set = {title: target.get_text()};
+    this._pomodoro_item.set = { title: target.get_text() };
   }
 
   /**
@@ -90,6 +90,6 @@ export class Timer extends Adw.Bin {
    *
    */
   _on_description_changed(target) {
-    this._pomodoro_item.set = {description: target.get_text()};
+    this._pomodoro_item.set = { description: target.get_text() };
   }
 }

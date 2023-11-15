@@ -29,7 +29,7 @@ import XdpGtk4 from 'gi://XdpGtk4';
 import Settings from './settings.js';
 import { ApplicationDbManager } from './application-db-manager.js';
 import { PomodoroItem } from './pomodoro-item.js';
-import { timer } from './timer.js';
+import { timers } from './timers.js';
 import { gettext as _ } from 'gettext';
 
 /**
@@ -353,7 +353,8 @@ export const utils = ({ application }) => {
   const sound_player_instance = sound_player({ application, settings });
   const application_db_manager_instance = new ApplicationDbManager({ settings });
   const pomodoro_item_instance = new PomodoroItem({ application_db_manager: application_db_manager_instance, time_utils });
-  const timer_instance = timer({ application, pomodoro_item: pomodoro_item_instance, settings, sound_player: sound_player_instance, notification: notification_instance });
+  const timer_instance = timers({ application, pomodoro_item: pomodoro_item_instance, sound_player: sound_player_instance, notification: notification_instance, settings: settings });
+  // const display_timer_instance = new DisplayTimer({ timer: timer_instance, pomodoro_item: pomodoro_item_instance, settings });
   return {
     settings,
     notification: notification_instance,
@@ -365,5 +366,5 @@ export const utils = ({ application }) => {
     background_status: background_status(),
     quit_request_dialog: quit_request_dialog({ application, timer: timer_instance.get_data }),
     format_time,
-  }
+  };
 }

@@ -27,6 +27,7 @@ import { Statistics } from './pages/statistics/statistics.js';
 import { ThemeSelector } from './components/theme-selector/theme-selector.js';
 import Shortcuts from './components/shortcuts/shortcuts.js';
 import { SmallWindow } from './components/small-window/small-window.js';
+import { DisplayTimer } from './components/display-timer/display-timer.js';
 import Template from './window.blp' assert { type: 'uri' };
 
 /**
@@ -62,12 +63,13 @@ export class Window extends Adw.ApplicationWindow {
     super({ application });
 
     const theme_selector = new ThemeSelector({ application });
+    const display_timer = new DisplayTimer({ application });
     this._menu_button.get_popover().add_child(theme_selector, 'theme');
     this.set_help_overlay(new Shortcuts(application));
-    this._timer_page.set_child(new Timer({ application }));
+    this._timer_page.set_child(new Timer({ application, display_timer }));
     this._statistics_page_component = new Statistics({ application });
     this._statistics_page.set_child(this._statistics_page_component);
-    this._small_window = new SmallWindow({ application });
+    this._small_window = new SmallWindow({ application, display_timer });
     this._timer = application.utils.timer;
 
     this._timer.connect('start', () => {

@@ -23,8 +23,6 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 import Resource from './index.blp';
 
-
-
 /**
  *
  * Create a start technique component
@@ -39,16 +37,27 @@ export const start_timer = ({ application }) => {
   const component = builder.get_object('component');
   const switch_techniques = builder.get_object('technique');
   const techniques_wd = builder.get_object('techniques');
+  const title_timer = builder.get_object('title_timer');
+  const description_timer = builder.get_object('description_timer');
+  const start_timer_button = builder.get_object('start_timer_button');
   const techniques = {
     pomodoro: pomodoro({ application }),
     flowtime: flow_time({ application }),
   }
+  let current_technique = techniques.pomodoro;
 
   component.set_transient_for(application.get_active_window());
-  techniques_wd.set_child(techniques.pomodoro);
+  techniques_wd.set_child(current_technique.component);
 
   switch_techniques.connect('notify::selected', (selected_widget) => {
-    techniques_wd.set_child(techniques[selected_widget.get_selected_item().get_string().toLowerCase().replace(/ /gi, '')]);
+    current_technique = techniques[selected_widget.get_selected_item().get_string().toLowerCase().replace(/ /gi, '')];
+    techniques_wd.set_child(current_technique.component);
+  })
+
+  start_timer_button.connect('clicked', () => {
+    application.utils.timer.technique = application.utils.timer.flow_time({ break_time_percentage: 15 });
+    application.utils.timer.technique.start();
+    component.close();
   })
 
   return component
@@ -66,7 +75,10 @@ export const start_timer = ({ application }) => {
 const pomodoro = ({ application }) => {
   const builder = Gtk.Builder.new_from_resource(Resource);
   const container = builder.get_object('pomodoro');
-  return container
+  return {
+    component: container,
+    technique: application.utils.timer.pomodoro,
+  }
 }
 
 /**
@@ -81,5 +93,8 @@ const pomodoro = ({ application }) => {
 const flow_time = ({ application }) => {
   const builder = Gtk.Builder.new_from_resource(Resource);
   const container = builder.get_object('flowtime');
-  return container
+  return {
+    component: container,
+    technique: application.utils.timer.flow_time,
+  }
 }

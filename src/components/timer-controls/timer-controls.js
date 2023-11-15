@@ -72,8 +72,11 @@ export class TimerControls extends Gtk.Stack {
    *
    */
   _on_start_pause_timer() {
-    //this._timer.start();
-    start_timer({ application: this._application }).present();
+    if (this._timer.technique.get_data().timer_state === 'stopped') {
+      start_timer({ application: this._application }).present();
+    } else {
+      this._timer.technique.start();
+    }
   }
 
   /**
@@ -100,7 +103,7 @@ export class TimerControls extends Gtk.Stack {
    *
    */
   _on_skip_timer() {
-    this._timer.skip();
+    this._timer.technique.skip();
   }
 
 }
