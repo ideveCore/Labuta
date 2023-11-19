@@ -64,16 +64,34 @@ export const timers = ({ application, pomodoro_item, settings, notification, sou
     events[event].push(callback);
   }
 
+
+  /**
+   *
+   * Pomodoro timer
+   * @param {object} params
+   * @param {number} params.work_time
+   * @param {number} params.break_time
+   * @param {number} params.long_break
+   * @param {number} params.sessions_long_break
+   *
+   * @typeref {object}
+   * @property {Function} start
+   * @property {Function} stop
+   * @property {Function} reset
+   * @property {Function} skip
+   * @property {Function} get_data
+   *
+   */
   const pomodoro = ({ work_time, break_time, long_break, sessions_long_break }) => {
     let timer_state = 'stopped';
     let current_time = work_time;
     let current_break_time = break_time;
 
     /**
-       *
-       * Start timer
-       *
-       */
+     *
+     * Start timer
+     *
+     */
     const start = () => {
       if (timer_state === 'stopped') {
         current_time = work_time;
@@ -273,7 +291,6 @@ export const timers = ({ application, pomodoro_item, settings, notification, sou
    *
    * Flow time timer
    * @param {object} params
-   * @param {Adw.Application} params.application
    * @param {number} params.break_time_percentage
    *
    * @typeref {object}
@@ -281,8 +298,7 @@ export const timers = ({ application, pomodoro_item, settings, notification, sou
    * @property {Function} stop
    * @property {Function} reset
    * @property {Function} skip
-   * @property {Function} connect
-   * @property {object} data
+   * @property {Function} get_data
    *
    */
   const flow_time = ({ break_time_percentage }) => {

@@ -55,8 +55,9 @@ export const start_timer = ({ application }) => {
   })
 
   start_timer_button.connect('clicked', () => {
-    application.utils.timer.technique = application.utils.timer.flow_time({ break_time_percentage: 15 });
-    application.utils.timer.technique.start();
+    application.utils.pomodoro_item.set = { title: title_timer.get_text().trim() };
+    application.utils.pomodoro_item.set = { description: description_timer.get_text().trim() };
+    current_technique.start()
     component.close();
   })
 
@@ -75,7 +76,21 @@ export const start_timer = ({ application }) => {
 const pomodoro = ({ application }) => {
   const builder = Gtk.Builder.new_from_resource(Resource);
   const container = builder.get_object('pomodoro');
+  const pomodoro_work_time = builder.get_object('pomodoro_work_time');
+  const pomodoro_break_time = builder.get_object('pomodoro_break_time');
+  const pomodoro_long_break = builder.get_object('pomodoro_long_break');
+  const pomodoro_sessions_long_break = builder.get_object('pomodoro_sessions_long_break');
+
+  const start = () => {
+    const work_time = Number(pomodoro_work_time.get_text()) * 60;
+    const break_time = Number(pomodoro_break_time.get_text()) * 60;
+    const long_break = Number(pomodoro_long_break.get_text()) * 60;
+    const sessions_long_break = Number(pomodoro_sessions_long_break.get_text());
+    application.utils.timer.technique = application.utils.timer.pomodoro({ work_time, break_time, long_break, sessions_long_break });
+    application.utils.timer.technique.start();
+  }
   return {
+    start,
     component: container,
     technique: application.utils.timer.pomodoro,
   }
@@ -93,7 +108,16 @@ const pomodoro = ({ application }) => {
 const flow_time = ({ application }) => {
   const builder = Gtk.Builder.new_from_resource(Resource);
   const container = builder.get_object('flowtime');
+  const flowtime_break_time = builder.get_object('flowtime_break_time');
+
+  const start = () => {
+    const break_time_percentage = Number(flowtime_break_time.get_text());
+    application.utils.timer.technique = application.utils.timer.flow_time({ break_time_percentage });
+    application.utils.timer.technique.start();
+  }
+
   return {
+    start,
     component: container,
     technique: application.utils.timer.flow_time,
   }
