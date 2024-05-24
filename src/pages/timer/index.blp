@@ -1,0 +1,21 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.Bin component {
+  Adw.Clamp {
+    valign: center;
+    halign: center;
+    Box timer_container {
+      styles ["vertical"]
+      hexpand: true;
+      valign: start;
+      spacing: 12;
+      margin-start: 20;
+      margin-end: 20;
+      margin-top: 20;
+      margin-bottom: 20;
+      orientation: vertical;
+      Box display_timer {}
+    }
+  }
+}
