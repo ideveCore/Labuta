@@ -38,8 +38,8 @@ export class Timer extends Adw.Bin {
       InternalChildren: [
         'timer_container',
         'display_timer',
-        'title_entry',
-        'description_entry',
+        // 'title_entry',
+        // 'description_entry',
       ]
     }, this);
   }
@@ -58,16 +58,16 @@ export class Timer extends Adw.Bin {
     this._pomodoro_item = application.utils.pomodoro_item;
 
     this._timer.connect('start', ({ data, pomodoro_item }) => {
-      this._title_entry.set_text(pomodoro_item.title);
-      this._description_entry.set_text(pomodoro_item.description);
-      this._title_entry.editable = false;
-      this._description_entry.editable = false;
+      // this._title_entry.set_text(pomodoro_item.title);
+      // this._description_entry.set_text(pomodoro_item.description);
+      // this._title_entry.editable = false;
+      // this._description_entry.editable = false;
     });
     this._timer.connect('stop', ({ data, pomodoro_item }) => {
-      this._title_entry.editable = true;
-      this._description_entry.editable = true;
-      this._title_entry.set_text('');
-      this._description_entry.set_text('');
+      // this._title_entry.editable = true;
+      // this._description_entry.editable = true;
+      // this._title_entry.set_text('');
+      // this._description_entry.set_text('');
     });
     this._timer_container.append(new TimerControls({ application }));
     this._display_timer.append(display_timer);

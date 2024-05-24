@@ -27,18 +27,18 @@ template $Timer : Adw.Bin {
           margin-bottom: 20;
           orientation: vertical;
           Box display_timer {}
-          ListBox list_box {
-            styles ["boxed-list"]
-            selection-mode: none;
-            Adw.EntryRow title_entry {
-              title: _("Title (optional)");
-              changed => $_on_title_changed();
-            }
-            Adw.EntryRow description_entry {
-              title: _("Description (optional)");
-              changed => $_on_description_changed();
-            }
-          }
+          // ListBox list_box {
+          //   styles ["boxed-list"]
+          //   selection-mode: none;
+            // Adw.EntryRow title_entry {
+            //   title: _("Title (optional)");
+            //   changed => $_on_title_changed();
+            // }
+            // Adw.EntryRow description_entry {
+            //   title: _("Description (optional)");
+            //   changed => $_on_description_changed();
+            // }
+          // }
         }
       }
     }
