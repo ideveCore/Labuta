@@ -46,7 +46,7 @@ export const start_timer = ({ application }) => {
   }
   let current_technique = techniques.pomodoro;
 
-  component.set_transient_for(application.get_active_window());
+  // component.set_transient_for(application.get_active_window());
   techniques_wd.set_child(current_technique.component);
 
   switch_techniques.connect('notify::selected', (selected_widget) => {

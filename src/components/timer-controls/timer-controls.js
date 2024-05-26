@@ -74,7 +74,7 @@ export class TimerControls extends Gtk.Stack {
   _on_start_pause_timer() {
     console.log(this._timer.technique.get_data().timer_state)
     if (this._timer.technique.get_data().timer_state === 'stopped') {
-      start_timer({ application: this._application }).present();
+      start_timer({ application: this._application }).present(this._application.get_active_window());
     } else {
       this._timer.technique.start();
     }

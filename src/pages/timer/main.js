@@ -37,10 +37,9 @@ export const timer = ({ application, display_timer }) => {
   const builder = Gtk.Builder.new_from_resource(Resource);
   const component_element = builder.get_object("component");
   const timer_container_element = builder.get_object("timer_container");
-  const display_timer_element = builder.get_object("display_timer");
 
+  timer_container_element.append(display_timer);
   timer_container_element.append(new TimerControls({ application }));
-  display_timer_element.append(display_timer);
 
   return component_element;
 }
