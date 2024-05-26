@@ -21,7 +21,7 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import { TimerControls } from '../timer-controls/timer-controls.js';
+import { timer_controls } from '../timer-controls/main.js';
 import Template from './small-window.blp' assert { type: 'uri' };
 
 /**
@@ -56,7 +56,7 @@ export class SmallWindow extends Adw.Window {
   constructor({ application, display_timer }) {
     super();
     this._timer = application.utils.timer;
-    this._timer_controls_container.append(new TimerControls({ application }));
+    this._timer_controls_container.append(timer_controls({ application }));
     // this._display_timer_container.append(display_timer);
 
     this._timer.connect('stop', () => {

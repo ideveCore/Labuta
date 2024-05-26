@@ -1,0 +1,51 @@
+using Gtk 4.0;
+using Adw 1;
+
+Gtk.Stack component {
+  transition-type: crossfade;
+  StackPage {
+    name: "init_timer";
+    child: $StartPause {};
+  }
+  StackPage {
+    name: "running_timer";
+    child:
+    Gtk.Grid {
+      halign: center;
+      column-spacing: 18;
+      column-homogeneous: true;
+      $StartPause {}
+      Button skip_timer {
+        styles ["circular", "large-button"]
+        halign: center;
+        valign: center;
+        icon-name: "media-skip-forward-symbolic";
+        tooltip-text: _("Skip timer");
+      }
+    };
+  }
+  StackPage {
+    name: "paused_timer";
+    child:
+      Grid {
+        halign: center;
+        column-spacing: 18;
+        column-homogeneous: true;
+        Button reset_timer {
+          styles ["circular", "large-button"]
+          halign: center;
+          valign: center;
+          icon-name: "view-refresh-symbolic";
+          tooltip-text: _("Reset timer");
+        }
+        $StartPause {}
+        Button stop_timer {
+          styles ["circular", "large-button"]
+          halign: center;
+          valign: center;
+          icon-name: "media-playback-stop-symbolic";
+          tooltip-text: _("Stop timer");
+        }
+      };
+  }
+}

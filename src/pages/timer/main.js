@@ -21,8 +21,8 @@
 import GObject from 'gi://GObject';
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
+import { timer_controls } from '../../components/timer-controls/main.js';
 import Resource from './index.blp';
-import { TimerControls } from '../../components/timer-controls/timer-controls.js';
 
 /**
  *
@@ -39,7 +39,7 @@ export const timer = ({ application, display_timer }) => {
   const timer_container_element = builder.get_object("timer_container");
 
   timer_container_element.append(display_timer);
-  timer_container_element.append(new TimerControls({ application }));
+  timer_container_element.append(timer_controls({ application }));
 
   return component_element;
 }

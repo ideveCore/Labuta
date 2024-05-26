@@ -26,7 +26,7 @@ import Resource from './index.blp';
 
 /**
  *
- * Create timer page
+ * Create display timer
  *
  * @param {Object} params
  * @param {Adw.Application} params.application
