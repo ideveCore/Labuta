@@ -36,6 +36,7 @@ export const display_timer = ({ application }) => {
   const builder = Gtk.Builder.new_from_resource(Resource);
   const timer = application.utils.timer;
   const component = builder.get_object("component");
+  const status_label = builder.get_object("status_label");
   const timer_label = builder.get_object("timer_label");
   const pomodoro_counts = builder.get_object("pomodoro_counts");
   const tag_area = builder.get_object("tag_area");
@@ -54,8 +55,12 @@ export const display_timer = ({ application }) => {
    */
   const load_time = ({ data, pomodoro_item }) => {
     if (data.current_time > 0) {
+      status_label.set_text(_("Work time"));
+      status_label.get_style_context().remove_class('error');
       timer_label.get_style_context().remove_class('error');
     } else {
+      status_label.set_text(_("Break time"));
+      status_label.get_style_context().add_class('error');
       timer_label.get_style_context().add_class('error');
     }
 

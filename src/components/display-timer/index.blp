@@ -4,9 +4,16 @@ using Adw 1;
 Gtk.Box component {
   hexpand: true;
   halign: center;
-  Label timer_label {
-    styles ["accent", "fs-1"]
-    label: "00:25:00";
+  Gtk.Box {
+    orientation: vertical;
+    Label status_label {
+      styles ["accent", "fs-3"]
+      label: _("Work time");
+    }
+    Label timer_label {
+      styles ["accent", "fs-1"]
+      label: "00:25:00";
+    }
   }
   [suffix]
   Gtk.Overlay pomodoro_counts {
