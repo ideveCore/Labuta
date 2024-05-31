@@ -21,8 +21,46 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
-import "./start_pause_button/main.js";
+import { start_timer } from '../start-timer/main.js';
 import Resource from './index.blp';
+
+const TimerControlsScope = GObject.registerClass(
+  {
+    Implements: [Gtk.BuilderScope],
+  },
+  class TimerControlsScope extends GObject.Object {
+    vfunc_create_closure(builder, handlerName, flags, connectObject) {
+      if (flags & Gtk.BuilderClosureFlags.SWAPPED)
+        throw new Error('Unsupported template signal flag "swapped"');
+
+      if (typeof this[handlerName] === "undefined")
+        throw new Error(`${handlerName} is undefined`);
+
+      return this[handlerName].bind(connectObject || this);
+    }
+    constructor({ application, timer }) {
+      super();
+      this._timer = timer;
+      this._application = application;
+    }
+    _on_start_pause_timer() {
+      if (this._timer.technique.get_data().timer_state === 'stopped') {
+        start_timer({ application: this._application }).present(this._application.get_active_window());
+      } else {
+        this._timer.technique.start();
+      }
+    }
+    _skip_timer() {
+      this._timer.technique.skip();
+    }
+    _reset_timer() {
+      this._timer.technique.reset();
+    }
+    _stop_timer() {
+      this._timer.technique.stop();
+    }
+  }
+);
 
 /**
  *
@@ -33,13 +71,14 @@ import Resource from './index.blp';
  *
  */
 export const timer_controls = ({ application }) => {
-  const builder = Gtk.Builder.new_from_resource(Resource);
+  const builder = new Gtk.Builder();
   const timer = application.utils.timer;
+
+  builder.set_scope(new TimerControlsScope({ application, timer }));
+  builder.add_from_resource(Resource);
+
   const pomodoro_item = application.utils.pomodoro_item;
   const component = builder.get_object("component");
-  const skip_timer = builder.get_object("skip_timer");
-  const reset_timer = builder.get_object("reset_timer");
-  const stop_timer = builder.get_object("stop_timer");
 
   timer.connect('start', () => {
     component.visible_child_name = 'running_timer';
@@ -53,10 +92,6 @@ export const timer_controls = ({ application }) => {
   timer.connect('stop', () => {
     component.visible_child_name = 'init_timer';
   });
-
-  skip_timer.connect("clicked", () => timer.technique.skip());
-  reset_timer.connect("clicked", () => timer.technique.reset());
-  stop_timer.connect("clicked", () => timer.technique.stop());
 
   return component;
 }

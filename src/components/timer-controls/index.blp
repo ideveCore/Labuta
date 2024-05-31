@@ -5,7 +5,14 @@ Gtk.Stack component {
   transition-type: crossfade;
   StackPage {
     name: "init_timer";
-    child: $StartPause {};
+    child: Button {
+      styles ["suggested-action", "circular", "large-button"]
+      halign: center;
+      valign: center;
+      icon-name: "media-playback-start-symbolic";
+      tooltip-text: _("Init timer");
+      clicked => $_on_start_pause_timer();
+    };
   }
   StackPage {
     name: "running_timer";
@@ -14,13 +21,21 @@ Gtk.Stack component {
       halign: center;
       column-spacing: 18;
       column-homogeneous: true;
-      $StartPause {}
+      Button {
+        styles ["circular", "large-button"]
+        halign: center;
+        valign: center;
+        icon-name: "media-playback-pause-symbolic";
+        tooltip-text: _("Pause timer");
+        clicked => $_on_start_pause_timer();
+      }
       Button skip_timer {
         styles ["circular", "large-button"]
         halign: center;
         valign: center;
         icon-name: "media-skip-forward-symbolic";
         tooltip-text: _("Skip timer");
+        clicked => $_skip_timer();
       }
     };
   }
@@ -37,14 +52,23 @@ Gtk.Stack component {
           valign: center;
           icon-name: "view-refresh-symbolic";
           tooltip-text: _("Reset timer");
+          clicked => $_reset_timer();
         }
-        $StartPause {}
+        Button {
+          styles ["suggested-action", "circular", "large-button"]
+          halign: center;
+          valign: center;
+          icon-name: "media-playback-start-symbolic";
+          tooltip-text: _("Init timer");
+          clicked => $_on_start_pause_timer();
+        }
         Button stop_timer {
           styles ["circular", "large-button"]
           halign: center;
           valign: center;
           icon-name: "media-playback-stop-symbolic";
           tooltip-text: _("Stop timer");
+          clicked => $_stop_timer();
         }
       };
   }
