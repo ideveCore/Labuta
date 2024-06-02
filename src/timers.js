@@ -514,6 +514,6 @@ export const timers = ({ application, pomodoro_item, settings, notification, sou
     reset: technique.reset,
     skip: technique.skip,
     connect,
-    get_data: technique.get_timer_data,
+    get_timer_data: technique.get_data,
   }
 }

@@ -27,6 +27,8 @@ import { gettext as _ } from 'gettext';
 import Style from './assets/style.css';
 import { window } from './window.js';
 import { small_window } from './components/small-window/main.js';
+import { display_timer } from './components/display-timer/main.js';
+import { timer_controls } from './components/timer-controls/main.js';
 import { application_actions } from './actions.js';
 import { utils } from './utils.js';
 
@@ -93,6 +95,11 @@ application.create_small_window = function() {
  *
  */
 application.connect("activate", (user_data) => {
+  user_data.global_components = {
+    display_timer: display_timer({ application: user_data }),
+    timer_controls: timer_controls({ application: user_data }),
+  };
+
   user_data.create_main_window();
 
   // Load styles in app

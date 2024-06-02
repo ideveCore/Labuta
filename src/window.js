@@ -72,12 +72,7 @@ export const window = ({ application }) => {
   );
 
   builder.get_object("timer_page").set_child(
-    timer(
-      {
-        application,
-        display_timer: display_timer({ application }),
-      }
-    )
+    timer({ application })
   );
   builder.get_object("statistics_page").set_child(
     statistics({ application })
@@ -85,6 +80,8 @@ export const window = ({ application }) => {
 
   application.utils.timer.connect('start', () => shorten_window_button.set_visible(true));
   application.utils.timer.connect('stop', () => shorten_window_button.set_visible(false));
+  if(application.utils.timer.technique.get_data().timer_state == "running")
+    shorten_window_button.set_visible(true);
 
   component.set_help_overlay(shortcuts({ application }));
   component.set_application(application);
@@ -146,3 +143,4 @@ export const window = ({ application }) => {
 //     this.window_group.add_action(toggle_small_window)
 //   }
 // }
+

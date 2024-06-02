@@ -354,7 +354,6 @@ export const utils = ({ application }) => {
   const application_db_manager_instance = new ApplicationDbManager({ settings });
   const pomodoro_item_instance = new PomodoroItem({ application_db_manager: application_db_manager_instance, time_utils });
   const timer_instance = timers({ application, pomodoro_item: pomodoro_item_instance, sound_player: sound_player_instance, notification: notification_instance, settings: settings });
-  // const display_timer_instance = new DisplayTimer({ timer: timer_instance, pomodoro_item: pomodoro_item_instance, settings });
   return {
     settings,
     notification: notification_instance,

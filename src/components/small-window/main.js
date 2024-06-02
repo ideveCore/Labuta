@@ -21,7 +21,6 @@
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
-import { timer_controls } from '../timer-controls/main.js';
 import Resource from './index.blp';
 
 /**
@@ -42,7 +41,10 @@ export const small_window = ({ application }) => {
   const overlay_controls = builder.get_object("overlay_controls");
   const overlay = builder.get_object("overlay");
 
-  builder.get_object("timer_controls_container").append(timer_controls({ application }));
+  application.global_components.display_timer.unparent();
+  application.global_components.timer_controls.unparent();
+  builder.get_object("display_timer_container").append(application.global_components.display_timer);
+  builder.get_object("timer_controls_container").append(application.global_components.timer_controls);
 
   controller.connect("enter", () => overlay_controls.set_opacity(1));
   controller.connect("leave", () => overlay_controls.set_opacity(0));
