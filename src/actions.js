@@ -16,10 +16,12 @@
  * along with application program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
+ *
  */
 
 import Gio from 'gi://Gio';
 import Adw from 'gi://Adw';
+import GLib from 'gi://GLib';
 import { create_about_params } from './about.js';
 import { Preferences } from './components/preferences/preferences.js';
 import { History } from './components/history/history.js';
@@ -37,6 +39,7 @@ export const application_actions = ({ application }) => {
   const history_action = new Gio.SimpleAction({ name: 'history' });
   const show_about_action = new Gio.SimpleAction({ name: 'about' });
   const active_action = new Gio.SimpleAction({ name: 'open' });
+  const toggle_small_window = new Gio.SimpleAction({ name: 'toggle-small-window', parameter_type: new GLib.Variant('s', '').get_type() });
 
   quit_action.connect('activate', () => {
     if (application.get_active_window().visible) {
@@ -62,11 +65,22 @@ export const application_actions = ({ application }) => {
     application.active_window.show();
   });
 
+  toggle_small_window.connect("activate", (simple_action, parameter) => {
+    const value = parameter.get_string()[0];
+    const current_window = application.get_active_window();
+    if (value === 'open') {
+      application.create_small_window();
+    } else {
+      application.create_main_window();
+    }
+  });
+
   application.add_action(quit_action);
   application.add_action(preferences_action);
   application.add_action(history_action);
   application.add_action(show_about_action);
   application.add_action(active_action);
+  application.add_action(toggle_small_window);
   application.set_accels_for_action('app.quit', ['<primary>q']);
   application.set_accels_for_action('win.show-help-overlay', ['<Primary>question']);
   application.set_accels_for_action('app.history', ['<Primary>h']);
