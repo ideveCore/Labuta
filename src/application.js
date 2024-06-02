@@ -25,7 +25,8 @@ import Gtk from 'gi://Gtk';
 import Gdk from 'gi://Gdk';
 import { gettext as _ } from 'gettext';
 import Style from './assets/style.css';
-import { Window } from './window.js';
+import { window } from './window.js';
+import { small_window } from './components/small-window/main.js';
 import { application_actions } from './actions.js';
 import { utils } from './utils.js';
 
@@ -60,50 +61,39 @@ application.quit_request = () => {
 
 /**
  *
- * Is called up when the application is started.
- *
- */
-application.connect("activate", () => {
-  create_main_window(application);
-});
-
-/**
- *
  * Create main window
  * @param {Adw.Application} application
  *
  */
-const create_main_window = (application) => {
-  let { active_window } = application;
-  const settings = application.utils.settings;
-  if (!active_window) {
-    active_window = new Window(application);
-    settings.bind(
-      "width",
-      active_window,
-      "default-width",
-      Gio.SettingsBindFlags.DEFAULT,
-    );
-    settings.bind(
-      "height",
-      active_window,
-      "default-height",
-      Gio.SettingsBindFlags.DEFAULT,
-    );
-    settings.bind(
-      "is-maximized",
-      active_window,
-      "maximized",
-      Gio.SettingsBindFlags.DEFAULT,
-    );
-    settings.bind(
-      "is-fullscreen",
-      active_window,
-      "fullscreened",
-      Gio.SettingsBindFlags.DEFAULT,
-    );
+application.create_main_window = function () {
+  const { active_window } = this;
+  window({ application: this }).present();
+  if (active_window) {
+    active_window.destroy();
   }
-  active_window.present();
+}
+
+/**
+ *
+ * Create small window
+ * @param {Adw.Application} application
+ *
+ */
+application.create_small_window = function() {
+  const { active_window } = this;
+  small_window({ application: this }).present();
+  if(active_window) {
+    active_window.destroy();
+  }
+}
+
+/**
+ *
+ * Is called up when the application is started.
+ *
+ */
+application.connect("activate", (user_data) => {
+  user_data.create_main_window();
 
   // Load styles in app
   if (!provider) {
@@ -115,7 +105,7 @@ const create_main_window = (application) => {
       Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
     );
   }
-}
+});
 
 // Setup application actions
 application_actions({ application });
