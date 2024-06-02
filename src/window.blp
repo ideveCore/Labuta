@@ -1,79 +1,79 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $Window : Adw.ApplicationWindow {
+Adw.ApplicationWindow component {
   default-width: 420;
   default-height: 600;
+  width-request: 360;
+  height-request: 400;
   hide-on-close: true;
   title: _("Planytimer");
+  Adw.Breakpoint {
+    condition ("max-width: 550sp")
 
-  Adw.Leaflet {
-    orientation: vertical;
-    visible-child: world_leaflet;
-    transition-type: under;
-    can-unfold: false;
-    Adw.Leaflet world_leaflet {
-      can-navigate-back: true;
-      Box {
-        orientation: vertical;
-        Adw.HeaderBar {
-          centering-policy: strict;
-          [title]
-          Adw.ViewSwitcherTitle view_switcher_title {
-            stack: stack;
-            title: bind template.title;
-          }
-          [start]
-          Gtk.Button shorten_window {
-            halign: start;
-            valign: center;
-            icon-name: "pip-in-symbolic";
-            action-name: 'win.toggle-small-window';
-            action-target: "'open'";
-            tooltip-text: _("Minimize window");
-          }
-          [end]
-          MenuButton menu_button {
-            menu-model: primary_menu;
-            icon-name: "open-menu-symbolic";
-            tooltip-text: _("Main menu");
-          }
-        }
-        Adw.ViewStack stack {
-          hexpand: true;
-          vexpand: true;
-          Adw.ViewStackPage {
-            name: "timer";
-            title: _("_Timer");
-            use-underline: true;
-            icon-name: "hourglass-symbolic";
-            child: Adw.Bin timer_page {};
-          }
-
-          Adw.ViewStackPage {
-            name: "statistics";
-            title: _("_Statistics");
-            use-underline: true;
-            icon-name: "profit-symbolic";
-            child: Adw.Bin statistics_page {};
-          }
-        }
-        Adw.ViewSwitcherBar {
+    setters {
+      header_bar.title-widget: null;
+      switcher_bar.reveal: true;
+    }
+  }
+  content: Gtk.WindowHandle {
+    Adw.ToolbarView {
+      [top]
+      Adw.HeaderBar header_bar {
+        centering-policy: strict;
+        title-widget: Adw.ViewSwitcher switcher_title {
           stack: stack;
-          reveal: bind view_switcher_title.title-visible;
+          policy: wide;
+        };
+        [start]
+        Gtk.Button shorten_window_button {
+          halign: start;
+          valign: center;
+          icon-name: "pip-in-symbolic";
+          action-name: 'app.toggle-small-window';
+          action-target: "'open'";
+          tooltip-text: _("Minimize window");
+          visible: false;
+        }
+        [end]
+        MenuButton menu_button {
+          menu-model: primary_menu;
+          icon-name: "open-menu-symbolic";
+          tooltip-text: _("Main menu");
         }
       }
+      content: Adw.Bin content {
+        Box {
+          orientation: vertical;
+          Adw.ViewStack stack {
+            hexpand: true;
+            vexpand: true;
+            Adw.ViewStackPage {
+              name: "timer";
+              title: _("_Timer");
+              use-underline: true;
+              icon-name: "hourglass-symbolic";
+              child: Adw.Bin timer_page {};
+            }
+
+            Adw.ViewStackPage {
+              name: "statistics";
+              title: _("_Statistics");
+              use-underline: true;
+              icon-name: "profit-symbolic";
+              child: Adw.Bin statistics_page {};
+            }
+          }
+          Adw.ViewSwitcherBar switcher_bar {
+            stack: stack;
+          }
+        }
+      };
     }
-    Adw.ToastOverlay toast_overlay {}
-  }
+  };
 }
 
 menu primary_menu {
-  section {
-    item {
-      custom: "theme";
-    }
-  }
   section {
     item {
       label: _("_Preferences");
