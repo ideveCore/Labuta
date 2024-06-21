@@ -1,0 +1,56 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.PreferencesDialog component {
+  can-close: true;
+  content-width: 400;
+  content-height: 450;
+  presentation-mode: auto;
+  Adw.PreferencesPage {
+    title: _("Preferences");
+    Adw.PreferencesGroup {
+      title: _("User interface");
+      Adw.ActionRow  {
+        title: _("Allow sounds");
+        subtitle: _("Plays the feedback sounds");
+        icon-name: "sound-wave-symbolic";
+        activatable-widget: switch_play_sounds;
+        [suffix]
+        Gtk.Button sound_preferences {
+          halign: center;
+          valign: center;
+          icon-name: 'settings-symbolic';
+          sensitive: bind switch_play_sounds.active;
+          tooltip-text: _('Open sound preferences');
+        }
+        Switch switch_play_sounds {
+          name: "play-sounds";
+          valign: center;
+        }
+      }
+      Adw.ActionRow  {
+        title: _("Autostart");
+        subtitle: _("Automatically start the timer after break time");
+        icon-name: "system-restart-symbolic";
+        activatable-widget: switch_autostart;
+        [suffix]
+        Switch switch_autostart {
+          name: "autostart";
+          valign: center;
+        }
+      }
+      Adw.SpinRow set_history_duration {
+        title: _("History duration");
+        subtitle: _("The amount of months that history data will be saved");
+        icon-name: 'history-undo-symbolic';
+        adjustment:
+        Adjustment {
+          lower: 2;
+          upper: 12;
+          page-increment: 1;
+          step-increment: 1;
+        };
+      }
+    }
+  }
+}

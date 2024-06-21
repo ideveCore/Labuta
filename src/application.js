@@ -101,6 +101,7 @@ application.connect("activate", (user_data) => {
   };
 
   user_data.create_main_window();
+  user_data.utils.sound_player.setup_actions();
 
   // Load styles in app
   if (!provider) {

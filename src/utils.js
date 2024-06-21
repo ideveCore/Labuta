@@ -61,12 +61,17 @@ const format_time = (time) => {
  *
  * Sound Player
  * @param {object} params
- * @param {Adw.Applicatin} params.application
+ * @param {Adw.Application} params.application
  * @param {Settings} params.settings
  *
  */
 const sound_player = ({ application, settings }) => {
   const gsound = new GSound.Context();
+  const default_settings = {
+    "timer-start-sound": JSON.stringify({ type: 'freedesktop', uri: 'message-new-instant', repeat: 1 }),
+    "timer-break-sound": JSON.stringify({ type: 'freedesktop', uri: 'complete', repeat: 1 }),
+    "timer-finish-sound": JSON.stringify({ type: 'freedesktop', uri: 'alarm-clock-elapsed', repeat: 1 }),
+  };
   gsound.init(null);
   Gst.init(null);
 
@@ -152,8 +157,47 @@ const sound_player = ({ application, settings }) => {
     }
   }
 
+  /**
+   *
+   * Reset the sound settings
+   * @param {object} params
+   * @param {string} params.sound_settings
+   *
+   */
+  const reset = ({ sound_settings }) => application.utils.settings.set_string(
+    sound_settings,
+    default_settings[sound_settings]
+  );
+
+  /**
+   *
+   * Setup actions
+   *
+   */
+  const setup_actions = () => {
+    const sound_group = new Gio.SimpleActionGroup();
+    const play_action = new Gio.SimpleAction({ name: 'play', parameter_type: new GLib.Variant('s', '').get_type() });
+    const reset_action = new Gio.SimpleAction({ name: 'reset', parameter_type: new GLib.Variant('s', '').get_type() });
+
+    play_action.connect("activate", (simple_action, parameter) => {
+      const sound_settings = parameter.get_string()[0];
+      play({ sound_settings });
+    });
+
+    reset_action.connect("activate", (simple_action, parameter) => {
+      const sound_settings = parameter.get_string()[0];
+      reset({ sound_settings });
+    });
+
+    sound_group.add_action(play_action);
+    sound_group.add_action(reset_action);
+    application.get_active_window().insert_action_group('sound', sound_group);
+  }
+
   return {
     play,
+    reset,
+    setup_actions,
   }
 }
 
@@ -303,7 +347,7 @@ const time_utils = () => {
 
   /**
    *
-   * Create timestap for pomodoro
+   * Create timestamp for pomodoro
    * @param {null|number} item_day
    * @param {null|number} item_year
    * @returns {number} return sum of current date hour, minutes, microseconds, year and day.

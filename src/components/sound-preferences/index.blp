@@ -1,24 +1,14 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $SoundPreferences : Adw.Window {
-  default-width: 350;
-  modal: true;
-  title: _('Sound preferences');
-  resizable: false;
-
-  content: Gtk.Box {
-    hexpand: true;
-    vexpand: true;
-    orientation: vertical;
-    Adw.HeaderBar {
-      styles ["flat"]
-    }
+Adw.PreferencesDialog component {
+  can-close: true;
+  content-width: 400;
+  content-height: 450;
+  presentation-mode: auto;
+  Adw.PreferencesPage {
     Adw.PreferencesGroup {
-      margin-start: 10; 
-      margin-end: 10; 
-      margin-bottom: 10; 
-      margin-top: 10; 
+      title: _("Sound preferences");
       Adw.ExpanderRow timer_start_sound {
         title: _('Timer start sound');
         subtitle: 'freedesktop';
@@ -28,7 +18,8 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           icon-name: 'media-playback-start-symbolic';
           tooltip-text: _("Play sound");
-          clicked => $_play_timer_start_sound();
+          action-name: "sound.play";
+          action-target: "'timer-start-sound'";
         }
         [prefix]
         Gtk.Button {
@@ -36,7 +27,8 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           icon-name: 'system-restart-symbolic';
           tooltip-text: _("Reset settings");
-          clicked => $_reset_timer_start_settings();
+          action-name: "sound.reset";
+          action-target: "'timer-start-sound'";
         }
         Adw.ActionRow uri_timer_start_sound {
           title: 'message-new-instant';
@@ -47,7 +39,8 @@ template $SoundPreferences : Adw.Window {
             valign: center;
             icon-name: 'folder-open-symbolic';
             tooltip-text: _("Select sound file");
-            clicked => $_select_timer_start_sound();
+            action-name: "sound_preferences.select_sound_file";
+            action-target: "'timer-start-sound'";
           }
         }
         Adw.SpinRow repeat_timer_start_sound {
@@ -55,14 +48,13 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           numeric: true;
           adjustment:
-          Adjustment {
+          Adjustment repeat_timer_start_sound_adj {
             lower: 1;
             upper: 10;
             value: 1;
             page-increment: 1;
             step-increment: 1;
           };
-          output => $_on_repeat_timer_start_sound_changed();
         }
       }
       Adw.ExpanderRow timer_break_sound {
@@ -74,7 +66,8 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           icon-name: 'media-playback-start-symbolic';
           tooltip-text: _("Play sound");
-          clicked => $_play_timer_break_sound();
+          action-name: "sound.play";
+          action-target: "'timer-break-sound'";
         }
         [prefix]
         Gtk.Button {
@@ -82,7 +75,8 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           icon-name: 'system-restart-symbolic';
           tooltip-text: _("Reset settings");
-          clicked => $_reset_timer_break_settings();
+          action-name: "sound.reset";
+          action-target: "'timer-break-sound'";
         }
         Adw.ActionRow uri_timer_break_sound {
           title: 'complete';
@@ -93,7 +87,8 @@ template $SoundPreferences : Adw.Window {
             valign: center;
             icon-name: 'folder-open-symbolic';
             tooltip-text: _("Select sound file");
-            clicked => $_select_timer_break_sound();
+            action-name: "sound_preferences.select_sound_file";
+            action-target: "'timer-break-sound'";
           }
         }
         Adw.SpinRow repeat_timer_break_sound {
@@ -101,14 +96,13 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           numeric: true;
           adjustment:
-          Adjustment {
+          Adjustment repeat_timer_break_sound_adj {
             lower: 1;
             upper: 10;
             value: 1;
             page-increment: 1;
             step-increment: 1;
           };
-          output => $_on_repeat_timer_break_sound_changed();
         }
       }
       Adw.ExpanderRow timer_finish_sound {
@@ -120,7 +114,8 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           icon-name: 'media-playback-start-symbolic';
           tooltip-text: _("Play sound");
-          clicked => $_play_timer_finish_sound();
+          action-name: "sound.play";
+          action-target: "'timer-finish-sound'";
         }
         [prefix]
         Gtk.Button {
@@ -128,7 +123,8 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           icon-name: 'system-restart-symbolic';
           tooltip-text: _("Reset settings");
-          clicked => $_reset_timer_finish_settings();
+          action-name: "sound.reset";
+          action-target: "'timer-finish-sound'";
         }
         Adw.ActionRow uri_timer_finish_sound {
           title: 'sound-clock-elapsed';
@@ -139,7 +135,8 @@ template $SoundPreferences : Adw.Window {
             valign: center;
             icon-name: 'folder-open-symbolic';
             tooltip-text: _("Select sound file");
-            clicked => $_select_timer_finish_sound();
+            action-name: "sound_preferences.select_sound_file";
+            action-target: "'timer-finish-sound'";
           }
         }
         Adw.SpinRow repeat_timer_finish_sound {
@@ -147,16 +144,15 @@ template $SoundPreferences : Adw.Window {
           valign: center;
           numeric: true;
           adjustment:
-          Adjustment {
+          Adjustment repeat_timer_finish_sound_adj {
             lower: 1;
             upper: 10;
             value: 1;
             page-increment: 1;
             step-increment: 1;
           };
-          output => $_on_repeat_timer_finish_sound_changed();
         }
       }
     }
-  };
+  }
 }

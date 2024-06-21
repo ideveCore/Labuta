@@ -23,7 +23,7 @@ import Gio from 'gi://Gio';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import { create_about_params } from './about.js';
-import { Preferences } from './components/preferences/preferences.js';
+import { preferences } from './components/preferences/main.js';
 import { History } from './components/history/history.js';
 
 /**
@@ -50,7 +50,7 @@ export const application_actions = ({ application }) => {
   });
 
   preferences_action.connect('activate', () => {
-    new Preferences({ application }).present();
+    preferences({ application }).present(application.get_active_window());
   });
 
   history_action.connect('activate', () => {
