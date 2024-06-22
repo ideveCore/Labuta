@@ -244,7 +244,7 @@ export const timers = ({ application, pomodoro_item, settings, notification, sou
         }
 
         if (!application.get_active_window().visible)
-          background_status.set_status({ message: `${current_time > 0 ? _('Work time') : _('Break time')}: ${format_time()}` });
+          application.utils.background_status.set_status({ message: `${current_time > 0 ? _('Work time') : _('Break time')}: ${format_time()}` });
 
         current_time--
         pomodoro_item.update();

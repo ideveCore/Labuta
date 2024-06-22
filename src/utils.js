@@ -280,27 +280,32 @@ const background_status = () => {
  * @param {timer} params.timer
  *
  */
-const quit_request_dialog = ({ application, timer }) => {
+const quit_request_dialog = ({ application }) => {
   const open = () => {
     let dialog = new Adw.MessageDialog();
-    const timer_data = timer();
     dialog.set_heading(_('Stop timer?'));
     dialog.set_transient_for(application.get_active_window());
     dialog.set_body(_('There is a running timer, wants to stop and exit the application?'));
     dialog.add_response('continue', _('Continue'));
+    if(application.get_active_window().visible)
+      dialog.add_response('hide', _('Hide'));
     dialog.add_response('quit', _('Quit'));
+    dialog.set_response_appearance('continue', Adw.ResponseAppearance.SUGGESTED);
     dialog.set_response_appearance('quit', Adw.ResponseAppearance.DESTRUCTIVE);
 
     dialog.connect('response', (dialog, id) => {
       if (id === 'quit') {
-        timer_data.timer_state = 'stopped';
+        application.utils.timer.technique.get_data().timer_state = 'stopped';
         setTimeout(() => {
           application.quit()
         }, 1000)
+      } else if(id == 'hide') {
+        application.get_active_window().hide();
       }
     })
 
-    if (timer_data.timer_state === 'running' || timer_data.timer_state == 'paused') {
+    if (application.utils.timer.technique.get_data().timer_state === 'running' ||
+      application.utils.timer.technique.get_data().timer_state == 'paused') {
       return dialog.present()
     }
     application.quit();
@@ -407,7 +412,7 @@ export const utils = ({ application }) => {
     timer: timer_instance,
     time_utils: time_utils,
     background_status: background_status(),
-    quit_request_dialog: quit_request_dialog({ application, timer: timer_instance.get_data }),
+    quit_request_dialog: quit_request_dialog({ application }),
     format_time,
   };
 }

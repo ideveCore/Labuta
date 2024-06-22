@@ -48,17 +48,14 @@ export const application = new Adw.Application({
  */
 application.utils = utils({ application });
 application.quit_request = () => {
-  const run_in_background = application.utils.settings.get_boolean('run-in-background');
-  if (!run_in_background) {
-    application.utils.quit_request_dialog.open();
-    return;
-  }
   if (application.utils.timer.technique.get_data().timer_state === 'stopped') {
     application.quit();
     return;
   }
-  application.active_window.hide();
-  if (application.active_window) return;
+  application.utils.quit_request_dialog.open();
+  return;
+  // application.active_window.hide();
+  // if (application.active_window) return;
 }
 
 /**
@@ -91,15 +88,22 @@ application.create_small_window = function() {
 
 /**
  *
- * Is called up when the application is started.
+ * Is emitted on the primary instance immediately after registration.
  *
  */
-application.connect("activate", (user_data) => {
+application.connect("startup", (user_data) => {
   user_data.global_components = {
     display_timer: display_timer({ application: user_data }),
     timer_controls: timer_controls({ application: user_data }),
   };
+});
 
+/**
+ *
+ * Is called up when the application is started.
+ *
+ */
+application.connect("activate", (user_data) => {
   user_data.create_main_window();
   user_data.utils.sound_player.setup_actions();
 
