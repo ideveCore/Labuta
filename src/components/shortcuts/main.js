@@ -1,4 +1,5 @@
-/* main.js
+/*
+ * main.js
  *
  * Copyright 2023 Ideve Core
  *

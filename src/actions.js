@@ -24,7 +24,7 @@ import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import { create_about_params } from './about.js';
 import { preferences } from './components/preferences/main.js';
-import { History } from './components/history/history.js';
+import { history } from './components/history/main.js';
 
 /**
  *
@@ -54,7 +54,7 @@ export const application_actions = ({ application }) => {
   });
 
   history_action.connect('activate', () => {
-    new History({ application }).present();
+    history({ application }).present(application.get_active_window());
   });
 
   show_about_action.connect('activate', () => {
