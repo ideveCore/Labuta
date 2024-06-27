@@ -29,21 +29,12 @@ Adw.Dialog component {
             sensitive: false;
             margin-end: 10;
             tooltip-text: _("Delete selected items");
-            // clicked => $_on_delete();
           }
           [end]
           MenuButton menu_button {
             menu-model: primary_menu;
             icon-name: "open-menu-symbolic";
             tooltip-text: _("History menu");
-          }
-          [end]
-          MenuButton {
-            styles ["flat"]
-            halign: center;
-            valign: center;
-            icon-name: "month-symbolic";
-            menu-model: history_view_menu;
           }
         }
         content: Gtk.ScrolledWindow {
@@ -125,32 +116,32 @@ menu primary_menu {
         }
       }
     }
+    submenu {
+      label: _('Period');
+      item {
+        label: _('Today');
+        action: 'history.view';
+        target: 'today';
+      }
+      item {
+        label: _('This week');
+        action: 'history.view';
+        target: 'week';
+      }
+      item {
+        label: _('This month');
+        action: 'history.view';
+        target: 'month';
+      }
+      item {
+        label: _('All');
+        action: 'history.view';
+        target: 'all';
+      }
+    }
     item {
       label: _("Clear history");
       action: "history.clear";
     }
-  }
-}
-
-menu history_view_menu {
-  item {
-    label: _('Today');
-    action: 'history.view';
-    target: 'today';
-  }
-  item {
-    label: _('This week');
-    action: 'history.view';
-    target: 'week';
-  }
-  item {
-    label: _('This month');
-    action: 'history.view';
-    target: 'month';
-  }
-  item {
-    label: _('All');
-    action: 'history.view';
-    target: 'all';
   }
 }

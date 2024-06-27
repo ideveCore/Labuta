@@ -27,7 +27,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import { Db_item } from '../../db.js';
 import Settings from '../../settings.js';
-import { HistoryDetails } from '../history-details/history-details.js';
+import { history_details } from '../history-details/main.js';
 import Resource from './index.blp';
 
 /**
@@ -43,14 +43,15 @@ export const history  = ({ application }) => {
   const history_settings = new Settings({ schema_id: `${pkg.name}.History`});
   const application_db_manager = application.utils.application_db_manager;
   const time_utils = application.utils.time_utils();
-  const view_settings = history_settings.get_string('view');
+  const view_settings = () => history_settings.get_string('view');
+  const settings = new Settings({ schema_id: `${pkg.name}.History`});
   const get_history = {
     today: () => (application_db_manager.get_by_day(time_utils.day)),
     week: () => (application_db_manager.get_by_week(time_utils.week)),
     month: () => (application_db_manager.get_by_month(time_utils.month)),
     all: () => (application_db_manager.get()),
   };
-  const data = get_history[view_settings]();
+  let data = get_history[view_settings()]();
   let selected_rows = [];
 
   builder.add_from_resource(Resource);
@@ -76,22 +77,17 @@ export const history  = ({ application }) => {
    *
    */
   const create_deatails_page = (item) => {
-    const details_page = new Adw.StatusPage();
-    details_page.set_title(item.title);
-    details_page.set_description(item.description || _('No description'));
-    const history_details = new HistoryDetails({
+    details_container.set_child(history_details({
       application,
       id: item.id,
       title: item.title,
-      parent: this,
+      parent: component,
       sessions: item.sessions,
       subtitle: item.display_date,
       work_time: item.work_time,
       break_time: item.break_time,
       description: item.description,
-    });
-    details_page.set_child(history_details);
-    details_container.set_child(details_page);
+    }));
     navigate(history_detail_page);
   }
 
@@ -209,7 +205,7 @@ export const history  = ({ application }) => {
       week: _('this week'),
       month: _('this month'),
     }
-    const message = view_settings === 'all' ? _('Empty history') : `${_('No pomodoro')} ${dates[view_settings]}`;
+    const message = view_settings() === 'all' ? _('Empty history') : `${_('No pomodoro')} ${dates[view_settings()]}`;
     empty_history_message.set_label(message);
     selected_rows = [];
     load_display_total_time();
@@ -254,8 +250,53 @@ export const history  = ({ application }) => {
     });
   }
 
-  toggle_view_work_break_time_button.connect('clicked', () => load_display_total_time());
+  /**
+   *
+   * Setup GAction methods
+   *
+   */
+  const setup_gactions = () => {
+    const history_action_group = new Gio.SimpleActionGroup();
+    component.insert_action_group("history", history_action_group);
 
+    const clear_action = new Gio.SimpleAction({ name: 'clear' });
+    clear_action.connect('activate', (simple_action) => {
+      application_db_manager.delete_all();
+      load_history_list();
+    })
+
+    history_action_group.add_action(clear_action);
+    history_action_group.add_action(settings.create_action('view'));
+    history_action_group.add_action(settings.create_action('order'));
+    history_action_group.add_action(settings.create_action('sort'));
+    settings.connect('changed::view', () => {
+      data = get_history[view_settings()]();
+      load_history_list();
+    });
+    settings.connect('changed::order', () => {
+      load_history_list();
+      list_box.set_sort_func(sort_history)
+    });
+    settings.connect('changed::sort', () => {
+      load_history_list();
+      list_box.set_sort_func(sort_history)
+    });
+  }
+
+  toggle_view_work_break_time_button.connect('clicked', () => load_display_total_time());
+  delete_button.connect("clicked", () => {
+    selected_rows.forEach((item) => {
+      application_db_manager.delete(item.id);
+      list_box.remove(item);
+    });
+    data = get_history[view_settings()]();
+    selected_rows = [];
+    load_history_list();
+    delete_button.set_sensitive(false);
+    delete_button.set_icon_name('user-trash-symbolic');
+  });
+
+  setup_gactions();
   load_history_list();
   return component;
 }
