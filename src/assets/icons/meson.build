@@ -17,6 +17,9 @@ install_data(
     'month-symbolic.svg',
     'permissions-notifications-symbolic.svg',
     'question-round-symbolic.svg',
+    'arrow-pointing-at-line-down-symbolic.svg',
+    'arrow-pointing-away-from-line-up-symbolic.svg',
+    'vertical-arrows-long-symbolic.svg',
   ],
   install_dir: datadir / 'icons/hicolor/scalable/status',
 )
