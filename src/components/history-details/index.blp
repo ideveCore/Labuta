@@ -1,0 +1,53 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.ToastOverlay component {
+  Adw.StatusPage history_info {
+    child: Gtk.Box {
+        orientation: vertical;
+        Adw.ActionRow {
+          title: _("Work time");
+          title-lines: 1;
+          Gtk.Label work_time {
+            styles ["accent", "dim-label"]
+            ellipsize: end;
+            label: "00:00:00";
+          }
+        }
+        Adw.ActionRow {
+          title: _("Break time");
+          title-lines: 1;
+          Gtk.Label break_time {
+            styles ["error", "dim-label"]
+            ellipsize: end;
+            label: "00:00:00";
+          }
+        }
+        Adw.ActionRow {
+          title: _("Date");
+          title-lines: 1;
+          Gtk.Label date {
+            styles ["accent", "dim-label"]
+            ellipsize: end;
+            label: "00:00:00";
+          }
+        }
+        Adw.ActionRow {
+          styles ["dim-label"]
+          title: _("Planytimer sessions");
+          title-lines: 1;
+          Gtk.Label sessions {
+            ellipsize: end;
+          }
+        }
+        Gtk.Button continue_timer {
+          styles ["suggested-action"]
+          hexpand: true;
+          margin-start: 5;
+          margin-end: 5;
+          label: _("Continue");
+          tooltip-text: _("Continue pomodoro");
+        }
+    };
+  }
+}
