@@ -6,49 +6,240 @@ Adw.PreferencesDialog component {
   content-width: 400;
   content-height: 450;
   presentation-mode: auto;
-  Adw.PreferencesPage {
-    title: _("Preferences");
-    Adw.PreferencesGroup {
-      title: _("User interface");
-      Adw.ActionRow  {
-        title: _("Allow sounds");
-        subtitle: _("Plays the feedback sounds");
-        icon-name: "sound-wave-symbolic";
-        activatable-widget: switch_play_sounds;
-        [suffix]
-        Gtk.Button sound_preferences {
-          halign: center;
-          valign: center;
-          icon-name: 'settings-symbolic';
-          sensitive: bind switch_play_sounds.active;
-          tooltip-text: _('Open sound preferences');
+  Adw.NavigationView nav_view {
+    Adw.NavigationPage history_list_page {
+      title: _("Preferences");
+      Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {
+          styles ["flat"]
         }
-        Switch switch_play_sounds {
-          name: "play-sounds";
-          valign: center;
-        }
+        content: Adw.PreferencesPage {
+          title: _("Preferences");
+          Adw.PreferencesGroup {
+            title: _("User interface");
+            Adw.ActionRow  {
+              title: _("Allow sounds");
+              subtitle: _("Plays the feedback sounds");
+              icon-name: "sound-wave-symbolic";
+              activatable-widget: switch_play_sounds;
+              [suffix]
+              Gtk.Button sound_preferences {
+                halign: center;
+                valign: center;
+                icon-name: 'settings-symbolic';
+                sensitive: bind switch_play_sounds.active;
+                tooltip-text: _('Open sound preferences');
+              }
+              Switch switch_play_sounds {
+                name: "play-sounds";
+                valign: center;
+              }
+            }
+            Adw.ActionRow  {
+              title: _("Autostart");
+              subtitle: _("Automatically start the timer after break time");
+              icon-name: "system-restart-symbolic";
+              activatable-widget: switch_autostart;
+              [suffix]
+              Switch switch_autostart {
+                name: "autostart";
+                valign: center;
+              }
+            }
+            Adw.SpinRow set_history_duration {
+              title: _("History duration");
+              subtitle: _("The amount of months that history data will be saved");
+              icon-name: 'history-undo-symbolic';
+              adjustment:
+              Adjustment {
+                lower: 2;
+                upper: 12;
+                page-increment: 1;
+                step-increment: 1;
+              };
+            }
+          }
+          Adw.PreferencesGroup {
+            title: _("Application");
+            Adw.ActionRow  {
+              title: _("Data transfer");
+              subtitle: _("Import or export application data, support onlly for JSON files");
+              icon-name: "vertical-arrows-long-symbolic";
+              [suffix]
+              Gtk.Button import_data {
+                halign: center;
+                valign: center;
+                icon-name: 'arrow-pointing-at-line-down-symbolic';
+                tooltip-text: _('Import data');
+              }
+              [suffix]
+              Gtk.Button export_data {
+                halign: center;
+                valign: center;
+                icon-name: 'arrow-pointing-away-from-line-up-symbolic';
+                tooltip-text: _('Export data');
+              }
+            }
+          }
+        };
       }
-      Adw.ActionRow  {
-        title: _("Autostart");
-        subtitle: _("Automatically start the timer after break time");
-        icon-name: "system-restart-symbolic";
-        activatable-widget: switch_autostart;
-        [suffix]
-        Switch switch_autostart {
-          name: "autostart";
-          valign: center;
+    }
+    Adw.NavigationPage sound_preferences_page {
+      title: _("Sound preferences");
+      Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {
+          styles ["flat"]
         }
-      }
-      Adw.SpinRow set_history_duration {
-        title: _("History duration");
-        subtitle: _("The amount of months that history data will be saved");
-        icon-name: 'history-undo-symbolic';
-        adjustment:
-        Adjustment {
-          lower: 2;
-          upper: 12;
-          page-increment: 1;
-          step-increment: 1;
+        content: Adw.PreferencesPage {
+          Adw.PreferencesGroup {
+            title: _("Sound preferences");
+            Adw.ExpanderRow timer_start_sound {
+              title: _('Timer start sound');
+              subtitle: 'freedesktop';
+              [prefix]
+              Gtk.Button {
+                halign: center;
+                valign: center;
+                icon-name: 'media-playback-start-symbolic';
+                tooltip-text: _("Play sound");
+                action-name: "sound.play";
+                action-target: "'timer-start-sound'";
+              }
+              [prefix]
+              Gtk.Button {
+                halign: center;
+                valign: center;
+                icon-name: 'system-restart-symbolic';
+                tooltip-text: _("Reset settings");
+                action-name: "sound.reset";
+                action-target: "'timer-start-sound'";
+              }
+              Adw.ActionRow uri_timer_start_sound {
+                title: 'message-new-instant';
+                subtitle: 'freedesktop';
+                [suffix]
+                Gtk.Button {
+                  halign: center;
+                  valign: center;
+                  icon-name: 'folder-open-symbolic';
+                  tooltip-text: _("Select sound file");
+                  action-name: "sound_preferences.select_sound_file";
+                  action-target: "'timer-start-sound'";
+                }
+              }
+              Adw.SpinRow repeat_timer_start_sound {
+                title: _('Repeat sound');
+                valign: center;
+                numeric: true;
+                adjustment:
+                Adjustment repeat_timer_start_sound_adj {
+                  lower: 1;
+                  upper: 10;
+                  value: 1;
+                  page-increment: 1;
+                  step-increment: 1;
+                };
+              }
+            }
+            Adw.ExpanderRow timer_break_sound {
+              title: _('Timer break sound');
+              subtitle: 'freedesktop';
+              [prefix]
+              Gtk.Button {
+                halign: center;
+                valign: center;
+                icon-name: 'media-playback-start-symbolic';
+                tooltip-text: _("Play sound");
+                action-name: "sound.play";
+                action-target: "'timer-break-sound'";
+              }
+              [prefix]
+              Gtk.Button {
+                halign: center;
+                valign: center;
+                icon-name: 'system-restart-symbolic';
+                tooltip-text: _("Reset settings");
+                action-name: "sound.reset";
+                action-target: "'timer-break-sound'";
+              }
+              Adw.ActionRow uri_timer_break_sound {
+                title: 'complete';
+                subtitle: 'freedesktop';
+                [suffix]
+                Gtk.Button {
+                  halign: center;
+                  valign: center;
+                  icon-name: 'folder-open-symbolic';
+                  tooltip-text: _("Select sound file");
+                  action-name: "sound_preferences.select_sound_file";
+                  action-target: "'timer-break-sound'";
+                }
+              }
+              Adw.SpinRow repeat_timer_break_sound {
+                title: _('Repeat sound');
+                valign: center;
+                numeric: true;
+                adjustment:
+                Adjustment repeat_timer_break_sound_adj {
+                  lower: 1;
+                  upper: 10;
+                  value: 1;
+                  page-increment: 1;
+                  step-increment: 1;
+                };
+              }
+            }
+            Adw.ExpanderRow timer_finish_sound {
+              title: _('Timer finish sound');
+              subtitle: 'freedesktop';
+              [prefix]
+              Gtk.Button {
+                halign: center;
+                valign: center;
+                icon-name: 'media-playback-start-symbolic';
+                tooltip-text: _("Play sound");
+                action-name: "sound.play";
+                action-target: "'timer-finish-sound'";
+              }
+              [prefix]
+              Gtk.Button {
+                halign: center;
+                valign: center;
+                icon-name: 'system-restart-symbolic';
+                tooltip-text: _("Reset settings");
+                action-name: "sound.reset";
+                action-target: "'timer-finish-sound'";
+              }
+              Adw.ActionRow uri_timer_finish_sound {
+                title: 'sound-clock-elapsed';
+                subtitle: 'freedesktop';
+                [suffix]
+                Gtk.Button {
+                  halign: center;
+                  valign: center;
+                  icon-name: 'folder-open-symbolic';
+                  tooltip-text: _("Select sound file");
+                  action-name: "sound_preferences.select_sound_file";
+                  action-target: "'timer-finish-sound'";
+                }
+              }
+              Adw.SpinRow repeat_timer_finish_sound {
+                title: _('Repeat sound');
+                valign: center;
+                numeric: true;
+                adjustment:
+                Adjustment repeat_timer_finish_sound_adj {
+                  lower: 1;
+                  upper: 10;
+                  value: 1;
+                  page-increment: 1;
+                  step-increment: 1;
+                };
+              }
+            }
+          }
         };
       }
     }
