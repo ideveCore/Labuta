@@ -152,6 +152,33 @@ export class ApplicationDbManager {
     this.data = null;
   }
 
+  import({ data, concat }) {
+    const default_keys = [ "id", "title", "description", "work_time", "break_time",
+      "day", "day_of_month", "year", "week", "month", "display_date", "timestamp", "sessions"
+    ]
+    let is_array_validate = true;
+
+    data.forEach((item) => {
+      const keys = Object.keys(item);
+      if(JSON.stringify(keys) !== JSON.stringify(default_keys))
+        is_array_validate = false;
+    })
+    if(!is_array_validate)
+      return { error: true, message: _("Error validating data.")};
+
+    if(concat)
+      data = [...this.get()];
+
+    this.delete_all();
+    let imported_data = 0;
+
+    data.forEach((item) => {
+      if(this.save(new Db_item({ ...item, id: null })))
+        imported_data++;
+    });
+    return {error: false, message: _(`Imported ${imported_data} data`)};
+  }
+
   /**
    *
    * Returns the database query

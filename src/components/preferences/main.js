@@ -1,4 +1,5 @@
-/* preferences.js
+/*
+ * preferences.js
  *
  * Copyright 2023 Ideve Core
  *
@@ -36,17 +37,35 @@ import Resource from './index.blp';
  */
 export const preferences = ({ application }) => {
   const builder = new Gtk.Builder();
+  const application_db_manager = application.utils.application_db_manager;
 
   builder.add_from_resource(Resource);
 
   const component = builder.get_object("component");
+  const alert_wg = builder.get_object("alert");
   const switch_play_sounds = builder.get_object("switch_play_sounds");
   const switch_autostart = builder.get_object("switch_autostart");
   const set_history_duration = builder.get_object("set_history_duration");
   const sound_preferences_wk = builder.get_object("sound_preferences");
   const nav_view = builder.get_object("nav_view");
   const sound_preferences_page = builder.get_object("sound_preferences_page");
+  const import_data_wk = builder.get_object("import_data");
+  const export_data_wk = builder.get_object("export_data");
   const navigate = (page) => (nav_view.push(page));
+
+  const file_dialog = new Gtk.FileDialog();
+  const data_mimetypes = new Gtk.FileFilter({
+    name: _('JSON Files'),
+    mime_types: ['application/json'],
+  });
+  const sound_mimetypes = new Gtk.FileFilter({
+    name: _('Sound files'),
+    mime_types: [
+      'audio/aac',
+      'audio/x-wav',
+      'audio/mpeg',
+    ],
+  });
 
   const build_preferences_page = () => {
     const sound_preferences_group = new Gio.SimpleActionGroup();
@@ -109,26 +128,18 @@ export const preferences = ({ application }) => {
 
     select_sound_file.connect("activate", (simple_action, parameter) => {
       const sound_settings = parameter.get_string()[0];
-      const dialog = Gtk.FileDialog.new();
-      const sound_mimetypes = new Gtk.FileFilter({
-        name: _('Sound files'),
-        mime_types: [
-          'audio/aac',
-          'audio/x-wav',
-          'audio/mpeg',
-        ],
-      });
-      dialog.filters = new Gio.ListStore();
-      dialog.filters.append(new Gtk.FileFilter({
+      file_dialog.filters = new Gio.ListStore();
+      file_dialog.filters.append(new Gtk.FileFilter({
         name: _('All files'),
         patterns: ['*'],
       }));
-      dialog.filters.append(sound_mimetypes);
-      dialog.default_filter = sound_mimetypes;
-      dialog.open(application.get_active_window(), null, (_dialog, _task) => {
+      file_dialog.filters.append(sound_mimetypes);
+      file_dialog.default_filter = sound_mimetypes;
+      file_dialog.set_title("Get a sound file.");
+      file_dialog.open(application.get_active_window(), null, (dialog, task) => {
         try {
           const settings = JSON.parse(application.utils.settings.get_string(sound_settings));
-          settings.uri = _dialog.open_finish(_task).get_uri();
+          settings.uri = dialog.open_finish(task).get_uri();
           settings.type = 'file';
           application.utils.settings.set_string(sound_settings, JSON.stringify(settings));
           setup_timer_sounds();
@@ -162,6 +173,76 @@ export const preferences = ({ application }) => {
 
   build_preferences_page();
   sound_preferences_wk.connect("clicked", () => navigate(sound_preferences_page));
+  export_data_wk.connect("clicked", () => {
+    file_dialog.filters = new Gio.ListStore();
+    file_dialog.filters.append(new Gtk.FileFilter({
+      name: _('All Files'),
+      patterns: ['*'],
+    }));
+    file_dialog.filters.append(data_mimetypes)
+    file_dialog.default_filter = data_mimetypes;
+    file_dialog.set_initial_name("data.json");
+    file_dialog.set_title(_("Save the backup file."));
+    file_dialog.save(application.get_active_window(), null, async (dialog, task) => {
+      try {
+        const file = dialog.save_finish(task);
+        const data = application_db_manager.get();
+        if (file) {
+          await application.utils.save_file_content({ dialog, data });
+        }
+      } catch(error) {
+        console.log(error)
+      }
+    });
+  });
+  import_data_wk.connect("clicked", () => {
+    const timer_state = application.utils.timer.technique.get_data().timer_state;
+    if (timer_state == 'running' || timer_state == 'paused')
+      return alert_wg.add_toast(new Adw.Toast({
+        title: _("There is a timer running, end it to complete this action."),
+        priority: Adw.ToastPriority.HIGH,
+      }));
+    let alert = new Adw.MessageDialog();
+    alert.set_heading(_('Overwrite the data?'));
+    alert.set_transient_for(application.get_active_window());
+    alert.set_body(_('Do you want to overwrite the current history?'));
+    alert.add_response('cancel', _('Cancel'));
+    alert.add_response('concat', _('Concatenate'));
+    alert.add_response('continue', _('Continue'));
+    alert.set_response_appearance('concat', Adw.ResponseAppearance.SUGGESTED);
+    alert.set_response_appearance('continue', Adw.ResponseAppearance.DESTRUCTIVE);
+    alert.connect('response', (alert, id) => {
+      let concat;
+      if (id === 'continue') {
+        concat = false;
+      } else if(id == 'concat') {
+        concat = true;
+      } else if(id == 'cancel') {
+        return;
+      }
+      file_dialog.filters = new Gio.ListStore()
+      file_dialog.filters.append(new Gtk.FileFilter({
+        name: _('All Files'),
+        patterns: ['*'],
+      }))
+      file_dialog.filters.append(data_mimetypes);
+      file_dialog.default_filter = data_mimetypes;
+      file_dialog.set_title(_("Get the backup file."));
+      file_dialog.open(application.get_active_window(), null, (dialog, task) => {
+        try {
+          const file = dialog.open_finish(task);
+          const data = JSON.parse(application.utils.read_file(file, '{}'));
+          alert_wg.add_toast(new Adw.Toast({
+            title: application_db_manager.import({ data, concat }).message,
+            priority: Adw.ToastPriority.HIGH,
+          }));
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    });
+    alert.present();
+  });
 
   return component;
 }

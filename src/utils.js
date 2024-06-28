@@ -32,6 +32,8 @@ import { PomodoroItem } from './pomodoro-item.js';
 import { timers } from './timers.js';
 import { gettext as _ } from 'gettext';
 
+const decoder = new TextDecoder();
+
 /**
  *
  *
@@ -377,6 +379,54 @@ const time_utils = () => {
   }
 }
 
+/**
+ *
+ * Save a file content
+ *
+ * @param {object} params
+ * @param {Gtk.FileDialog} params.dialog A dialog to save file.
+ * @param {Gtk.FileDialog} params.data A dialog to save file.
+ *
+ */
+const save_file_content = async ({ dialog, data }) => {
+  if(!data) return;
+  let file_name;
+  try {
+    const file_info = dialog.query_info("standard::display-name", FileQueryInfoFlags.NONE);
+    file_name = file_info.get_attribute_string("standard::display-name");
+  } catch(_) {
+    file_name = dialog.get_basename();
+  }
+
+  try {
+    await dialog.replace_contents_bytes_async(
+      new GLib.Bytes(JSON.stringify(data)),
+      null,
+      false,
+      Gio.FileCreateFlags.NONE,
+      null);
+  } catch(e) {
+    logError(`Unable to save ${file_name}: ${e.message}`)
+  }
+}
+
+/**
+ *
+ * Read file contents
+ * @param {Gtk.File} file
+ * @param {string} default_value
+ *
+ */
+const read_file = (file, defaultValue = '') => {
+  try {
+    const [success, data/*, tag*/] = file.load_contents(null)
+    if (success) return decoder.decode(data)
+    else throw new Error()
+  } catch (e) {
+    console.debug(e)
+    return defaultValue
+  }
+}
 
 /**
  *
@@ -414,5 +464,7 @@ export const utils = ({ application }) => {
     background_status: background_status(),
     quit_request_dialog: quit_request_dialog({ application }),
     format_time,
+    read_file,
+    save_file_content,
   };
 }

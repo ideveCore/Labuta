@@ -18,11 +18,14 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import GLib from 'gi://GLib?version=2.0'
+import GLib from 'gi://GLib?version=2.0';
+import Gio from 'gi://Gio';
 import { application } from './application.js';
 
 pkg.initGettext();
 GLib.set_application_name('Planytimer');
+Gio._promisify(Gio.File.prototype, 'load_contents_async', 'load_contents_finish');
+Gio._promisify(Gio.File.prototype, 'replace_contents_bytes_async', 'replace_contents_finish');
 
 export const main = (argv) => {
   return application.runAsync(argv);
