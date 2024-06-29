@@ -75,7 +75,7 @@ export const history_details  = (
 
   continue_timer_wg.connect("clicked", () => {
     const timer_state = application.utils.timer.technique.get_data().timer_state;
-    if (timer_state !== 'running' && timer_state !== 'paused') {
+    if (timer_state !== 'running' || timer_state !== 'paused') {
       application.utils.pomodoro_item.set = { title, description }
       application.utils.timer.start();
       parent.close();
