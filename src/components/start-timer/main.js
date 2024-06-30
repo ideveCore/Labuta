@@ -32,7 +32,7 @@ import Resource from './index.blp';
  * @returns {Gtk.Widget}
  *
  */
-export const start_timer = ({ application }) => {
+export const start_timer = ({ application, timer_item, edit }) => {
   const builder = Gtk.Builder.new_from_resource(Resource);
   const component = builder.get_object('component');
   const switch_techniques = builder.get_object('technique');
@@ -46,19 +46,38 @@ export const start_timer = ({ application }) => {
   }
   let current_technique = techniques.pomodoro;
 
+  if(timer_item) {
+    title_timer.set_text(timer_item.title);
+    description_timer.set_text(timer_item.description);
+    application.utils.pomodoro_item.set = { ...timer_item };
+    if(edit) {
+      component.set_title(_("Edit timer"));
+      switch_techniques.set_visible(false);
+      techniques_wd.set_visible(false);
+      start_timer_button.set_label(_("Save"));
+    } else {
+      title_timer.set_editable(false);
+      description_timer.set_editable(false);
+    }
+  }
+
   techniques_wd.set_child(current_technique.component);
 
   switch_techniques.connect('notify::selected', (selected_widget) => {
     current_technique = techniques[selected_widget.get_selected_item().get_string().toLowerCase().replace(/ /gi, '')];
     techniques_wd.set_child(current_technique.component);
-  })
+  });
 
   start_timer_button.connect('clicked', () => {
     application.utils.pomodoro_item.set = { title: title_timer.get_text().trim() };
     application.utils.pomodoro_item.set = { description: description_timer.get_text().trim() };
-    current_technique.start()
+    if(!edit) {
+      current_technique.start();
+    } else {
+      application.utils.pomodoro_item.update();
+    }
     component.close();
-  })
+  });
 
   return component
 }

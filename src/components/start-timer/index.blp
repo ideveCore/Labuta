@@ -29,28 +29,31 @@ Adw.Dialog component {
         hexpand: true;
         margin-start: 6;
         margin-end: 6;
-        Gtk.ListBox {
-          styles ["boxed-list"]
-          hexpand: true;
-          valign: start;
-          selection-mode: none;
-          margin-bottom: 6;
-          Adw.ComboRow technique {
-            title: _("Technique");
-            model: Gtk.StringList {
-              strings [_("Pomodoro"), _("Flow time")]
-            };
-            selected: 0;
+        Adw.PreferencesGroup {
+          title: _("Timer details");
+          Gtk.ListBox {
+            styles ["boxed-list"]
+            hexpand: true;
+            valign: start;
+            selection-mode: none;
+            margin-bottom: 6;
+            Adw.ComboRow technique {
+              title: _("Technique");
+              model: Gtk.StringList {
+                strings [_("Pomodoro"), _("Flow time")]
+              };
+              selected: 0;
+            }
+            Adw.EntryRow title_timer {
+              title: _("Title (optional)");
+            }
+            Adw.EntryRow description_timer {
+              title: _("Description (optional)");
+            }
           }
-          Adw.EntryRow title_timer {
-            title: _("Title (optional)");
+          Adw.Bin techniques {
+            margin-bottom: 6;
           }
-          Adw.EntryRow description_timer {
-            title: _("Description (optional)");
-          }
-        }
-        Adw.Bin techniques {
-          margin-bottom: 6;
         }
       }
     };

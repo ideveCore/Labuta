@@ -79,14 +79,8 @@ export const history  = ({ application }) => {
   const create_deatails_page = (item) => {
     details_container.set_child(history_details({
       application,
-      id: item.id,
-      title: item.title,
+      timer_item: item,
       parent: component,
-      sessions: item.sessions,
-      subtitle: item.display_date,
-      work_time: item.work_time,
-      break_time: item.break_time,
-      description: item.description,
     }));
     navigate(history_detail_page);
   }
@@ -300,3 +294,4 @@ export const history  = ({ application }) => {
   load_history_list();
   return component;
 }
+

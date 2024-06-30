@@ -25,6 +25,7 @@ import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
+import { start_timer } from '../start-timer/main.js';
 import Resource from './index.blp';
 
 /**
@@ -33,27 +34,15 @@ import Resource from './index.blp';
  *
  * @param {Object} params
  * @param {Adw.Application} params.application
- * @param {number} params.id
- * @param {string} params.title
+ * @param {Object} params.timer_item
  * @param {Gtk.Widget} params.parent
- * @param {number} params.sessions
- * @param {string} params.subtitle
- * @param {number} params.work_time
- * @param {number} params.break_time
- * @param {string} params.description
  *
  */
 export const history_details  = (
   {
     application,
-    id,
-    title,
+    timer_item,
     parent,
-    sessions,
-    subtitle,
-    work_time,
-    break_time,
-    description
   }) => {
   const builder = new Gtk.Builder();
   builder.add_from_resource(Resource);
@@ -65,25 +54,37 @@ export const history_details  = (
   const sessions_wg = builder.get_object("sessions");
   const date_wg = builder.get_object("date");
   const continue_timer_wg = builder.get_object("continue_timer");
+  const edit_timer_wg = builder.get_object("edit_timer");
 
-  history_info_wg.set_title(title);
-  history_info_wg.set_description(description || _('No description'));
-  date_wg.set_text(subtitle);
-  work_time_wg.set_text(application.utils.format_time(work_time).toString());
-  break_time_wg.set_text(application.utils.format_time(break_time).toString());
-  sessions_wg.set_text(sessions.toString());
+  history_info_wg.set_title(timer_item.title);
+  history_info_wg.set_description(timer_item.description || _('No description'));
+  date_wg.set_text(timer_item.display_date);
+  work_time_wg.set_text(application.utils.format_time(timer_item.work_time).toString());
+  break_time_wg.set_text(application.utils.format_time(timer_item.break_time).toString());
+  sessions_wg.set_text(timer_item.sessions.toString());
 
   continue_timer_wg.connect("clicked", () => {
     const timer_state = application.utils.timer.technique.get_data().timer_state;
     if (timer_state !== 'running' || timer_state !== 'paused') {
-      application.utils.pomodoro_item.set = { title, description }
-      application.utils.timer.start();
+      start_timer({
+        application: application,
+        timer_item,
+        edit: false,
+      }).present(application.get_active_window());
       parent.close();
     } else {
       component_wg.add_toast(new Adw.Toast({
         title: _("Timer already in progress"),
       }));
     }
+  });
+  edit_timer_wg.connect("clicked", () => {
+    start_timer({
+      application: application,
+      timer_item,
+      edit: true,
+    }).present(application.get_active_window());
+    parent.close();
   });
 
   return component_wg;

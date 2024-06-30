@@ -40,13 +40,24 @@ Adw.ToastOverlay component {
             ellipsize: end;
           }
         }
-        Gtk.Button continue_timer {
-          styles ["suggested-action"]
+        Gtk.Box {
+          orientation: horizontal;
           hexpand: true;
-          margin-start: 5;
-          margin-end: 5;
-          label: _("Continue");
-          tooltip-text: _("Continue pomodoro");
+          Gtk.Button edit_timer {
+            hexpand: true;
+            margin-start: 5;
+            margin-end: 5;
+            label: _("Edit");
+            tooltip-text: _("Edit timer");
+          }
+          Gtk.Button continue_timer {
+            styles ["suggested-action"]
+            hexpand: true;
+            margin-start: 5;
+            margin-end: 5;
+            label: _("Continue");
+            tooltip-text: _("Continue timer");
+          }
         }
     };
   }
