@@ -23,11 +23,11 @@ import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
-import { shortcuts } from './components/shortcuts/main.js';
-import { timer } from './pages/timer/main.js';
-import { statistics } from './pages/statistics/main.js';
-import { display_timer } from './components/display-timer/main.js';
 import Resource from './window.blp';
+import { shortcuts } from '../../components/shortcuts/main.js';
+import { timer } from '../../pages/timer/main.js';
+import { statistics } from '../../pages/statistics/main.js';
+import { display_timer } from '../../components/display-timer/main.js';
 
 /**
  *
