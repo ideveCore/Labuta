@@ -2,8 +2,8 @@ desktop_conf = configuration_data()
 desktop_conf.set('app_id', application_id)
 desktop_file = i18n.merge_file(
   input: configure_file(
-    input: files('io.gitlab.idevecore.Planytimer.desktop.in.in'),
-    output: 'io.gitlab.idevecore.Planytimer.desktop.in',
+    input: files('io.github.idevecore.Labuta.desktop.in.in'),
+    output: 'io.github.idevecore.Labuta.desktop.in',
     configuration: desktop_conf
   ),
   output: '@0@.desktop'.format(application_id),
@@ -22,8 +22,8 @@ appstream_conf = configuration_data()
 appstream_conf.set('app_id', application_id)
 appstream_file = i18n.merge_file(
   input: configure_file(
-    input: 'io.gitlab.idevecore.Planytimer.appdata.xml.in.in',
-    output: 'io.gitlab.idevecore.Planytimer.appdata.xml.in',
+    input: 'io.github.idevecore.Labuta.appdata.xml.in.in',
+    output: 'io.github.idevecore.Labuta.appdata.xml.in',
     configuration: appstream_conf
   ),
   output: '@0@.metainfo.xml'.format(application_id),
@@ -40,7 +40,7 @@ endif
 gschema_conf = configuration_data()
 gschema_conf.set('app_id', application_id)
 configure_file(
-  input: 'io.gitlab.idevecore.Planytimer.gschema.xml',
+  input: 'io.github.idevecore.Labuta.gschema.xml',
   output: '@0@.gschema.xml'.format(application_id),
   configuration: gschema_conf,
   install: true,

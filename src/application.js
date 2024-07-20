@@ -37,7 +37,7 @@ let provider;
 export const application = new Adw.Application({
   application_id: pkg.name,
   flags: Gio.ApplicationFlags.DEFAULT_FLAGS,
-  resource_base_path: '/io/gitlab/idevecore/Planytimer',
+  resource_base_path: '/io/github/idevecore/Labuta',
 });
 
 /**

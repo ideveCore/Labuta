@@ -5,16 +5,16 @@
   <translation type="gettext">@app_id@</translation>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <name>Planytimer</name>
-  <summary>Planytimer is a productivity-focused timer</summary>
+  <name>Labuta</name>
+  <summary>Labuta will help you with tough and boring tasks.</summary>
   <description>
-    <p>Planytimer is a timer utility with rules, ideal for better productivity.</p>
+    <p>Labuta is a time management app that offers various methods to suit your needs.</p>
   </description>
-  <url type="homepage">https://gitlab.com/idevecore/pomodoro</url>
-  <url type="bugtracker">https://gitlab.com/idevecore/pomodoro/-/issues</url>
+  <url type="homepage">https://github.com/idevecore/labuta</url>
+  <url type="bugtracker">https://github.com/idevecore/labuta/-/issues</url>
   <url type="translate">https://hosted.weblate.org/engage/pomodoro</url>
   <url type="donation">https://ko-fi.com/idevecore</url>
-  <url type="vcs-browser">https://gitlab.com/idevecore/pomodoro</url>
+  <url type="vcs-browser">https://github.com/idevecore/labuta</url>
 
   <releases>
     <release version="1.4.0" date="2023-10-07">
@@ -76,31 +76,31 @@
   </recommends>
   <screenshots>
     <screenshot type="default">
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/01.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/01.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/02.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/02.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/03.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/03.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/04.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/04.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/05.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/05.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/06.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/06.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/07.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/07.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/08.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/08.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/idevecore/pomodoro/-/raw/main/data/screenshots/09.png</image>
+      <image>https://github.com/idevecore/labuta/-/raw/main/data/screenshots/09.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">

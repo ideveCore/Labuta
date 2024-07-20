@@ -23,7 +23,7 @@ import Gio from 'gi://Gio';
 import { application } from './application.js';
 
 pkg.initGettext();
-GLib.set_application_name('Planytimer');
+GLib.set_application_name('Labuta');
 Gio._promisify(Gio.File.prototype, 'load_contents_async', 'load_contents_finish');
 Gio._promisify(Gio.File.prototype, 'replace_contents_bytes_async', 'replace_contents_finish');
 

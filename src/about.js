@@ -64,17 +64,17 @@ Blueprint 0.10.0
     `.trim();
   return {
     transient_for: application.active_window,
-    application_name: 'Planytimer',
+    application_name: 'Labuta',
     application_icon: pkg.name,
     developer_name: 'Ideve Core',
     version: pkg.version,
-    comments: _("Planytimer is a timer utility with rules, ideal for better productivity."),
-    website: "https://gitlab.com/idevecore/pomodoro",
-    support_url: "https://gitlab.com/idevecore/pomodoro",
+    comments: _("Labuta is a time management app that offers various methods to suit your needs."),
+    website: "https://github.com/idevecore/labuta",
+    support_url: "https://github.com/idevecore/labuta",
     developers: [
       'Ideve Core'
     ],
-    issue_url: 'https://gitlab.com/idevecore/pomodoro/-/issues',
+    issue_url: 'https://github.com/idevecore/labuta/-/issues',
     debug_info,
     copyright: '© 2023 Ideve Core',
     license_type: Gtk.License.GPL_3_0_ONLY,

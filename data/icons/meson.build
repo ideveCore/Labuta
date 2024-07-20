@@ -6,6 +6,6 @@ install_data(
 
 symbolic_dir = join_paths('hicolor', 'symbolic', 'apps')
 install_data(
-  join_paths(symbolic_dir, ('@0@-symbolic.svg').format('io.gitlab.idevecore.Planytimer')),
+  join_paths(symbolic_dir, ('@0@-symbolic.svg').format('io.github.idevecore.Labuta')),
   install_dir: join_paths(get_option('datadir'), 'icons', symbolic_dir)
 )

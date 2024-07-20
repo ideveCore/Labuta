@@ -1,10 +1,10 @@
-<img heigth="128" src="./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Planytimer.svg" align="left" />
+<img heigth="128" src="./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Labuta.svg" align="left" />
 
-# Planytimer
+# Labuta
 
-A simple timer application, its main objective is to be simple, and intuitive.
+Labuta will help you with tough and boring tasks.
 
-![Planytimer](data/screenshots/01.png)
+![Labuta](data/screenshots/01.png)
 
 ## Features
 - History
@@ -28,7 +28,7 @@ A simple timer application, its main objective is to be simple, and intuitive.
 
 ### Building from Git
 ```bash 
- git clone --recurse-submodules https://gitlab.com/idevecore/pomodoro.git
+ git clone --recurse-submodules https://github.com/idevecore/labuta.git
  cd pomodoro
  meson builddir --prefix=/usr/local 
  sudo ninja -C builddir install 
@@ -38,13 +38,13 @@ A simple timer application, its main objective is to be simple, and intuitive.
 
 [![Translation status](https://hosted.weblate.org/widget/pomodoro/pomodoro/svg-badge.svg)](https://hosted.weblate.org/engage/pomodoro/) ✨Powered by [Weblate](https://weblate.org/en/)✨
 
-Planytimer has been translated into the following languages:
+Labuta has been translated into the following languages:
 
 <a href="https://hosted.weblate.org/engage/pomodoro/">
 <img src="https://hosted.weblate.org/widget/pomodoro/pomodoro/multi-auto.svg" alt="Translation status" />
 </a>
 
-Please help translate Planytimer into more languages through [Weblate](https://hosted.weblate.org/engage/pomodoro/).
+Please help translate Labuta into more languages through [Weblate](https://hosted.weblate.org/engage/pomodoro/).
 
 ## Donate
 If you like this project and have some spare money left, consider donating:

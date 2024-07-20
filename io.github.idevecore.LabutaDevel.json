@@ -1,9 +1,9 @@
 {
-  "app-id": "io.gitlab.idevecore.PlanytimerDevel",
+  "app-id": "io.github.idevecore.LabutaDevel",
   "runtime": "org.gnome.Platform",
   "runtime-version": "46",
   "sdk": "org.gnome.Sdk",
-  "command": "planytimer",
+  "command": "labuta",
   "finish-args": [
     "--share=ipc",
     "--socket=fallback-x11",
@@ -154,7 +154,7 @@
       ]
     },
     {
-      "name": "planytimer",
+      "name": "labuta",
       "builddir": true,
       "buildsystem": "meson",
       "config-opts": [

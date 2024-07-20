@@ -4,11 +4,11 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name xml:lang="en">Planytimer</name>
-  <shortdesc xml:lang="en">Planytimer is a productivity-focused timer</shortdesc>
-  <description xml:lang="en">Planytimer is a timer utility with rules, ideal for better productivity.</description>
-  <homepage rdf:resource="https://gitlab.com/idevecore/pomodoro" />
-  <bug-database rdf:resource="https://gitlab.com/idevecore/pomodoro/issues/" />
+  <name xml:lang="en">Labuta</name>
+  <shortdesc xml:lang="en">Labuta will help you with tough and boring tasks.</shortdesc>
+  <description xml:lang="en">Labuta is a time management app that offers various methods to suit your needs.</description>
+  <homepage rdf:resource="https://github.com/idevecore/labuta" />
+  <bug-database rdf:resource="https://github.com/idevecore/labuta/issues/" />
   <programming-language>JavaScript</programming-language>
   <platform>GTK 4</platform>
   <platform>Libadwaita</platform>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="pomodoro">
-  <schema id="@app_id@" path="/io/gitlab/idevecore/Planytimer/" gettext-domain="@app_id@">
+  <schema id="@app_id@" path="/io/github/idevecore/Labuta/" gettext-domain="@app_id@">
     <key type="s" name="color-scheme">
       <choices>
         <choice value="auto" />
