@@ -1,4 +1,4 @@
-<img heigth="128" src="./data/icons/hicolor/scalable/apps/io.gitlab.idevecore.Labuta.svg" align="left" />
+<img heigth="128" src="./data/icons/hicolor/scalable/apps/io.github.idevecore.Labuta.svg" align="left" />
 
 # Labuta
 
